@@ -9,21 +9,41 @@
   <version>1.0</version>
 
   <name>Cirellium Commons</name>
-  <url>http://cirellium.net</url>
+  <url>https://cirellium.net</url>
 
   <properties>
+
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
+
   </properties>
 
+  <repositories>
+
+    <repository>
+      <id>papermc</id>
+      <url>https://papermc.io/repo/repository/maven-public/</url>
+    </repository>
+
+  </repositories>
+
   <dependencies>
+
+    <dependency>
+      <groupId>io.papermc.paper</groupId>
+      <artifactId>paper-api</artifactId>
+      <version>1.18-R0.1-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.11</version>
       <scope>test</scope>
     </dependency>
+
   </dependencies>
 
   <build>
