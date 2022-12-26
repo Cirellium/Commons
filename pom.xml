@@ -26,6 +26,17 @@
       <url>https://papermc.io/repo/repository/maven-public/</url>
     </repository>
 
+    <repository>
+      <id>bungeecord-repo</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </repository>
+
+    <repository>
+      <id>sponge-repo</id>
+      <name>Sponge Maven Repository</name>
+      <url>https://repo.spongepowered.org/repository/maven-public/</url>
+    </repository>
+
   </repositories>
 
   <dependencies>
@@ -33,11 +44,48 @@
     <dependency>
       <groupId>io.papermc.paper</groupId>
       <artifactId>paper-api</artifactId>
-      <version>1.18-R0.1-SNAPSHOT</version>
+      <version>1.19.3-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
+      <groupId>net.md-5</groupId>
+      <artifactId>bungeecord-api</artifactId>
+      <version>1.19-R0.1-SNAPSHOT</version>
+      <type>jar</type>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+        <groupId>net.md-5</groupId>
+        <artifactId>bungeecord-api</artifactId>
+        <version>1.19-R0.1-SNAPSHOT</version>
+        <type>javadoc</type>
+        <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.velocitypowered</groupId>
+      <artifactId>velocity-api</artifactId>
+      <version>3.1.1</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>io.github.waterfallmc</groupId>
+        <artifactId>waterfall-api</artifactId>
+        <version>1.18-R0.1-SNAPSHOT</version>
+        <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.spongepowered</groupId>
+      <artifactId>spongeapi</artifactId>
+      <version>8.0.0</version>
+      <type>jar</type>
+      <scope>provided</scope>
+    </dependency>
+
+   <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.11</version>
