@@ -5,9 +5,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import net.cirellium.commons.core.plugin.CirelliumPlugin;
 import net.cirellium.commons.core.service.ServiceHandler;
 
-public abstract class CirelliumBukkitPlugin extends JavaPlugin implements CirelliumPlugin {
-
-    private static CirelliumBukkitPlugin instance;
+public abstract class CirelliumBukkitPlugin<P extends CirelliumBukkitPlugin<P>> extends JavaPlugin implements CirelliumPlugin {
 
     private ServiceHandler serviceHandler;
     
@@ -19,7 +17,6 @@ public abstract class CirelliumBukkitPlugin extends JavaPlugin implements Cirell
 
     @Override
     public void onEnable() {
-        instance = this;
         serviceHandler.loadServices();
 
         enable();
@@ -27,14 +24,10 @@ public abstract class CirelliumBukkitPlugin extends JavaPlugin implements Cirell
 
     @Override
     public void onDisable() {
-        instance = null;
-
         disable();
     }
 
-    public static CirelliumBukkitPlugin getInstance() {
-        return instance;
-    }
+    public abstract P getInstance();
 
     public ServiceHandler getServiceHandler() {
         return serviceHandler;

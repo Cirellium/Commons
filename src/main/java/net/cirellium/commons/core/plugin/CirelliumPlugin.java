@@ -18,7 +18,7 @@ import net.cirellium.commons.core.service.ServiceHandler;
 import net.cirellium.commons.core.service.ServiceType;
 import net.cirellium.commons.core.version.Platform;
 
-public interface CirelliumPlugin {
+public interface CirelliumPlugin<P> {
     
     public String getPluginName();
 

@@ -18,9 +18,9 @@ import net.cirellium.commons.core.exception.service.ServiceNotFoundException;
 import net.cirellium.commons.core.exception.service.ServiceStateException;
 import net.cirellium.commons.core.plugin.CirelliumPlugin;
 
-public abstract class Service {
+public abstract class Service<P extends CirelliumPlugin<P>> {
     
-    private final CirelliumPlugin plugin;
+    private final P plugin;
 
     private final ServiceType type;
 
@@ -28,7 +28,7 @@ public abstract class Service {
 
     private boolean initialized = false;
 
-    public Service(CirelliumPlugin plugin, ServiceType type, ServiceType... dependencies) {
+    public Service(P plugin, ServiceType type, ServiceType... dependencies) {
         this.plugin = plugin;
         this.type = type;
 
@@ -45,7 +45,7 @@ public abstract class Service {
         Set<ServiceType> missingDependencies = new HashSet<>();
 
         for (ServiceType dependency : dependencies) {
-            Service service = plugin.getService(dependency).get();
+            Service<P> service = plugin.getService(dependency).get();
             if (!service.isInitialized()) {
                 missingDependencies.add(dependency);
             }
@@ -60,9 +60,9 @@ public abstract class Service {
         return initialized && plugin.getServices().contains(this);
     }
 
-    public final CirelliumPlugin getPlugin() { return plugin; }
+    public final CirelliumPlugin<P> getPlugin() { return plugin; }
 
-    public final Service getService(ServiceType type) {
+    public final Service<P> getService(ServiceType type) {
         return plugin.getServices()
             .stream()
             .filter(service -> service.getType() == type)
