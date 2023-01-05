@@ -11,6 +11,7 @@ package net.cirellium.commons.common.plugin;
 
 import java.io.File;
 
+import net.cirellium.commons.common.logger.CirelliumLogger;
 import net.cirellium.commons.common.service.ServiceHolder;
 import net.cirellium.commons.common.version.Platform;
 import net.cirellium.commons.common.version.Version;
@@ -26,6 +27,8 @@ public interface CirelliumPlugin<P> {
     public Platform getPlatform();
 
     public ServiceHolder<?> getServiceHolder();
+
+    public CirelliumLogger getLogger();
     
     // ! Other methods:
     // ! Platform getPlatform();

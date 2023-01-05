@@ -51,5 +51,7 @@ public class CirelliumCore extends CirelliumBukkitPlugin<CirelliumCore> {
     @Override
     public CirelliumCore getSelf() {
         return this;
-    } 
+    }
+
+    
 }

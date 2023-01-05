@@ -12,6 +12,7 @@ package net.cirellium.commons.common.service;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import net.cirellium.commons.common.exception.service.ServiceDependencyException;
 import net.cirellium.commons.common.exception.service.ServiceNotFoundException;
@@ -21,6 +22,8 @@ import net.cirellium.commons.common.plugin.CirelliumPlugin;
 public abstract class AbstractService<P extends CirelliumPlugin<P>> {
     
     protected final P plugin;
+
+    protected final Logger logger;
 
     protected final ServiceType type;
 
@@ -43,6 +46,8 @@ public abstract class AbstractService<P extends CirelliumPlugin<P>> {
     public AbstractService(P plugin, ServiceType type, boolean autoInitialize, ServiceType... dependencies) {
         this.plugin = plugin;
         this.type = type;
+        this.logger = plugin.getLogger();
+
         this.autoInitialize = autoInitialize;
 
         this.dependencies = new HashSet<>(Arrays.asList(dependencies));

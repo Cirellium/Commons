@@ -12,6 +12,7 @@ package net.cirellium.commons.bukkit;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import net.cirellium.commons.common.logger.CirelliumLogger;
 import net.cirellium.commons.common.plugin.CirelliumPlugin;
 import net.cirellium.commons.common.service.ServiceHandler;
 import net.cirellium.commons.common.service.ServiceHolder;
@@ -77,6 +78,11 @@ public abstract class CirelliumBukkitPlugin<P extends CirelliumBukkitPlugin<P>> 
     @Override
     public Platform getPlatform() {
         return Platform.BUKKIT;
+    }
+
+    @Override
+    public CirelliumLogger getLogger() {
+        return new CirelliumLogger(getPlatform(), getPluginName().toLowerCase());
     }
 
     public abstract boolean load();
