@@ -93,3 +93,4 @@ clans.code-workspace
 .tmp.driveupload/
 *.ignore
 *.bat
+.vscode/settings.json

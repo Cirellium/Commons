@@ -9,10 +9,14 @@
 */
 package net.cirellium.commons.bukkit.command.argument;
 
-public abstract class CommandArgument {
-    
-    public enum Type {
-        
-    }
+import java.util.List;
 
+import net.cirellium.commons.bukkit.command.CommandContext;
+
+public interface CommandArgument<T> {
+    
+    T transform(CommandContext context, String argument);
+
+    List<String> tabComplete(CommandContext context, String argument);
+    
 }
