@@ -18,11 +18,12 @@ import java.util.Map;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import net.cirellium.commons.bukkit.CirelliumBukkitPlugin;
+import net.cirellium.commons.bukkit.command.result.CommandResult;
 import net.cirellium.commons.common.data.user.AbstractCirelliumUser;
-import net.cirellium.commons.common.plugin.CirelliumPlugin;
 
 public abstract class AbstractCommand<
-    P extends CirelliumPlugin<P>, 
+    P extends CirelliumBukkitPlugin<P>, 
     M extends AbstractCommandManager<P, ?, M>> {
     
     protected final P plugin;
@@ -53,37 +54,61 @@ public abstract class AbstractCommand<
         this.minArgs = minArgs;
     }
 
+    public int getMinArgs() { return this.minArgs; }
+
     public void setMaxArgs(int maxArgs) {
         this.maxArgs = maxArgs;
     }
+
+    public int getMaxArgs() { return this.maxArgs; }
 
     public void setPermission(String permission) {
         this.permission = permission;
     }
 
+    public String getPermission() { return this.permission; }
+
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public String getDescription() { return this.description; }
 
     public void setHelp(String help) {
         this.help = help;
     }
 
+    public String getHelp() { return this.help; }
+
     public void setPlayerCommand(boolean playerCommand) {
         this.isPlayerCommand = playerCommand;
     }
+
+    public boolean isPlayerCommand() { return this.isPlayerCommand; }
 
     public void setConsoleCommand(boolean consoleCommand) {
         this.isConsoleCommand = consoleCommand;
     }
 
+    public boolean isConsoleCommand() { return this.isConsoleCommand; }
+
     public void setSubCommand(boolean subCommand) {
         this.isSubCommand = subCommand;
+    }
+
+    public boolean isSubCommand() {
+        return this instanceof SubCommand;
+    }
+
+    public boolean isDirectCommand() {
+        return !isSubCommand();
     }
 
     public void setAutoTabComplete(boolean autoTabComplete) {
         this.autoTabComplete = autoTabComplete;
     }
+
+    public boolean isAutoTabComplete() { return this.autoTabComplete; }
 
     public String getCommandName() {
         return commandName;
@@ -103,8 +128,8 @@ public abstract class AbstractCommand<
         return subCommands.containsKey(subCommand);
     }
 
-    public AbstractCommand<P, M> getSubCommand(String string) {
-        return subCommands.get(string);
+    public AbstractCommand<P, M> getSubCommand(String name) {
+        return hasSubCommand(name) ? subCommands.get(name) : null;
     }
 
     public boolean matches(String arg) {
@@ -115,9 +140,9 @@ public abstract class AbstractCommand<
         return (this.permission == null || this.permission.isEmpty() || sender.hasPermission(this.permission));
     }
 
-    public abstract void executePlayer(AbstractCirelliumUser<P> player, org.bukkit.command.Command command, String[] arguments);
+    public abstract CommandResult executePlayer(AbstractCirelliumUser<P> player, org.bukkit.command.Command command, String[] arguments);
 
-    public abstract void executeConsole(org.bukkit.command.Command command, String[] arguments);
+    public abstract CommandResult executeConsole(org.bukkit.command.Command command, String[] arguments);
 
     public abstract List<String> onTabComplete(AbstractCirelliumUser<P> player, String[] arguments);
 

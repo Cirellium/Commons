@@ -11,6 +11,8 @@ package net.cirellium.commons.bukkit.command;
 
 import org.bukkit.command.CommandSender;
 
+import net.cirellium.commons.bukkit.command.argument.CommandArgument;
+
 public class CommandContext {
     
     private CommandSender commandSender;
