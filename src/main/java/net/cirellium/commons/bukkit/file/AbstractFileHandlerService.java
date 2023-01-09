@@ -15,32 +15,35 @@ import java.util.Set;
 
 import net.cirellium.commons.bukkit.CirelliumBukkitPlugin;
 import net.cirellium.commons.bukkit.file.implementation.AbstractPluginFile;
-import net.cirellium.commons.bukkit.file.implementation.ConfigFile;
 import net.cirellium.commons.bukkit.file.implementation.DatabaseFile;
 import net.cirellium.commons.common.service.AbstractService;
 import net.cirellium.commons.common.service.ServiceType;
 
-public class DefaultFileHandlerService<P extends CirelliumBukkitPlugin<P>> extends AbstractService<P> {
-    
-    public Map<String, AbstractPluginFile<P>> files = new HashMap<>();
+public abstract class AbstractFileHandlerService<P extends CirelliumBukkitPlugin<P>> extends AbstractService<P> {
 
-    public DefaultFileHandlerService(P plugin) {
+    protected Map<String, AbstractPluginFile<P>> files = new HashMap<>();
+
+    public AbstractFileHandlerService(P plugin) {
         super(plugin, ServiceType.FILE);
     }
-    
+
     @Override
     public void initialize() {
-        addFile(new ConfigFile<P>(plugin, "config"));
-        addFile(new DatabaseFile<P>(plugin, "database"));
+        addFiles();
+
+        files.values().forEach(file -> {
+            file.create();
+            file.load();
+        });
     }
-    
+
     @Override
     public void shutdown() {
         getFiles().stream().filter(file -> file instanceof DatabaseFile).forEach(file -> file.save());
     }
 
     public void addFile(AbstractPluginFile<P> file) {
-        files.put(file.getName(), file);
+        files.putIfAbsent(file.getName(), file);
     }
 
     public AbstractPluginFile<P> getFile(String name) {
@@ -54,7 +57,7 @@ public class DefaultFileHandlerService<P extends CirelliumBukkitPlugin<P>> exten
     public Set<AbstractPluginFile<P>> getFiles() {
         return Set.copyOf(files.values());
     }
-    
-    
+
+    protected abstract void addFiles();
     
 }

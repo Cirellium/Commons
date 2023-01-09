@@ -62,6 +62,7 @@
       <type>jar</type>
       <scope>provided</scope>
     </dependency>
+
     <dependency>
         <groupId>net.md-5</groupId>
         <artifactId>bungeecord-api</artifactId>
@@ -109,6 +110,13 @@
       <groupId>com.zaxxer</groupId>
       <artifactId>HikariCP</artifactId>
       <version>5.0.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.24</version>
+      <scope>provided</scope>
     </dependency>
 
   </dependencies>

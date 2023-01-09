@@ -39,25 +39,12 @@ public abstract class AbstractPluginFile<P extends CirelliumBukkitPlugin<P>> {
 
     public boolean comments;
 
-    public AbstractPluginFile(P plugin) {
-        plugin.getConfig().options().copyDefaults(true);
-        plugin.saveConfig();
-
-        this.plugin = plugin;
-        this.name = "config";
-        this.file = new File(plugin.getDataFolder(), name + ".yml");
-        this.logger = plugin.getLogger();
-
-        create();
+    public AbstractPluginFile(String path) {
+        this(new File(path));
     }
 
-    public AbstractPluginFile(P plugin, String fileName) {
-        this.plugin = plugin;
-        this.name = fileName;
-        this.file = new File(plugin.getDataFolder(), fileName + ".yml");
-        this.logger = plugin.getLogger();
-
-        create();
+    public AbstractPluginFile(File file) {
+        this(file, YamlConfiguration.loadConfiguration(file));
     }
 
     public AbstractPluginFile(File file, FileConfiguration fileConfig) {
@@ -66,16 +53,32 @@ public abstract class AbstractPluginFile<P extends CirelliumBukkitPlugin<P>> {
         this.fileConfig.options().copyDefaults(true);
         this.name = file.getName().replace(".yml", "");
         this.logger = new CirelliumLogger(Platform.BUKKIT, name);
+        this.comments = true;
 
         this.plugin = null;
     }
 
-    public AbstractPluginFile(File file) {
-        this(file, YamlConfiguration.loadConfiguration(file));
+    public AbstractPluginFile(P plugin) {
+        plugin.getConfig().options().copyDefaults(true);
+        plugin.saveConfig();
+
+        this.plugin = plugin;
+        this.name = "config";
+        this.file = new File(plugin.getDataFolder(), name + ".yml");
+        this.logger = plugin.getLogger();
+        this.comments = true;
+
+        // create();
     }
 
-    public AbstractPluginFile(String path) {
-        this(new File(path));
+    public AbstractPluginFile(P plugin, String fileName) {
+        this.plugin = plugin;
+        this.name = fileName;
+        this.file = new File(plugin.getDataFolder(), fileName + ".yml");
+        this.logger = plugin.getLogger();
+        this.comments = true;
+
+        // create();
     }
 
     public void create() {
@@ -87,29 +90,33 @@ public abstract class AbstractPluginFile<P extends CirelliumBukkitPlugin<P>> {
         logger.info("&bCreating new file " + name + ".yml"  );
 
         try {
-            if (plugin.getResource(name + ".yml") == null) {
-                try {
-                    file.createNewFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } else {
+            if (plugin.getResource(name + ".yml") != null) {
                 FileUtils.copyToFile(plugin.getResource(name + ".yml"), file);
+                return;
             }
+            file.createNewFile();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        fileConfig = YamlConfiguration.loadConfiguration(file);
-        fileConfig.options().copyDefaults(true);
     }
 
     public FileConfiguration get() {
         return fileConfig != null ? fileConfig : YamlConfiguration.loadConfiguration(file);
     }
 
+    public FileConfiguration load() {
+        fileConfig = YamlConfiguration.loadConfiguration(file);
+        fileConfig.options().copyDefaults(true);
+        fileConfig.options().parseComments(comments);        
+
+        return fileConfig;
+    }
+
     public FileConfiguration load(File file) {
         fileConfig = YamlConfiguration.loadConfiguration(file);
+        fileConfig.options().copyDefaults(true);
+        fileConfig.options().parseComments(comments);
 
         return fileConfig;
     }

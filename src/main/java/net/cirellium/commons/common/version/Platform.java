@@ -10,6 +10,7 @@
 package net.cirellium.commons.common.version;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Server;
 import org.spongepowered.api.Sponge;
 import net.md_5.bungee.api.ProxyServer;
 
@@ -26,7 +27,13 @@ public abstract class Platform {
 
     public abstract boolean isProxy();
 
-    public static Platform getPlatform() {
+    public static Platform getCurrentPlatform() {
+        try {
+            Class.forName("org.bukkit.craftbukkit.CraftServer");
+            return BUKKIT;
+        } catch (ClassNotFoundException e) {
+        }
+
         return null;
     }
 

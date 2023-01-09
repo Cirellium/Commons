@@ -44,6 +44,7 @@ public class ServiceHandler<P extends CirelliumPlugin<P>> {
         return provider;
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public void loadServices() throws ServiceException {
         try {
             // Load the service classes using the ServiceLoader
