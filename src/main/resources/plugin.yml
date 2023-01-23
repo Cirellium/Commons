@@ -1,8 +1,0 @@
-name: CirelliumCore
-main: net.cirellium.core.CirelliumCore
-version: 1.0
-api-version: 1.19
-description: CirelliumCore is the core plugin for Cirellium. It manages all the other cirellium plugins and contains shared code.
-author: FearMyShotz
-website: https://cirellium.net
-prefix: CirelliumCore

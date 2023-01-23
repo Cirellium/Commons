@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>commons-parent</artifactId>
+    <groupId>net.cirellium</groupId>
+    <version>1.0</version>
+    <relativePath>../../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>commons-bukkit</artifactId>
+  <name>Commons-Bukkit</name>
+  <version>1.0</version>
+
+  <properties>
+    <java.version>19</java.version>
+
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <project.fullVersion>${project.version}</project.fullVersion>
+
+    <maven.compiler.source>19</maven.compiler.source>
+    <maven.compiler.target>19</maven.compiler.target>
+  </properties>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <excludes>
+          <exclude>*.yml</exclude>
+        </excludes>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.4.1</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <!--<failOnError>false</failOnError>-->
+              <shadedArtifactAttached>false</shadedArtifactAttached>
+              <createDependencyReducedPom>false</createDependencyReducedPom>
+
+              <relocations>
+                <relocation>
+                  <pattern>com.zaxxer</pattern>
+                  <shadedPattern>net.cirellium.libs.com.zaxxer</shadedPattern>
+                </relocation>
+
+                <relocation>
+                  <pattern>org.projectlombok</pattern>
+                  <shadedPattern>net.cirellium.libs.org.projectlombok</shadedPattern>
+                </relocation>
+
+                <relocation>
+                  <pattern>net.kyori</pattern>
+                  <shadedPattern>net.cirellium.libs.net.kyori</shadedPattern>
+                </relocation>
+
+                <relocation>
+                  <pattern>com.google</pattern>
+                  <shadedPattern>net.cirellium.libs.com.google</shadedPattern>
+                </relocation>
+
+                <relocation>
+                  <pattern>javassist</pattern>
+                  <shadedPattern>net.cirellium.libs.javassist</shadedPattern>
+                </relocation>
+
+                <relocation>
+                  <pattern>javax.annotation</pattern>
+                  <shadedPattern>net.cirellium.libs.javax.annotation</shadedPattern>
+                </relocation>
+
+                <relocation>
+                  <pattern>org.apache</pattern>
+                  <shadedPattern>net.cirellium.libs.org.apache</shadedPattern>
+                </relocation>
+
+                <relocation>
+                  <pattern>org.checkerframework</pattern>
+                  <shadedPattern>net.cirellium.libs.org.checkerframework</shadedPattern>
+                </relocation>
+
+                <relocation>
+                  <pattern>org.intellij</pattern>
+                  <shadedPattern>net.cirellium.libs.org.intellij</shadedPattern>
+                </relocation>
+
+                <relocation>
+                  <pattern>org.jetbrains</pattern>
+                  <shadedPattern>net.cirellium.libs.org.jetbrains</shadedPattern>
+                </relocation>
+
+                <relocation>
+                  <pattern>org.reflections</pattern>
+                  <shadedPattern>net.cirellium.libs.org.reflections</shadedPattern>
+                </relocation>
+
+                <!-- SLF4J throws random errors when relocated -->
+                <!-- <relocation>
+                  <pattern>org.slf4j</pattern>
+                <shadedPattern>net.cirellium.libs.org.slf4j</shadedPattern>
+                </relocation> -->
+              </relocations>
+              <artifactSet>
+                <excludes>
+                  <exclude>junit:junit</exclude>
+                  <exclude>io.netty:*</exclude>
+                  <exclude>org.bukkit</exclude>
+                  <exclude>io.papermc</exclude>
+                </excludes>
+              </artifactSet>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.3.1</version>
+        <configuration>
+          <!--<failOnError>false</failOnError>-->
+          <artifactItems>
+            <artifactItem>
+              <groupId>${project.groupId}</groupId>
+              <artifactId>${project.artifactId}</artifactId>
+              <version>${project.version}</version>
+              <type>${project.packaging}</type>
+              <type>jar</type>
+              <classifier>jar-with-dependencies</classifier>
+              <overWrite>true</overWrite>
+              <destFileName>${project.name}.jar</destFileName>
+            </artifactItem>
+          </artifactItems>
+          <outputDirectory>T:\Programmierung\Testserver\1.19\plugins</outputDirectory>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <executions>
+          <execution>
+            <id>compile</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>testCompile</id>
+            <phase>test-compile</phase>
+            <goals>
+              <goal>testCompile</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <!--<failOnError>false</failOnError>-->
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.4.1</version>
+        <configuration>
+          <!--<failOnError>false</failOnError>-->
+          <filters>
+          </filters>
+          <dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml</dependencyReducedPomLocation>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+    <!-- <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+    <filtering>true</filtering>
+      </resource>
+    </resources> -->
+  </build>
+
+  <developers>
+    <developer>
+      <id>Fear</id>
+      <name>FearMyShotz</name>
+      <email>supremeplayzbs@gmail.com</email>
+      <url>https://fearmyshotz.github.io</url>
+      <roles>
+        <role>developer</role>
+        <role>maintainer</role>
+      </roles>
+    </developer>
+  </developers>
+
+  <repositories>
+    <repository>
+      <id>papermc</id>
+      <url>https://papermc.io/repo/repository/maven-public/</url>
+    </repository>
+
+    <repository>
+      <id>spigot-repo</id>
+      <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+    </repository>
+
+    <repository>
+      <id>bungeecord-repo</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </repository>
+
+    <repository>
+      <id>sponge-repo</id>
+      <name>Sponge Maven Repository</name>
+      <url>https://repo.spongepowered.org/repository/maven-public/</url>
+    </repository>
+  </repositories>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>net.cirellium</groupId>
+      <artifactId>commons</artifactId>
+      <version>1.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.bukkit</groupId>
+      <artifactId>craftbukkit</artifactId>
+      <version>1.19.2-R0.1-SNAPSHOT</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/libs/craftbukkit-1.19.3-R0.1-SNAPSHOT.jar</systemPath>
+    </dependency>
+
+    <dependency>
+      <groupId>io.papermc.paper</groupId>
+      <artifactId>paper-api</artifactId>
+      <version>1.19.3-R0.1-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>net.md-5</groupId>
+      <artifactId>bungeecord-api</artifactId>
+      <version>1.19-R0.1-SNAPSHOT</version>
+      <type>jar</type>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>net.md-5</groupId>
+      <artifactId>bungeecord-api</artifactId>
+      <version>1.19-R0.1-SNAPSHOT</version>
+      <type>javadoc</type>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.velocitypowered</groupId>
+      <artifactId>velocity-api</artifactId>
+      <version>3.1.1</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.github.waterfallmc</groupId>
+      <artifactId>waterfall-api</artifactId>
+      <version>1.18-R0.1-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.spongepowered</groupId>
+      <artifactId>spongeapi</artifactId>
+      <version>8.0.0</version>
+      <type>jar</type>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.11.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.zaxxer</groupId>
+      <artifactId>HikariCP</artifactId>
+      <version>5.0.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.24</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>net.kyori</groupId>
+      <artifactId>adventure-text-minimessage</artifactId>
+      <version>4.12.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>31.1-jre</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.reflections</groupId>
+      <artifactId>reflections</artifactId>
+      <version>0.10.2</version>
+    </dependency>
+  </dependencies>
+
+</project>
