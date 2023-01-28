@@ -94,3 +94,4 @@ clans.code-workspace
 *.ignore
 *.bat
 .vscode/settings.json
+!platform/libs/*.jar
