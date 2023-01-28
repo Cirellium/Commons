@@ -34,7 +34,13 @@ jobs:
     - name: Update dependency graph
       uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
       
-    - run: mkdir build && cp target/*.jar build
+    - run: mkdir build && cp /home/runner/work/commons/commons/commons/target/*.jar build
+    - uses: actions/upload-artifact@v3
+      with:
+        name: Package
+        path: build
+        
+    - run: cp /home/runner/work/commons/commons/platform/bukkit/target/*.jar build
     - uses: actions/upload-artifact@v3
       with:
         name: Package
