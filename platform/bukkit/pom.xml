@@ -163,7 +163,7 @@
               <!-- <outputDirectory>/home/fear/code/commons</outputDirectory> -->
             </artifactItem>
           </artifactItems>
-          <outputDirectory>/home/fear/code/commons</outputDirectory>
+          <!-- <outputDirectory>/home/fear/code/commons</outputDirectory> -->
         </configuration>
       </plugin>
 
