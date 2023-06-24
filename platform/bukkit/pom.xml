@@ -159,8 +159,8 @@
               <classifier>jar-with-dependencies</classifier>
               <overWrite>true</overWrite>
               <destFileName>${project.name}.jar</destFileName>
-              <directory>/home/fear/code/commons</directory>
-              <outputDirectory>/home/fear/code/commons</outputDirectory>
+              <!-- <directory>/home/fear/code/commons</directory> -->
+              <!-- <outputDirectory>/home/fear/code/commons</outputDirectory> -->
             </artifactItem>
           </artifactItems>
           <outputDirectory>/home/fear/code/commons</outputDirectory>
