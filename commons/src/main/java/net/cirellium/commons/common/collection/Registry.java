@@ -19,7 +19,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
 /**
- * A registry is a map of elements that can be registered accessed by a key.
+ * A registry is a map of elements that can be registered and accessed by a key.
  * 
  * @author Fear
  * @param <K> The key type

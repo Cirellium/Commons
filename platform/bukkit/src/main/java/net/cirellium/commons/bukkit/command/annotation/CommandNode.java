@@ -114,17 +114,26 @@ public class CommandNode {
 
     @SuppressWarnings({ "deprecation" })
     public boolean invoke(CommandSender sender, ProvidedArguments args) throws CommandException {
+        // Check if the method is null
         if (this.method == null) {
+            // If the method is null, log a warning message
             CommandHandler.getInstance().getLogger().warning("Method is null for command: " + this.name);
+
+            // Check if the command has subcommands
             if (hasCommands()) {
+                // Check if the sender has any subcommands
                 if (getSubCommands(sender, true).isEmpty()) {
+                    // Check if the command is hidden
                     if (isHidden()) {
+                        // If the command is hidden, send a message to the sender
                         sender.sendMessage("§fUnknown command. Try /help for help.");
                     } else {
+                        // If the command is not hidden, send a message to the sender
                         sender.sendMessage("No permission.");
                     }
                 }
             } else {
+                // If the command does not have subcommands, send a message to the sender
                 sender.sendMessage("§fUnknown command. Try /help for help.");
             }
             return true;
@@ -157,7 +166,7 @@ public class CommandNode {
             if (argumentData.isWildcard() && (argument.isEmpty() || !argument.equals(argumentData.getDefaultValue())))
                 argument = args.join(index);
 
-            ArgumentTypeHandler<?> type = CommandHandler.getInstance().getRegistry().getArgumentType(argumentData.getType());
+            ArgumentTypeHandler<?> type = CommandHandler.getInstance().getRegistry().getArgumentTypeHandler(argumentData.getType());
             if (argumentData.getArgumentType() != null)
                 try {
                     type = argumentData.getArgumentType().newInstance();
@@ -192,15 +201,7 @@ public class CommandNode {
                 this.method.invoke(owningClass.newInstance(), objects.toArray());
             } catch (IllegalArgumentException e) {
                 if (e.getMessage().contains("type mismatch") && !senderType.matches(sender)) {
-                    switch (senderType) {
-                        case PLAYER:
-                            sender.sendMessage(Message.COMMAND_PLAYER_ONLY.asComponent());
-                            break;
-                        case CONSOLE:
-                            sender.sendMessage(Message.COMMAND_CONSOLE_ONLY.asComponent());
-                            break;
-                        default: return true;
-                    }
+                    sender.sendMessage((senderType == SenderType.PLAYER ? Message.COMMAND_PLAYER_ONLY : Message.COMMAND_CONSOLE_ONLY).toString());
                 }
             } catch (InstantiationException e) {
                 e.printStackTrace();
@@ -267,6 +268,7 @@ public class CommandNode {
     public CommandNode findCommand(List<String> commandLine) {
         if (commandLine.size() > 0) {
             String trySub = commandLine.get(0);
+            
             if (hasCommand(trySub)) {
                 commandLine.remove(0);
                 CommandNode returnNode = getNode(trySub);

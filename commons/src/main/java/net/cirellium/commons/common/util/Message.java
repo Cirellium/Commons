@@ -101,7 +101,7 @@ public enum Message implements Sendable<CommandSender> {
     @Override
     public String toString() {
         // return messagesFile.getValueAs(String.class, MESSAGES_PATH_PREFIX + messagePath).get();
-        return null;
+        return fallbackMessage;
     }
 
     // ! TODO test this method
@@ -121,7 +121,11 @@ public enum Message implements Sendable<CommandSender> {
     }
 
     public Message placeholder(String placeholder, String value) {
-        this.messageComponent = parser.deserialize(toString(), Placeholder.parsed(placeholder, value));
+        this.messageComponent = parser
+            .deserialize(
+                toString(), 
+                Placeholder.parsed(placeholder, value)
+            );
         return this;
     }
 

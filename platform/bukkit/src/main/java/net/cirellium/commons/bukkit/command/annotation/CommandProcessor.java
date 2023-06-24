@@ -28,7 +28,7 @@ import net.cirellium.commons.bukkit.command.annotation.argument.Type;
 import net.cirellium.commons.bukkit.command.annotation.exception.CommandProcessException;
 import net.cirellium.commons.common.util.Processor;
 
-@SuppressWarnings({ "rawtypes", "unused" })
+@SuppressWarnings("rawtypes")
 public class CommandProcessor implements Processor<Method, Set<CommandNode>> {
 
     Logger logger = CommandHandler.getInstance().getLogger();
@@ -86,7 +86,8 @@ public class CommandProcessor implements Processor<Method, Set<CommandNode>> {
                         arg.wildcard(),
                         i,
                         Set.of(arg.tabCompleteFlags()),
-                        specificType.apply(parameter));
+                        specificType.apply(parameter)
+                );
 
                 args.add(data);
             }

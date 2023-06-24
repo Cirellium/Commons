@@ -41,7 +41,6 @@ import net.cirellium.commons.bukkit.command.annotation.argument.ArgumentTypeHand
 import net.cirellium.commons.bukkit.command.annotation.argument.implementation.IntegerArgumentType;
 import net.cirellium.commons.bukkit.command.annotation.argument.implementation.PlayerArgumentType;
 import net.cirellium.commons.bukkit.command.annotation.argument.implementation.StringArgumentType;
-import net.cirellium.commons.common.plugin.CirelliumPlugin;
 import net.cirellium.commons.common.util.clazz.ClassUtils;
 
 @SuppressWarnings({ "unused" })
@@ -79,12 +78,12 @@ public class CommandRegistry<P extends CirelliumBukkitPlugin<P>> {
     public void initialize() {
         // registerArgumentType(boolean.class, (ArgumentType<?>) new
         // BooleanArgumentType());
-        registerArgumentType(int.class, (ArgumentTypeHandler<?>) new IntegerArgumentType());
+        registerArgumentTypeHandler(int.class, (ArgumentTypeHandler<?>) new IntegerArgumentType());
         // registerArgumentType(double.class, (ArgumentType<?>) new
         // DoubleArgumentType());
         // registerArgumentType(float.class, (ArgumentType<?>) new FloatArgumentType());
-        registerArgumentType(String.class, (ArgumentTypeHandler<?>) new StringArgumentType());
-        registerArgumentType(Player.class, (ArgumentTypeHandler<?>) new PlayerArgumentType());
+        registerArgumentTypeHandler(String.class, (ArgumentTypeHandler<?>) new StringArgumentType());
+        registerArgumentTypeHandler(Player.class, (ArgumentTypeHandler<?>) new PlayerArgumentType());
         // registerArgumentType(World.class, (ArgumentType<?>) new WorldArgumentType());
         // registerArgumentType(ItemStack.class, (ArgumentType<?>) new
         // ItemStackArgumentType());
@@ -113,25 +112,38 @@ public class CommandRegistry<P extends CirelliumBukkitPlugin<P>> {
         }, 5L);
     }
 
-    public void registerArgumentType(Class<?> clazz, ArgumentTypeHandler<?> type) {
+    public void registerArgumentTypeHandler(Class<?> clazz, ArgumentTypeHandler<?> type) {
         ARGUMENT_TYPE_MAP.put(clazz, type);
     }
 
-    public ArgumentTypeHandler<?> getArgumentType(Class<?> clazz) {
+    public ArgumentTypeHandler<?> getArgumentTypeHandler(Class<?> clazz) {
         return ARGUMENT_TYPE_MAP.get(clazz);
     }
 
-    protected static CommandMap getCommandMap() {
-        return Bukkit.getCommandMap();
+    // protected static CommandMap getCommandMap() {
+    //     return Bukkit.getCommandMap();
 
-        // return (CommandMap) (new
-        // ClassWrapper(Bukkit.getServer())).getField("commandMap").get();
+    //     // return (CommandMap) (new
+    //     // ClassWrapper(Bukkit.getServer())).getField("commandMap").get();
+    // }
+
+    private static CommandMap getCommandMap() {
+        try {
+            Field commandMapField = Bukkit.getServer().getClass().getDeclaredField("commandMap");
+            commandMapField.setAccessible(true);
+            return (CommandMap) commandMapField.get(Bukkit.getServer());
+        } catch (ReflectiveOperationException ignored) {}
+        return null;
     }
 
+    @SuppressWarnings("unchecked")
     protected Map<String, Command> getRegisteredCommands() {
-        return commandMap.getKnownCommands();
-        // return (Map<String, Command>) (new
-        // ClassWrapper(commandMap)).getField("commandMap").get();
+        try {
+            Field commandMapField = commandMap.getClass().getDeclaredField("knownCommands");
+            commandMapField.setAccessible(true);
+            return (Map<String, Command>) commandMapField.get(commandMap);
+        } catch (ReflectiveOperationException ignored) {}
+        return null;
     }
 
     public void registerMethod(Method method) {
@@ -146,11 +158,9 @@ public class CommandRegistry<P extends CirelliumBukkitPlugin<P>> {
 
         nodes.forEach(node -> {
             if (node != null) {
-                ExecutableCommand command = new ExecutableCommand(node,
-                        JavaPlugin.getProvidingPlugin(method.getDeclaringClass()));
+                ExecutableCommand command = new ExecutableCommand(node, JavaPlugin.getProvidingPlugin(method.getDeclaringClass()));
                 register(command);
-                node.getChildren().values().forEach(children -> {
-                });
+                node.getChildren().values().forEach(children -> {});
             }
         });
         registeredMethods.add(method);
@@ -231,9 +241,11 @@ public class CommandRegistry<P extends CirelliumBukkitPlugin<P>> {
     }
 
     public Set<Method> getCommandMethods(String packageName) {
-        Reflections reflections = new Reflections(new ConfigurationBuilder()
+        Reflections reflections = new Reflections(
+            new ConfigurationBuilder()
                 .setUrls(ClasspathHelper.forPackage(packageName))
-                .setScanners(Scanners.MethodsAnnotated));
+                .setScanners(Scanners.MethodsAnnotated)
+        );
 
         return reflections.getMethodsAnnotatedWith(net.cirellium.commons.bukkit.command.annotation.annotations.Command.class);
     }

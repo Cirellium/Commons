@@ -44,7 +44,7 @@ public class CommandHandler<
             return false;
         }
 
-        sender.sendMessage(result.getMessage());
+        sender.sendMessage(result.getMessage().toString());
 
         return result.shouldDisplayUsage();
     }

@@ -96,7 +96,7 @@ public class ServiceHandler<P extends CirelliumPlugin<P>> {
                         }
     
                         try {
-                            Object service = (AbstractService) constructor.newInstance(plugin);
+                            var service = (AbstractService) constructor.newInstance(plugin);
 
                             registry.registerService((AbstractService) service);
     
