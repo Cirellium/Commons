@@ -9,7 +9,7 @@ import net.cirellium.commons.bukkit.inv.implementation.InventoryBase;
 import net.cirellium.commons.bukkit.inv.implementation.InventoryContent;
 
 /**
- * This interface represents a custom inventory and is implemented by all types of inventoris.
+ * This interface represents a custom inventory and is implemented by all types of inventories.
  * 
  * @see InventoryBase
  * @author Fear
