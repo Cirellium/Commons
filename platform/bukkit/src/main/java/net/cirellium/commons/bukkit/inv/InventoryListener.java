@@ -45,6 +45,11 @@ public class InventoryListener implements Listener {
 
     @EventHandler
     public void invClose(InventoryCloseEvent e) {
-        
+        InventoryBase inv = (InventoryBase) e.getInventory().getHolder();
+
+        if (inv == null)
+            return;
+
+        inv.closeInventory((Player) e.getPlayer());
     }
 }

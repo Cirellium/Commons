@@ -25,6 +25,17 @@ public class DefaultFileHandler<P extends CirelliumBukkitPlugin<P>> extends Abst
     
     @Override
     public void addFiles() {
+        logger.info("Adding files...");
+        logger.info("Adding files...");
+        logger.info("Adding files...");
+        logger.info("Adding files...");
+        logger.info("Adding files...");
+        logger.info("Adding files...");
+        logger.info("Adding files...");
+        logger.info("Adding files...");
+        logger.info("Adding files...");
+        logger.info("Adding files...");
+
         addFile(new ConfigFile<P>(plugin, "config"));
         addFile(new ConfigFile<P>(plugin, "database"));
         addFile(new ConfigFile<P>(plugin, "messages"));

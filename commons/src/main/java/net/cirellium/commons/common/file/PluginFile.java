@@ -19,23 +19,16 @@ import java.util.Optional;
  * @author Fear
  * @param <F> File type
  */
-public interface CPluginFile<F> {
-    
-    F load();
+public interface PluginFile<F> {
 
     void create();
-
     void save();
-
     void reload();
-
-    String getName();
-
-    String getFileName();
 
     File getFile();
 
     F get();
+    F load();
 
     Object getValue(String path);
 

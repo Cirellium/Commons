@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 
 import net.cirellium.commons.bukkit.inv.CustomInventory;
 import net.cirellium.commons.bukkit.inv.button.Button;
@@ -26,7 +27,7 @@ public abstract class InventoryBase implements CustomInventory, InventoryHolder 
 
     public InventoryBase(int size, String title) {
         this.inventory = Bukkit.createInventory(null, size, title);
-        this.content = new InventoryContent.Builder().empty().build();
+        this.content = new InventoryContentBuilder().empty().build();
 
         this.closeAction = (p) -> {};
     }

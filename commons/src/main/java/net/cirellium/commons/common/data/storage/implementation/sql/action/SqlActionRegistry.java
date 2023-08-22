@@ -30,7 +30,7 @@ public abstract class SqlActionRegistry implements Initializable<CirelliumPlugin
     }
 
     public void registerDefaultActions() {
-        this.defaultActions = new Registry<>();
+        this.defaultActions = Registry.create();
         
         for (SqlAction action : SqlAction.values()) {
             this.defaultActions.register(action, action.getStatement());

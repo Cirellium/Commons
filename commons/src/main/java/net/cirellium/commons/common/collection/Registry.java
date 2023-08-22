@@ -27,7 +27,15 @@ import com.google.common.collect.HashBiMap;
  */
 public class Registry<K, E> implements Iterable<E> {
 
-    protected BiMap<K, E> elements = HashBiMap.create();
+    protected BiMap<K, E> elements;
+
+    protected Registry() {
+        this.elements = HashBiMap.create();
+    }
+
+    public static <K, E> Registry<K, E> create() {
+        return new Registry<K, E>();
+    }
 
     public void register(K key, E element) {
         elements.put(key, element);
@@ -64,8 +72,12 @@ public class Registry<K, E> implements Iterable<E> {
         return elements;
     }
 
-    public Collection<E> getAll() {
-        return new HashSet<>(elements.values());
+    public Collection<E> getAllElements() {
+        return new HashSet<E>(elements.values());
+    }
+
+    public CList<E> getElementList() {
+        return new CList<E>(elements);
     }
 
     public boolean containsKey(K key) {

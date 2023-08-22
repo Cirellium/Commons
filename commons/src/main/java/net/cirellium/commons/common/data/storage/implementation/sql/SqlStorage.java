@@ -15,12 +15,12 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 import net.cirellium.commons.common.collection.CMap;
-import net.cirellium.commons.common.data.storage.implementation.StorageImplementation;
+import net.cirellium.commons.common.data.storage.implementation.Storage;
 import net.cirellium.commons.common.data.storage.implementation.sql.connection.Connector;
 import net.cirellium.commons.common.data.user.AbstractCirelliumUser;
 
 /**
- * A class that implements the {@link StorageImplementation} interface, representing a SQL storage.
+ * A class that implements the {@link Storage} interface, representing a SQL storage.
  * 
  * Subclasses of this class must implement the user methods.
  * 
@@ -28,9 +28,9 @@ import net.cirellium.commons.common.data.user.AbstractCirelliumUser;
  * 
  * @author Fear
  * @version 1.0
- * @see StorageImplementation
+ * @see Storage
  */
-public abstract class SqlStorage<CUser extends AbstractCirelliumUser> implements StorageImplementation<CUser> {
+public abstract class SqlStorage<CUser extends AbstractCirelliumUser> implements Storage<CUser> {
 
     protected Connector connector;
 

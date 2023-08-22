@@ -49,7 +49,7 @@ public abstract class AbstractFileHandlerService<P extends CirelliumBukkitPlugin
     }
 
     public void addFile(AbstractPluginFile<P> file) {
-        files.putIfAbsent(file.getName(), file);
+        files.putIfAbsent(file.getFile().getName(), file);
     }
 
     public AbstractPluginFile<P> getFile(String name) {

@@ -20,7 +20,7 @@ import net.cirellium.commons.common.data.user.AbstractCirelliumUser;
  * This interface is used to provide methods for the storage of users.
  * It is implemented by the {@link SqlStorage} class and
  */
-public interface StorageImplementation<CUser extends AbstractCirelliumUser> {
+public interface Storage<CUser extends AbstractCirelliumUser> {
     
     public CMap<UUID, CUser> getUsers();
 

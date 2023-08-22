@@ -9,30 +9,47 @@
 */
 package net.cirellium.commons.common.message;
 
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-public enum MessageKey {
-    
-    TEST("test", "<red>This is a test message with a test tag: <test>"),
+public interface MessageKey {
 
-    PREFIX("prefix", "<dark_gray>[<gold>Cirellium<dark_gray>]"),
-    ;
+    String getKey();
 
-    private String key;
+    String getFallbackValue();
 
-    private @Nullable String fallback;
+    Enum<?> getEnum();
 
-    MessageKey(String key, @Nullable String fallback) {
-        this.key = key;
-        this.fallback = fallback;
+    public enum Default implements MessageKey {
+        TEST("test", "<red>This is a test message with a test tag: <test>"),
+
+        PREFIX("prefix", "<dark_gray>[<gold>Cirellium<dark_gray>]"),
+        ;
+
+        private String key;
+
+        private @Nullable String fallback;
+
+        Default(String key, @Nullable String fallback) {
+            this.key = key;
+            this.fallback = fallback;
+        }
+
+        public String getKey() {
+            return key;
+        }
+
+        public @Nullable String getFallbackValue() {
+            return fallback;
+        }
+
+        @Override
+        public Enum<?> getEnum() {
+            return this;
+        }
+
+        @Override
+        public String toString() {
+            return getKey();
+        }
     }
-
-    public String getKey() {
-        return key;
-    }
-
-    public @Nullable String getFallbackValue() {
-        return fallback;
-    }
-
 }

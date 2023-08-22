@@ -1,13 +1,22 @@
 package net.cirellium.commons.bukkit.inv.implementation;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
-import net.cirellium.commons.bukkit.inv.button.Button;
+import org.bukkit.inventory.ItemStack;
 
-public class InventoryContent {
+import net.cirellium.commons.bukkit.inv.button.Button;
+import net.cirellium.commons.common.collection.CList;
+
+/**
+ * This class represents the contents of an inventory.
+ * 
+ * @author Fear
+ */
+public class InventoryContent implements Iterable<ItemStack> {
     
-    private final Map<Integer, Button> buttons;
+    public final Map<Integer, Button> buttons;
 
     public InventoryContent() {
         this.buttons = new HashMap<>();
@@ -29,25 +38,38 @@ public class InventoryContent {
         return new HashMap<>(buttons);
     }
 
-    public static class Builder {
-        private final InventoryContent content;
+    @Override
+    public Iterator<ItemStack> iterator() {
+        return buttons.values().stream().map(Button::itemStack).iterator();
+    }
 
-        public Builder() {
-            this.content = new InventoryContent();
-        }
+    /**
+     * This interface provides a builder for the {@link InventoryContent} class.
+     * 
+     * @author Fear
+     */
+    public interface Builder {
 
-        public Builder empty() {
-            content.buttons.clear();
-            return this;
-        }
+        /**
+         * Creates a new empty {@link InventoryContent.Builder}.
+         * 
+         * @return An empty {@link InventoryContent.Builder}.
+         */
+        Builder empty();
 
-        public Builder addButton(Button button) {
-            content.addButton(button);
-            return this;
-        }
+        /**
+         * Adds a {@link Button} to the {@link InventoryContent.Builder} object.
+         * 
+         * @param button The button to add
+         * @return This builder object
+         */
+        Builder addButton(Button button);
 
-        public InventoryContent build() {
-            return content;
-        }
+        /**
+         * Builds the {@link InventoryContent} object from this builder.
+         * 
+         * @return The {@link InventoryContent} object
+         */
+        InventoryContent build();
     }
 }

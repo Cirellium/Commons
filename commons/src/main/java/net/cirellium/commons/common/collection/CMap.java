@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
+import java.util.stream.Stream;
 
 import net.cirellium.commons.common.util.TriConsumer;
 
@@ -107,12 +108,20 @@ public class CMap<Key, Value> extends ConcurrentHashMap<Key, Value> {
         return list;
     }
 
+    public Stream<Key> streamKeys() {
+        return k().stream();
+    }
+
+    public Stream<Value> streamValues() {
+        return v().stream();
+    }
+
+    public Stream<KeyPair<Key, Value>> streamKeyPairs() {
+        return toKeyPairList().stream();
+    }
+
     @Override
     public Set<Entry<Key, Value>> entrySet() {
         return super.entrySet();
     }
-
-
-    
-    
 }

@@ -9,14 +9,39 @@
 */
 package net.cirellium.commons.common.message;
 
-import net.cirellium.commons.common.util.Processor;
+import java.util.NoSuchElementException;
 
-public abstract class MessageProvider implements Processor<MessageKey, String> {
+import net.cirellium.commons.common.file.PluginFile;
+import net.cirellium.commons.common.util.Provider;
+
+public interface MessageProvider extends Provider<String, MessageKey> {
     
-    public abstract String get(MessageKey key);
-    
-    @Override
-    public String process(MessageKey key) {
-        return get(key);
+    String provide(MessageKey key);
+
+    MessageProvider defaultMessageProvider = new MessageProvider() { 
+        @Override
+        public String provide(MessageKey key) {
+            return key.getFallbackValue();
+        }
+
+    };
+
+    public class YmlMessageProvider implements MessageProvider {
+        private final PluginFile<?> ymlFile;
+
+        public YmlMessageProvider(PluginFile<?> ymlFile) {
+            this.ymlFile = ymlFile;
+        }
+
+        @Override
+        public String provide(MessageKey key) {
+            String message;
+            try {
+                message = ymlFile.getValueAs(String.class, key.getKey()).get();
+            } catch (NoSuchElementException e) {
+                message = key.getFallbackValue();
+            }
+            return message;
+        }
     }
 }

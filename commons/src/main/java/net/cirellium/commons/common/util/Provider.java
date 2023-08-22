@@ -11,19 +11,22 @@ package net.cirellium.commons.common.util;
 
 import java.util.function.Supplier;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * A provider is a supplier that provides an object.
  * 
  * @author Fear
  * @param <T> The type of the object to provide
+ * @param <P> The type of the parameter that is passed to the provider
  */
 @FunctionalInterface
-public interface Provider<T> extends Supplier<T> {
+public interface Provider<T, @Nullable P> extends Supplier<T> {
+
+    T provide(@Nullable P param);
 
     @Override
     default T get() {
-        return provide();
+        return provide(null);
     }
-
-    T provide();
 }
