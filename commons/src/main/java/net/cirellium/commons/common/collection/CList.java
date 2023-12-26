@@ -19,6 +19,8 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import com.google.common.collect.BiMap;
+
 public class CList<T> extends ArrayList<T> {
 
     public CList() {
@@ -39,6 +41,10 @@ public class CList<T> extends ArrayList<T> {
 
     public CList(Map<T, ?> m) {
         this(m.keySet());
+    }
+
+    public CList(BiMap<?, T> m) {
+        this(m.values());
     }
 
     public CList(Set<T> c) {

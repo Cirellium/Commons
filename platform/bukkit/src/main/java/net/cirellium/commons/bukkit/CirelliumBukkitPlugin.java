@@ -24,7 +24,7 @@ import net.cirellium.commons.common.version.Platform;
 import net.cirellium.commons.common.version.Version;
 
 /**
- * This class is the base class for all Cirellium Bukkit plugins.
+ * This class represents the base class for all Cirellium Bukkit plugins.
  */
 public abstract class CirelliumBukkitPlugin<P extends CirelliumBukkitPlugin<P>> extends JavaPlugin implements CirelliumPlugin<P>, ServiceHolder<P> {
 

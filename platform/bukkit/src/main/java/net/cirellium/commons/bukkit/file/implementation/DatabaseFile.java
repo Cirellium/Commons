@@ -117,7 +117,7 @@ public class DatabaseFile<P extends CirelliumBukkitPlugin<P>> extends AbstractPl
                 set(path, value.toString());
                 break;
             case "Sound":
-                set(path, ((Sound) value).getKey().asString());
+                set(path, ((Sound) value).getKey().toString());
                 break;
             case "Chunk":
                 Chunk c = ((Chunk) value);
@@ -306,7 +306,7 @@ public class DatabaseFile<P extends CirelliumBukkitPlugin<P>> extends AbstractPl
      */
     public Inventory getInventory(String path, int size, String title) {
         Inventory inventory = Bukkit.createInventory(null, size,
-                Component.text(ChatColor.translateAlternateColorCodes('&', title)));
+                Component.text(ChatColor.translateAlternateColorCodes('&', title)).toString());
         for (int i = 0; i < size; i++) {
             inventory.setItem(i, getItemStack(path + "." + i));
         }
@@ -324,7 +324,7 @@ public class DatabaseFile<P extends CirelliumBukkitPlugin<P>> extends AbstractPl
     public Inventory getInventory(String path, String title) {
         int size = getInt(path + ".size");
         Inventory inventory = Bukkit.createInventory(null, size,
-                Component.text(ChatColor.translateAlternateColorCodes('&', title)));
+                Component.text(ChatColor.translateAlternateColorCodes('&', title)).toString());
 
         for (int i = 0; i < size; i++) {
             inventory.setItem(i, getItemStack(path + "." + i));

@@ -18,13 +18,12 @@
 
   <properties>
     <java.version>19</java.version>
+    <maven.compiler.source>19</maven.compiler.source>
+    <maven.compiler.target>19</maven.compiler.target>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <project.fullVersion>${project.version}</project.fullVersion>
-
-    <maven.compiler.source>19</maven.compiler.source>
-    <maven.compiler.target>19</maven.compiler.target>
   </properties>
 
   <build>
@@ -34,13 +33,22 @@
         <excludes>
           <exclude>*.yml</exclude>
         </excludes>
+        <includes>
+          <include>META-INF/**</include>
+        </includes>
       </resource>
     </resources>
+    
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.4.1</version>
+        <version>3.5.0</version>
+        <configuration>
+          <!--<failOnError>false</failOnError>-->
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+        </configuration>
         <executions>
           <execution>
             <phase>package</phase>
@@ -48,6 +56,14 @@
               <goal>shade</goal>
             </goals>
             <configuration>
+              <filters>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/**</exclude>
+                  </excludes>
+                </filter>
+              </filters>
               <!--<failOnError>false</failOnError>-->
               <shadedArtifactAttached>false</shadedArtifactAttached>
               <createDependencyReducedPom>false</createDependencyReducedPom>
@@ -130,7 +146,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>2.3.1</version>
+        <version>3.3.0</version>
         <configuration>
           <!--<failOnError>false</failOnError>-->
           <artifactItems>
@@ -143,16 +159,23 @@
               <classifier>jar-with-dependencies</classifier>
               <overWrite>true</overWrite>
               <destFileName>${project.name}.jar</destFileName>
+              <!-- <directory>/home/fear/code/commons</directory> -->
+              <!-- <outputDirectory>/home/fear/code/commons</outputDirectory> -->
             </artifactItem>
           </artifactItems>
-          <outputDirectory>T:\Programmierung\Testserver\1.19\plugins</outputDirectory>
+          <!-- <outputDirectory>/home/fear/code/commons</outputDirectory> -->
         </configuration>
       </plugin>
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
+        <version>3.11.0</version>
+        <configuration>
+          <!--<failOnError>false</failOnError>-->
+          <source>19</source>
+          <target>19</target>
+        </configuration>
         <executions>
           <execution>
             <id>compile</id>
@@ -169,20 +192,14 @@
             </goals>
           </execution>
         </executions>
-        <configuration>
-          <!--<failOnError>false</failOnError>-->
-          <source>${java.version}</source>
-          <target>${java.version}</target>
-        </configuration>
       </plugin>
+      
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.4.1</version>
+        <version>3.5.0</version>
         <configuration>
           <!--<failOnError>false</failOnError>-->
-          <filters>
-          </filters>
           <dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml</dependencyReducedPomLocation>
         </configuration>
         <executions>
@@ -195,12 +212,6 @@
         </executions>
       </plugin>
     </plugins>
-    <!-- <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-    <filtering>true</filtering>
-      </resource>
-    </resources> -->
   </build>
 
   <developers>
@@ -217,26 +228,10 @@
   </developers>
 
   <repositories>
-    <repository>
-      <id>papermc</id>
-      <url>https://papermc.io/repo/repository/maven-public/</url>
-    </repository>
-
-    <repository>
-      <id>spigot-repo</id>
-      <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-    </repository>
-
-    <repository>
-      <id>bungeecord-repo</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </repository>
-
-    <repository>
-      <id>sponge-repo</id>
-      <name>Sponge Maven Repository</name>
-      <url>https://repo.spongepowered.org/repository/maven-public/</url>
-    </repository>
+      <repository>
+          <id>spigot-repo</id>
+          <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+      </repository>
   </repositories>
 
   <dependencies>
@@ -250,53 +245,15 @@
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>craftbukkit</artifactId>
-      <version>1.19.2-R0.1-SNAPSHOT</version>
+      <version>1.20-R0.1-SNAPSHOT</version>
       <scope>system</scope>
-      <systemPath>${project.basedir}/libs/craftbukkit-1.19.3-R0.1-SNAPSHOT.jar</systemPath>
+      <systemPath>${project.basedir}/libs/craftbukkit-1.20.1-R0.1-SNAPSHOT.jar</systemPath>
     </dependency>
 
     <dependency>
-      <groupId>io.papermc.paper</groupId>
-      <artifactId>paper-api</artifactId>
-      <version>1.19.3-R0.1-SNAPSHOT</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>net.md-5</groupId>
-      <artifactId>bungeecord-api</artifactId>
-      <version>1.19-R0.1-SNAPSHOT</version>
-      <type>jar</type>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>net.md-5</groupId>
-      <artifactId>bungeecord-api</artifactId>
-      <version>1.19-R0.1-SNAPSHOT</version>
-      <type>javadoc</type>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.velocitypowered</groupId>
-      <artifactId>velocity-api</artifactId>
-      <version>3.1.1</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>io.github.waterfallmc</groupId>
-      <artifactId>waterfall-api</artifactId>
-      <version>1.18-R0.1-SNAPSHOT</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.spongepowered</groupId>
-      <artifactId>spongeapi</artifactId>
-      <version>8.0.0</version>
-      <type>jar</type>
+      <groupId>org.spigotmc</groupId>
+      <artifactId>spigot-api</artifactId>
+      <version>1.20.1-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
 

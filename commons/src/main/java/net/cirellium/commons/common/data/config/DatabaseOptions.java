@@ -11,7 +11,7 @@ package net.cirellium.commons.common.data.config;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.cirellium.commons.common.file.CPluginFile;
+import net.cirellium.commons.common.file.PluginFile;
 
 public class DatabaseOptions {
 
@@ -46,7 +46,7 @@ public class DatabaseOptions {
         this.useSSL = useSSL;
     }
 
-    public static DatabaseOptions from(CPluginFile<?> databaseFile) {
+    public static DatabaseOptions from(PluginFile<?> databaseFile) {
         return new DatabaseOptions(
                 databaseFile.getValueAs(int.class, "sync-interval").orElse(0),
                 databaseFile.getValueAs(int.class, "save-interval").orElse(0),

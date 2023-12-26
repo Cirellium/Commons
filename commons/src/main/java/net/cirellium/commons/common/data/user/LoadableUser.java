@@ -11,7 +11,7 @@ package net.cirellium.commons.common.data.user;
 
 import java.util.UUID;
 
-import net.cirellium.commons.common.file.CPluginFile;
+import net.cirellium.commons.common.file.PluginFile;
 
 /**
  * Represents a user that can be loaded, saved and unloaded.
@@ -28,6 +28,6 @@ public interface LoadableUser {
 
     String getName();
 
-    void saveTo(CPluginFile<?> file);
+    void saveTo(PluginFile<?> file);
 
 }

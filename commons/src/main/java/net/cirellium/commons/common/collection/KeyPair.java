@@ -1,6 +1,8 @@
 package net.cirellium.commons.common.collection;
 
-public class KeyPair<Key, Value> {
+import java.util.Map;
+
+public class KeyPair<Key, Value> implements Map.Entry<Key, Value> {
 
     private Key key;
     private Value value;
@@ -15,6 +17,12 @@ public class KeyPair<Key, Value> {
     }
 
     public Value getValue() {
+        return value;
+    }
+
+    @Override
+    public Value setValue(Value value) {
+        this.value = value;
         return value;
     }
 

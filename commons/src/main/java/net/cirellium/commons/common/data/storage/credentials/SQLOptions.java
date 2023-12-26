@@ -6,7 +6,7 @@ import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
 import net.cirellium.commons.common.data.config.DatabaseOptions;
-import net.cirellium.commons.common.file.CPluginFile;
+import net.cirellium.commons.common.file.PluginFile;
 
 public class SQLOptions extends DatabaseOptions {
 
@@ -48,7 +48,7 @@ public class SQLOptions extends DatabaseOptions {
         this.keepaliveTime = keepaliveTime;
     }
 
-    public static SQLOptions from(CPluginFile<?> databaseFile) {
+    public static SQLOptions from(PluginFile<?> databaseFile) {
         return new SQLOptions(
                 databaseFile.getValueAs(int.class, PREFIX + "sync-interval").orElse(0),
                 databaseFile.getValueAs(int.class, PREFIX + "save-interval").orElse(0),

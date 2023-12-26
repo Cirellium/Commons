@@ -22,7 +22,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import lombok.Getter;
 import lombok.NonNull;
 import net.cirellium.commons.bukkit.CirelliumBukkitPlugin;
-import net.cirellium.commons.common.file.CPluginFile;
+import net.cirellium.commons.common.file.PluginFile;
 import net.cirellium.commons.common.logger.CirelliumLogger;
 import net.cirellium.commons.common.service.ServiceType;
 import net.cirellium.commons.common.version.Platform;
@@ -31,7 +31,7 @@ import net.cirellium.commons.common.version.Platform;
  * This class an abstract implementation of a plugin file.
  * It uses the {@link FileConfiguration} class as well as the {@link YamlConfiguration} class to load and save the file.
  */
-public abstract class AbstractPluginFile<P extends CirelliumBukkitPlugin<P>> implements CPluginFile<FileConfiguration> {
+public abstract class AbstractPluginFile<P extends CirelliumBukkitPlugin<P>> implements PluginFile<FileConfiguration> {
 
     private final P plugin;
 
@@ -133,20 +133,12 @@ public abstract class AbstractPluginFile<P extends CirelliumBukkitPlugin<P>> imp
             fileConfig.options().parseComments(comments);
             fileConfig.save(file);
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Could not save file " + getFileName(), e);
+            logger.log(Level.SEVERE, "Could not save file " + file.getName(), e);
         }
     }
 
     public void reload() {
         fileConfig = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), name + ".yml"));
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getFileName() {
-        return name + ".yml";
     }
 
     public File getFile() {

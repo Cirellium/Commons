@@ -11,6 +11,7 @@ package net.cirellium.commons.bukkit.command.annotation.argument.implementation;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -27,12 +28,12 @@ public class PlayerArgumentType implements ArgumentTypeHandler<Player> {
 
     @Override
     public List<String> tabComplete(CommandSender sender, Set<String> argumentSet, String argument) {
-        return Bukkit.getOnlinePlayers().stream().filter(player -> player.getName().startsWith(argument)).map(player -> player.getName()).toList();
+        return Bukkit.getOnlinePlayers().stream().filter(player -> player.getName().startsWith(argument)).map(player -> player.getName()).collect(Collectors.toList());
     }
 
     @Override
-    public List<?> getPossibleResults() {
-        return Bukkit.getOnlinePlayers().stream().toList();
+    public List<Player> getPossibleResults() {
+        return Bukkit.getOnlinePlayers().stream().collect(Collectors.toList());
     }
 
     @Override

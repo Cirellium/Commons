@@ -95,3 +95,7 @@ clans.code-workspace
 *.bat
 .vscode/settings.json
 !platform/bukkit/libs/*.jar
+server/
+node_modules/
+package.json
+package-lock.json

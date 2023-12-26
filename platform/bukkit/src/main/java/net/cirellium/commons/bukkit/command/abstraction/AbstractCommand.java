@@ -9,6 +9,7 @@
 */
 package net.cirellium.commons.bukkit.command.abstraction;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -19,6 +20,7 @@ import javax.annotation.Nullable;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -28,11 +30,9 @@ import net.cirellium.commons.bukkit.command.CirelliumBukkitCommand;
 import net.cirellium.commons.bukkit.command.abstraction.result.CommandResult;
 import net.cirellium.commons.common.data.user.AbstractCirelliumUser;
 
-public abstract class AbstractCommand<
-    P extends CirelliumBukkitPlugin<P>, 
-    M extends AbstractCommandManager<P, ?, M>>
-    implements CirelliumBukkitCommand {
-    
+public abstract class AbstractCommand<P extends CirelliumBukkitPlugin<P>, M extends AbstractCommandManager<P, ?, M>>
+        implements CirelliumBukkitCommand {
+
     protected final P plugin;
     protected final M manager;
 
@@ -55,51 +55,66 @@ public abstract class AbstractCommand<
         this.subCommands = new HashMap<String, AbstractCommand<P, M>>();
         this.aliases = new ArrayList<String>();
 
-        if (register) this.manager.registerCommand(this);
+        if (register)
+            this.manager.registerCommand(this);
     }
 
     public void setMinArgs(int minArgs) {
         this.minArgs = minArgs;
     }
 
-    public int getMinArgs() { return this.minArgs; }
+    public int getMinArgs() {
+        return this.minArgs;
+    }
 
     public void setMaxArgs(int maxArgs) {
         this.maxArgs = maxArgs;
     }
 
-    public int getMaxArgs() { return this.maxArgs; }
+    public int getMaxArgs() {
+        return this.maxArgs;
+    }
 
     public void setPermission(String permission) {
         this.permission = permission;
     }
 
     @Override
-    public String getPermission() { return this.permission; }
+    public String getPermission() {
+        return this.permission;
+    }
 
     public void setDescription(String description) {
         this.description = description;
     }
 
-    public String getDescription() { return this.description; }
+    public String getDescription() {
+        return this.description;
+    }
 
     public void setHelp(String help) {
         this.help = help;
     }
 
-    public String getHelp() { return this.help; }
+    public String getHelp() {
+        return this.help;
+    }
 
     public void setPlayerCommand(boolean playerCommand) {
         this.isPlayerCommand = playerCommand;
     }
 
-    public boolean isPlayerCommand() { return this.isPlayerCommand && (senderType == SenderType.PLAYER || senderType == SenderType.BOTH); }
+    public boolean isPlayerCommand() {
+        return this.isPlayerCommand && (senderType == SenderType.PLAYER || senderType == SenderType.BOTH);
+    }
 
     public void setConsoleCommand(boolean consoleCommand) {
         this.isConsoleCommand = consoleCommand;
     }
 
-    public boolean isConsoleCommand() { return this.isConsoleCommand && (senderType == SenderType.CONSOLE || senderType == SenderType.BOTH); }
+    public boolean isConsoleCommand() {
+        return this.isConsoleCommand && (senderType == SenderType.CONSOLE || senderType == SenderType.BOTH);
+    }
 
     public void setSubCommand(boolean subCommand) {
         this.isSubCommand = subCommand;
@@ -150,10 +165,11 @@ public abstract class AbstractCommand<
 
     @Override
     public @Nullable Command getBukkitCommand() {
-        return Bukkit.getCommandMap().getCommand(commandName);
+        return getCommandMap().getCommand(commandName);
     }
 
-    public abstract CommandResult executePlayer(AbstractCirelliumUser player, org.bukkit.command.Command command, String[] arguments);
+    public abstract CommandResult executePlayer(AbstractCirelliumUser player, org.bukkit.command.Command command,
+            String[] arguments);
 
     public abstract CommandResult executeConsole(org.bukkit.command.Command command, String[] arguments);
 
@@ -168,7 +184,8 @@ public abstract class AbstractCommand<
 
             List<String> commandCompletes = onTabComplete(cp, args);
             String cmdName = args[1];
-            if (commandCompletes != null && !commandCompletes.isEmpty()) completes.addAll(commandCompletes);
+            if (commandCompletes != null && !commandCompletes.isEmpty())
+                completes.addAll(commandCompletes);
 
             if (args.length == 2) {
                 List<String> cmds = new ArrayList<>();
@@ -203,4 +220,13 @@ public abstract class AbstractCommand<
         }
     }
 
+    private static CommandMap getCommandMap() {
+        try {
+            Field commandMapField = Bukkit.getServer().getClass().getDeclaredField("commandMap");
+            commandMapField.setAccessible(true);
+            return (CommandMap) commandMapField.get(Bukkit.getServer());
+        } catch (ReflectiveOperationException ignored) {
+        }
+        return null;
+    }
 }

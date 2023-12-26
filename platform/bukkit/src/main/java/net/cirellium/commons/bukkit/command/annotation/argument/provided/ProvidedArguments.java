@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 public class ProvidedArguments {
+    
     private final Set<String> flags;
 
     private final List<String> arguments;

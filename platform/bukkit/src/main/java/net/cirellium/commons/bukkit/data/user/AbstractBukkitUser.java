@@ -21,7 +21,7 @@ import lombok.Getter;
 import net.cirellium.commons.bukkit.CirelliumBukkitPlugin;
 import net.cirellium.commons.bukkit.file.implementation.DatabaseFile;
 import net.cirellium.commons.common.data.user.AbstractCirelliumUser;
-import net.cirellium.commons.common.file.CPluginFile;
+import net.cirellium.commons.common.file.PluginFile;
 
 public abstract class AbstractBukkitUser extends AbstractCirelliumUser implements LoadableBukkitUser {
 
@@ -64,7 +64,7 @@ public abstract class AbstractBukkitUser extends AbstractCirelliumUser implement
     }
 
     @Override
-    public void saveTo(CPluginFile<?> file) {
+    public void saveTo(PluginFile<?> file) {
         if (file == null) {
             throw new IllegalArgumentException("Cannot write to null file!");
         }

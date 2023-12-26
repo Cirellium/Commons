@@ -28,7 +28,7 @@ public final class Message {
 
     public static final String PLACEHOLDER_BOUNDS = "<>";
 
-    private static MessageProvider provider;
+    private static final MessageProvider DEFAULT_PROVIDER = MessageProvider.defaultMessageProvider;
 
     @Getter
     private final MessageKey messageKey;
@@ -38,7 +38,7 @@ public final class Message {
 
     private Component component;
 
-    private final MiniMessage parser = MiniMessage.builder()
+    private static final MiniMessage parser = MiniMessage.builder()
             .tags(TagResolver.builder()
                     .resolver(StandardTags.color())
                     .resolver(StandardTags.decorations())
@@ -66,7 +66,7 @@ public final class Message {
         if(placeholders == null || placeholders.isEmpty()) return parser.deserialize(msg);
 
         for(MessagePlaceholder placeholder : placeholders) {
-            placeholder(placeholder.getKey(), placeholder.getValue());
+            placeholder(placeholder.key(), placeholder.value());
         }
 
         return getComponent();
@@ -77,16 +77,19 @@ public final class Message {
         return this;
     }
 
+    // public String getString() {
+    //     return messageKey.getEnum().toString();
+    // }
+
     public String getString() {
-        return provider.get(messageKey);
+        return DEFAULT_PROVIDER.provide(messageKey);
     }
 
     public String getStringReplaced() {
-        return replacePlaceholders(provider.get(messageKey)).toString();
+        return replacePlaceholders(getString()).toString();
     }
 
     public Component getComponent() {
-        return Component.text(Message.of(MessageKey.PREFIX).getString()).append(component);
+        return Component.text(Message.of(MessageKey.Default.PREFIX).getString()).append(component);
     }
-
 }

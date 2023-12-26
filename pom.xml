@@ -28,7 +28,6 @@
     <plugin.specificationVersion>SNAPSHOT</plugin.specificationVersion>
     <plugin.name>${project.name}</plugin.name>
 
-
     <java.version>19</java.version>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -44,6 +43,15 @@
     <finalName>
         ${project.artifactId}-${plugin.version}-${git.commit.id.abbrev}-${plugin.specificationVersion}
     </finalName>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>META-INF/**</include>
+        </includes>
+      </resource>
+    </resources>
+
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -97,6 +105,14 @@
               <Implementation-Version>${git.commit.time}</Implementation-Version>
             </manifestEntries>
           </archive>
+          <filters> <!-- Exclude META-INF from dependencies -->
+            <filter>
+              <artifact>*:*</artifact>
+              <excludes>
+                <exclude>META-INF/</exclude>
+              </excludes>
+            </filter>
+          </filters>
         </configuration>
       </plugin>
       <plugin>
@@ -191,13 +207,6 @@
   </repositories>
 
   <dependencies>
-
-    <!-- <dependency>
-      <groupId>io.papermc.paper</groupId>
-      <artifactId>paper-api</artifactId>
-      <version>1.19.3-R0.1-SNAPSHOT</version>
-      <scope>provided</scope>
-    </dependency> -->
 
     <dependency>
       <groupId>net.md-5</groupId>

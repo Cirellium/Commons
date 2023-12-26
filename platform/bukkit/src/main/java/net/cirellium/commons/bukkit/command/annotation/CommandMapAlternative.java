@@ -9,7 +9,7 @@ import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_19_R2.command.CraftCommandMap;
+import org.bukkit.craftbukkit.v1_20_R1.command.CraftCommandMap;
 import org.bukkit.util.StringUtil;
 
 public class CommandMapAlternative extends CraftCommandMap {

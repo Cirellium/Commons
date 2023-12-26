@@ -9,25 +9,9 @@
 */
 package net.cirellium.commons.common.message;
 
-public class MessagePlaceholder {
-    
-    private final Object key;
-    private final Object value;
-    
-    public MessagePlaceholder(Object key, Object value) {
-        this.key = key;
-        this.value = value;
-    }
+public record MessagePlaceholder(Object key, Object value) {
 
     public static MessagePlaceholder of(Object key, Object value) {
         return new MessagePlaceholder(key, value);
-    }
-    
-    public Object getKey() {
-        return key;
-    }
-    
-    public Object getValue() {
-        return value;
     }
 }

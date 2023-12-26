@@ -11,6 +11,7 @@ package net.cirellium.commons.common.data.storage.implementation.sql.action;
 
 import net.cirellium.commons.common.collection.CMap;
 import net.cirellium.commons.common.util.Provider;
+import net.cirellium.commons.common.util.SimpleProvider;
 
 /**
  * A provider for {@link SqlAction}s.
@@ -20,7 +21,7 @@ import net.cirellium.commons.common.util.Provider;
  * @author Fear
  * @see SqlAction
  */
-public interface SqlActionProvider extends Provider<CMap<? extends SqlAction, String>> {
+public interface SqlActionProvider extends SimpleProvider<CMap<? extends SqlAction, String>> {
     
     @Override
     CMap<? extends SqlAction, String> provide();

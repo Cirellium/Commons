@@ -32,8 +32,10 @@ import net.cirellium.commons.bukkit.command.annotation.argument.ArgumentTypeHand
 import net.cirellium.commons.bukkit.command.annotation.argument.provided.ProvidedArgumentProcessor;
 import net.cirellium.commons.bukkit.command.annotation.argument.provided.ProvidedArguments;
 
-public class ExecutableCommand extends org.bukkit.command.Command
-        implements PluginIdentifiableCommand, CirelliumBukkitCommand {
+public class ExecutableCommand
+        extends org.bukkit.command.Command
+        implements PluginIdentifiableCommand,
+        CirelliumBukkitCommand {
 
     protected CommandNode node;
 
@@ -53,7 +55,7 @@ public class ExecutableCommand extends org.bukkit.command.Command
         label = stripLabel(label);
         String[] cmdLine = concat(label, args);
 
-        final ProvidedArguments arguments = (new ProvidedArgumentProcessor()).process(cmdLine);
+        final ProvidedArguments arguments = new ProvidedArgumentProcessor().process(cmdLine);
         final CommandNode executionNode = this.node.findCommand(arguments);
         // final String realLabel = getFullLabel(executionNode);
         if (sender.hasPermission(executionNode.getPermission())) {
@@ -92,7 +94,7 @@ public class ExecutableCommand extends org.bukkit.command.Command
         if (rawArgs.length < 1) {
             return Collections.emptyList();
         }
-        ProvidedArguments arguments = (new ProvidedArgumentProcessor()).process(rawArgs);
+        ProvidedArguments arguments = new ProvidedArgumentProcessor().process(rawArgs);
         CommandNode realNode = this.node.findCommand(arguments);
         if (!sender.hasPermission(realNode.getPermission()))
             return Collections.emptyList();
@@ -128,7 +130,7 @@ public class ExecutableCommand extends org.bukkit.command.Command
         // return completions;
         // }
         try {
-            ArgumentTypeHandler parameterType = null;
+            ArgumentTypeHandler argumentHandler = null;
             ArgumentData data = null;
             if (realNode.getParameters() != null) {
                 List<ArgumentData> params = realNode.getParameters()
@@ -138,10 +140,10 @@ public class ExecutableCommand extends org.bukkit.command.Command
                         .collect(Collectors.toList());
                 int fixed = Math.max(0, currentIndex - 1);
                 data = params.get(fixed);
-                parameterType = CommandHandler.getInstance().getRegistry().getArgumentType(data.getType());
+                argumentHandler = CommandHandler.getInstance().getRegistry().getArgumentTypeHandler(data.getType());
                 if (data.getArgumentType() != null) {
                     try {
-                        parameterType = data.getArgumentType().newInstance();
+                        argumentHandler = data.getArgumentType().newInstance();
                     } catch (IllegalAccessException | InstantiationException e) {
                         e.printStackTrace();
                     }
@@ -151,14 +153,14 @@ public class ExecutableCommand extends org.bukkit.command.Command
                 CommandHandler.getInstance().getLogger().info("Data is null");
                 return completions;
             }
-            if (parameterType != null) {
+            if (argumentHandler != null) {
                 if (currentIndex < realArgs.size()
                         && ((String) realArgs.get(currentIndex)).equalsIgnoreCase(realNode.getName())) {
                     realArgs.add("");
                     currentIndex++;
                 }
                 String argumentBeingCompleted = (currentIndex >= realArgs.size()) ? "" : realArgs.get(currentIndex);
-                List<String> suggested = parameterType.tabComplete((Player) sender, data.getTabCompleteFlags(),
+                List<String> suggested = argumentHandler.tabComplete((Player) sender, data.getTabCompleteFlags(),
                         argumentBeingCompleted);
                 completions.addAll((Collection<? extends String>) suggested.stream()
                         .filter(s -> StringUtils.startsWithIgnoreCase(s, argumentBeingCompleted))
