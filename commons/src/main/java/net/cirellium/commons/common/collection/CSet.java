@@ -9,6 +9,8 @@
 */
 package net.cirellium.commons.common.collection;
 
-public class CSet {
+import java.util.HashSet;
+
+public class CSet<T> extends HashSet<T> {
     
 }
