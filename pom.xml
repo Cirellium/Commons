@@ -28,14 +28,14 @@
     <plugin.specificationVersion>SNAPSHOT</plugin.specificationVersion>
     <plugin.name>${project.name}</plugin.name>
 
-    <java.version>19</java.version>
+    <java.version>21</java.version>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <project.fullVersion>${project.version}</project.fullVersion>
 
-    <maven.compiler.source>19</maven.compiler.source>
-    <maven.compiler.target>19</maven.compiler.target>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
   </properties>
 
   <build>
@@ -156,7 +156,7 @@
           <linksource>true</linksource>
           <nohelp>true</nohelp>
           <doclint>none</doclint>
-          <source>19</source>
+          <source>21</source>
         </configuration>
         <executions>
           <execution>

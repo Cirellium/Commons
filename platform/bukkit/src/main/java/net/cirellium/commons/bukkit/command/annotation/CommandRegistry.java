@@ -160,7 +160,7 @@ public class CommandRegistry<P extends CirelliumBukkitPlugin<P>> {
             if (node != null) {
                 ExecutableCommand command = new ExecutableCommand(node, JavaPlugin.getProvidingPlugin(method.getDeclaringClass()));
                 register(command);
-                node.getChildren().values().forEach(children -> {});
+                // node.getChildren().values().forEach(children -> {});
             }
         });
         registeredMethods.add(method);
