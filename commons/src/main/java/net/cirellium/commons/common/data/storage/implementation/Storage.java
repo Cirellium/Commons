@@ -19,6 +19,8 @@ import net.cirellium.commons.common.data.user.AbstractCirelliumUser;
 /**
  * This interface is used to provide methods for the storage of users.
  * It is implemented by the {@link SqlStorage} class and
+ * 
+ * @param <CUser> The type of user that this storage will store. (extends {@link AbstractCirelliumUser})
  */
 public interface Storage<CUser extends AbstractCirelliumUser> {
     

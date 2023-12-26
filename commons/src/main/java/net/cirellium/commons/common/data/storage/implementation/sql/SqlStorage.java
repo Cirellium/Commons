@@ -9,9 +9,14 @@
 */
 package net.cirellium.commons.common.data.storage.implementation.sql;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import net.cirellium.commons.common.collection.CMap;
@@ -64,8 +69,48 @@ public abstract class SqlStorage<CUser extends AbstractCirelliumUser> implements
     @Override
     public abstract String getPlayerName(UUID uuid);
 
-    public void runAsync(Runnable runnable) {
-        CompletableFuture.runAsync(runnable);
+    public void getResultSet(String query, Consumer<ResultSet> resultSet) {
+        execute(connection -> {
+            try {
+                try (PreparedStatement pStatement = connection.prepareStatement(query)) {
+                    try (ResultSet rSet = pStatement.executeQuery()) {
+                        resultSet.accept(rSet);
+                        rSet.close();
+                    } finally {
+                        pStatement.close();
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public CompletableFuture<Void> getResultSetAsync(String query, Consumer<ResultSet> resultSet) {
+        return getAsync(() -> getResultSet(query, resultSet));
+    }
+
+    public void executeUpdate(String update) {
+        execute(connection -> {
+            try {
+                connection.createStatement().executeUpdate(update);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public void execute(Consumer<Connection> consumer) {
+        try (Connection connection = connector.getConnection()) {
+            consumer.accept(connection);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public CompletableFuture<Void> getAsync(Runnable runnable) {
+        return CompletableFuture.runAsync(runnable);
     }
 
     public CompletableFuture<?> getAsync(Supplier<?> supplier) {
