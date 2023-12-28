@@ -72,16 +72,10 @@ public class CommandNode {
 
     @ConstructorProperties({ "name", "permission" })
     public CommandNode(@NonNull String name, @NonNull String permission) {
-        if (name == null)
-            throw new NullPointerException("name");
-        if (permission == null)
-            throw new NullPointerException("permission");
-        this.name = name;
-        this.permission = permission;
+        this.name = Objects.requireNonNull(name, "name");
+        this.permission = Objects.requireNonNull(permission, "permission");
     }
 
-    @ConstructorProperties({ "name", "aliases", "permission", "description", "async", "hidden", "method", "owningClass",
-            "validFlags", "parameters", "children", "parent", "logToConsole" })
     public CommandNode(
             @NonNull String name,
             Set<String> aliases,
@@ -95,13 +89,9 @@ public class CommandNode {
             Map<String, CommandNode> children,
             CommandNode parentNode) {
 
-        if (name == null)
-            throw new NullPointerException("name");
-        if (permission == null)
-            throw new NullPointerException("permission");
-        this.name = name;
+        this.name = Objects.requireNonNull(name, "name");
         this.aliases = aliases;
-        this.permission = permission;
+        this.permission = Objects.requireNonNull(permission, "permission");
         this.description = description;
         this.async = async;
         this.hidden = hidden;
@@ -112,45 +102,48 @@ public class CommandNode {
         this.parentNode = parentNode;
     }
 
+    public boolean checkMethod(CommandSender sender) {
+        if (this.method != null)
+            return false;
+        // If the method is null, log a warning message
+        CommandHandler.getInstance().getLogger().warning("Method is null for command: " + this.name);
+
+        if (!hasCommands()) {
+            // If the command does not have subcommands, send a message to the sender
+            sender.sendMessage("§fUnknown command. Try /help for help.");
+        } else {
+            if (isHidden()) {
+                // If the command is hidden, send a message to the sender
+                sender.sendMessage("§fUnknown command. Try /help for help.");
+            } else {
+                // If the command is not hidden, send a message to the sender
+                sender.sendMessage("No permission.");
+            }
+        }
+        return true;
+    }
+
     @SuppressWarnings({ "deprecation" })
     public boolean invoke(CommandSender sender, ProvidedArguments args) throws CommandException {
-        // Check if the method is null
-        if (this.method == null) {
-            // If the method is null, log a warning message
-            CommandHandler.getInstance().getLogger().warning("Method is null for command: " + this.name);
+        // Check if the method is null// Usage
+        if (checkMethod(sender))
+            return false;
 
-            // Check if the command has subcommands
-            if (hasCommands()) {
-                // Check if the sender has any subcommands
-                if (getSubCommands(sender, true).isEmpty()) {
-                    // Check if the command is hidden
-                    if (isHidden()) {
-                        // If the command is hidden, send a message to the sender
-                        sender.sendMessage("§fUnknown command. Try /help for help.");
-                    } else {
-                        // If the command is not hidden, send a message to the sender
-                        sender.sendMessage("No permission.");
-                    }
-                }
-            } else {
-                // If the command does not have subcommands, send a message to the sender
-                sender.sendMessage("§fUnknown command. Try /help for help.");
-            }
-            return true;
-        }
-
-        // CommandHandler.getInstance().getLogger().info("Parameter count of method " + this.method.getName() + ": "
-        //         + this.method.getParameterCount());
+        // CommandHandler.getInstance().getLogger().info("Parameter count of method " +
+        // this.method.getName() + ": "
+        // + this.method.getParameterCount());
 
         List<Object> objects = new ArrayList<Object>(this.method.getParameterCount());
         objects.add(sender);
 
-        // CommandHandler.getInstance().getLogger().info("Arguments: " + String.join(", ", args.getArguments()));
+        // CommandHandler.getInstance().getLogger().info("Arguments: " + String.join(",
+        // ", args.getArguments()));
 
         int index = 0;
         Iterator<ArgumentData> iterator = this.arguments.iterator();
         while (iterator.hasNext()) {
-            // CommandHandler.getInstance().getLogger().info("Argument " + index + ": " + args.getArguments().get(index));
+            // CommandHandler.getInstance().getLogger().info("Argument " + index + ": " +
+            // args.getArguments().get(index));
 
             ArgumentData argumentData = iterator.next();
             String argument;
@@ -166,7 +159,8 @@ public class CommandNode {
             if (argumentData.isWildcard() && (argument.isEmpty() || !argument.equals(argumentData.getDefaultValue())))
                 argument = args.join(index);
 
-            ArgumentTypeHandler<?> type = CommandHandler.getInstance().getRegistry().getArgumentTypeHandler(argumentData.getType());
+            ArgumentTypeHandler<?> type = CommandHandler.getInstance().getRegistry()
+                    .getArgumentTypeHandler(argumentData.getType());
             if (argumentData.getArgumentType() != null)
                 try {
                     type = argumentData.getArgumentType().newInstance();
@@ -184,31 +178,37 @@ public class CommandNode {
 
             Object result = type.parse(sender, argument);
 
-            if (result == null) return true;
+            if (result == null)
+                return true;
 
             // CommandHandler.getInstance().getLogger().info("RESULT: " + result);
-            // CommandHandler.getInstance().getLogger().info("Method index: " + argumentData.getMethodIndex());
+            // CommandHandler.getInstance().getLogger().info("Method index: " +
+            // argumentData.getMethodIndex());
 
             objects.add(argumentData.getMethodIndex(), result);
             index++;
         }
-        // CommandHandler.getInstance().getLogger().info("Invoking command: " + getFullLabel());
+        // CommandHandler.getInstance().getLogger().info("Invoking command: " +
+        // getFullLabel());
         try {
-            CommandHandler.getInstance().getLogger().info("Invoking command: " + String.join(", ", objects.stream().map(Object::toString).collect(Collectors.joining(", "))));
+            CommandHandler.getInstance().getLogger().info("Invoking command: "
+                    + String.join(", ", objects.stream().map(Object::toString).collect(Collectors.joining(", "))));
 
             Stopwatch stopwatch = Stopwatch.createStarted();
             try {
                 this.method.invoke(owningClass.newInstance(), objects.toArray());
             } catch (IllegalArgumentException e) {
                 if (e.getMessage().contains("type mismatch") && !senderType.matches(sender)) {
-                    sender.sendMessage((senderType == SenderType.PLAYER ? Message.COMMAND_PLAYER_ONLY : Message.COMMAND_CONSOLE_ONLY).toString());
+                    sender.sendMessage((senderType == SenderType.PLAYER ? Message.COMMAND_PLAYER_ONLY
+                            : Message.COMMAND_CONSOLE_ONLY).toString());
                 }
             } catch (InstantiationException e) {
                 e.printStackTrace();
             }
             stopwatch.stop();
             if (!this.async && stopwatch.elapsed().toMillis() >= 10) {
-                CommandHandler.getInstance().getLogger().warning("Command '/" + getFullLabel() + "' took " + stopwatch.elapsed().toMillis() + "ms!");
+                CommandHandler.getInstance().getLogger()
+                        .warning("Command '/" + getFullLabel() + "' took " + stopwatch.elapsed().toMillis() + "ms!");
             }
             return true;
         } catch (InvocationTargetException | IllegalAccessException e) {
@@ -268,7 +268,7 @@ public class CommandNode {
     public CommandNode findCommand(List<String> commandLine) {
         if (commandLine.size() > 0) {
             String trySub = commandLine.get(0);
-            
+
             if (hasCommand(trySub)) {
                 commandLine.remove(0);
                 CommandNode returnNode = getNode(trySub);
@@ -279,36 +279,37 @@ public class CommandNode {
     }
 
     public CommandNode findCommand(ProvidedArguments arguments) {
-        if (arguments.getArguments().size() > 0) {
-            String trySub = arguments.getArguments().get(0);
-            if (hasCommand(trySub)) {
-                arguments.getArguments().remove(0);
-                CommandNode returnNode = getNode(trySub);
-                return returnNode.findCommand(arguments);
-            }
+        if (arguments.getArguments().isEmpty()) {
+            return this;
         }
-        return this;
+
+        String trySub = arguments.getArguments().get(0);
+        if (!hasCommand(trySub)) {
+            return this;
+        }
+
+        arguments.getArguments().remove(0);
+        CommandNode returnNode = getNode(trySub);
+        return returnNode.findCommand(arguments);
     }
 
     public Set<String> getRealAliases() {
-        Set<String> aliases = getAliases();
-        if (aliases.contains(getName()))
-            aliases.remove(getName());
-        return aliases;
+        return getAliases().stream().filter(alias -> !alias.equals(getName())).collect(Collectors.toSet());
     }
 
     public String getFullLabel() {
         List<String> labels = new ArrayList<>();
-        for (CommandNode node = this; node != null; node = node.getParent()) {
+        CommandNode node = this.getParent();
+        while (node != null) {
             String name = node.getName();
-            if (name != null)
+            if (name != null) {
                 labels.add(name);
+            }
+            node = node.getParent();
         }
         Collections.reverse(labels);
         labels.remove(0);
-        StringBuilder builder = new StringBuilder();
-        labels.forEach(s -> builder.append(s).append(' '));
-        return builder.toString().trim();
+        return String.join(" ", labels);
     }
 
     @NonNull
@@ -317,7 +318,7 @@ public class CommandNode {
     }
 
     public void setName(@NonNull String name) {
-        Objects.requireNonNull(name, "name cannot be null");
+        Objects.requireNonNull(name, "name must not be null");
         this.name = name;
     }
 
@@ -335,8 +336,7 @@ public class CommandNode {
     }
 
     public void setPermission(@NonNull String permission) {
-        if (permission == null)
-            throw new NullPointerException("permission");
+        Objects.requireNonNull(permission, "permission must not be null");
         this.permission = permission;
     }
 

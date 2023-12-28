@@ -11,17 +11,21 @@ package net.cirellium.commons.bukkit.command.annotation.argument.provided;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import net.cirellium.commons.common.util.Processor;
 
-public class ProvidedArgumentProcessor implements Processor<String[], ProvidedArguments> {
+public class ProvidedArgumentProcessor implements Processor<List<String>, ProvidedArguments> {
 
-    public ProvidedArguments process(String[] value) {
-        HashSet<String> flags = new HashSet<>();
-        ArrayList<String> arguments = new ArrayList<>();
-        for (String s : value) {
-            if (!s.isEmpty()) arguments.add(s);
-        }
+    public ProvidedArguments process(List<String> value) {
+        Set<String> flags = new HashSet<>();
+        
+        List<String> arguments = value.stream()
+            .filter(s -> !s.isEmpty())
+            .collect(Collectors.toCollection(ArrayList::new));
+        
         return new ProvidedArguments(arguments, flags);
     }
 }

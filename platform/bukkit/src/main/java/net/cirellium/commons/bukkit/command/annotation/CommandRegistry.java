@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.SimpleCommandMap;
@@ -37,6 +38,7 @@ import com.google.common.collect.Lists;
 
 import lombok.NonNull;
 import net.cirellium.commons.bukkit.CirelliumBukkitPlugin;
+import net.cirellium.commons.bukkit.command.annotation.annotations.SubCommand;
 import net.cirellium.commons.bukkit.command.annotation.argument.ArgumentTypeHandler;
 import net.cirellium.commons.bukkit.command.annotation.argument.implementation.IntegerArgumentType;
 import net.cirellium.commons.bukkit.command.annotation.argument.implementation.PlayerArgumentType;
@@ -94,6 +96,10 @@ public class CommandRegistry<P extends CirelliumBukkitPlugin<P>> {
         // OfflinePlayerWrapperArgumentType());
 
         commandMap = getCommandMap();
+
+        plugin.getLogger().info("CommandMap is null: " + String.valueOf(commandMap == null));
+        plugin.getLogger().info("CommandMap: " + commandMap.toString());
+
         registeredCommands = getRegisteredCommands();
         registerCommands();
     }
@@ -120,35 +126,22 @@ public class CommandRegistry<P extends CirelliumBukkitPlugin<P>> {
         return ARGUMENT_TYPE_MAP.get(clazz);
     }
 
-    // protected static CommandMap getCommandMap() {
-    //     return Bukkit.getCommandMap();
-
-    //     // return (CommandMap) (new
-    //     // ClassWrapper(Bukkit.getServer())).getField("commandMap").get();
-    // }
-
-    private static CommandMap getCommandMap() {
-        try {
-            Field commandMapField = Bukkit.getServer().getClass().getDeclaredField("commandMap");
-            commandMapField.setAccessible(true);
-            return (CommandMap) commandMapField.get(Bukkit.getServer());
-        } catch (ReflectiveOperationException ignored) {}
-        return null;
-    }
-
     @SuppressWarnings("unchecked")
     protected Map<String, Command> getRegisteredCommands() {
         try {
-            Field commandMapField = commandMap.getClass().getDeclaredField("knownCommands");
-            commandMapField.setAccessible(true);
-            return (Map<String, Command>) commandMapField.get(commandMap);
-        } catch (ReflectiveOperationException ignored) {}
+            Field knownCommands = SimpleCommandMap.class.getDeclaredField("knownCommands");
+            knownCommands.setAccessible(true);
+
+            return (Map<String, Command>) knownCommands.get(commandMap);
+        } catch (ReflectiveOperationException ignored) {
+        }
         return null;
     }
 
     public void registerMethod(Method method) {
         method.setAccessible(true);
-        if (!method.isAnnotationPresent(net.cirellium.commons.bukkit.command.annotation.annotations.Command.class))
+        if (!method.isAnnotationPresent(net.cirellium.commons.bukkit.command.annotation.annotations.Command.class)
+                || !method.isAnnotationPresent(SubCommand.class))
             return;
 
         Set<CommandNode> nodes = new CommandProcessor().process(method);
@@ -158,7 +151,8 @@ public class CommandRegistry<P extends CirelliumBukkitPlugin<P>> {
 
         nodes.forEach(node -> {
             if (node != null) {
-                ExecutableCommand command = new ExecutableCommand(node, JavaPlugin.getProvidingPlugin(method.getDeclaringClass()));
+                ExecutableCommand command = new ExecutableCommand(node,
+                        JavaPlugin.getProvidingPlugin(method.getDeclaringClass()));
                 register(command);
                 // node.getChildren().values().forEach(children -> {});
             }
@@ -242,44 +236,47 @@ public class CommandRegistry<P extends CirelliumBukkitPlugin<P>> {
 
     public Set<Method> getCommandMethods(String packageName) {
         Reflections reflections = new Reflections(
-            new ConfigurationBuilder()
-                .setUrls(ClasspathHelper.forPackage(packageName))
-                .setScanners(Scanners.MethodsAnnotated)
-        );
+                new ConfigurationBuilder()
+                        .setUrls(ClasspathHelper.forPackage(packageName))
+                        .setScanners(Scanners.MethodsAnnotated));
 
-        return reflections.getMethodsAnnotatedWith(net.cirellium.commons.bukkit.command.annotation.annotations.Command.class);
+        return reflections
+                .getMethodsAnnotatedWith(net.cirellium.commons.bukkit.command.annotation.annotations.Command.class);
     }
 
+    private static CommandMap getCommandMap() {
+        CommandMap commandMap = null;
+        try {
+            Server server = Bukkit.getServer();
+            Method getCommandMap = server.getClass().getDeclaredMethod("getCommandMap");
+            getCommandMap.setAccessible(true);
+            commandMap = (CommandMap) getCommandMap.invoke(server);
+
+            return commandMap;
+        } catch (ReflectiveOperationException ignored) {
+        }
+        return null;
+    }
+
+    /**
+     * Swap the value of the commandMap field in the Bukkit server instance with a
+     * reference to a new CommandMapAlternative instance.
+     * Allows for overriding the default behaviour of command execution.
+     * 
+     * @throws Exception if an error occurs during the process of modifying the
+     *                   commandMap field in the Bukkit server instance
+     * 
+     */
     private void swapCommandMap() throws Exception {
         Field commandMapField = Bukkit.getServer().getClass().getDeclaredField("commandMap");
-        MODIFIERS.set(commandMapField, commandMapField.getModifiers() & ~Modifier.FINAL);
         commandMapField.setAccessible(true);
 
-        // CraftCommandMap
         Object oldCommandMap = commandMapField.get(Bukkit.getServer());
         CommandMapAlternative newCommandMap = new CommandMapAlternative(Bukkit.getServer());
 
-        // knownCommands -> HashMap<String, Command>()
-
-        Field testField = oldCommandMap.getClass().getSuperclass().getDeclaredField("knownCommands");
-        MODIFIERS.set(testField, testField.getModifiers() & ~Modifier.FINAL);
-        testField.setAccessible(true);
-        // plugin.getLogger().info("testField: " +
-        // testField.get(oldCommandMap).toString());
-
         Field knownCommandsField = SimpleCommandMap.class.getDeclaredField("knownCommands");
-        MODIFIERS.set(knownCommandsField, knownCommandsField.getModifiers() & ~Modifier.FINAL);
         knownCommandsField.setAccessible(true);
-
-        // Field modifiersField = Field.class.getDeclaredField("modifiers");
-        // modifiersField.setAccessible(true);
-        // modifiersField.setInt(knownCommandsField, knownCommandsField.getModifiers() &
-        // 0xFFFFFFEF); // ! doesn't work anymore
-        MODIFIERS.set(knownCommandsField, knownCommandsField.getModifiers() & 0xFFFFFFEF);
-
         knownCommandsField.set(newCommandMap, knownCommandsField.get(oldCommandMap));
-
-        // knownCommandsField.set(knownCommandsField.get(oldCommandMap), newCommandMap);
 
         commandMapField.set(Bukkit.getServer(), newCommandMap);
     }

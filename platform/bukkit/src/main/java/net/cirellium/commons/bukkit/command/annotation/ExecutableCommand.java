@@ -10,6 +10,7 @@
 package net.cirellium.commons.bukkit.command.annotation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -52,10 +53,7 @@ public class ExecutableCommand
         // CommandHandler.getInstance().getLogger().info("Attempting to execute command
         // " + label + " with arguments " + StringUtils.join(args, " "));
 
-        label = stripLabel(label);
-        String[] cmdLine = concat(label, args);
-
-        final ProvidedArguments arguments = new ProvidedArgumentProcessor().process(cmdLine);
+        final ProvidedArguments arguments = new ProvidedArgumentProcessor().process(getCommandLine(label, args));
         final CommandNode executionNode = this.node.findCommand(arguments);
         // final String realLabel = getFullLabel(executionNode);
         if (sender.hasPermission(executionNode.getPermission())) {
@@ -63,7 +61,7 @@ public class ExecutableCommand
                 if (executionNode.isAsync()) {
                     owningPlugin.getServer().getScheduler().runTaskAsynchronously(owningPlugin, () -> {
                         if (executionNode.invoke(sender, arguments))
-                                return;
+                            return;
                     });
                     return true;
                 }
@@ -71,7 +69,8 @@ public class ExecutableCommand
                 CommandHandler.getInstance().getLogger().info(
                         "Synchronously executing command " + executionNode.getName() + " with arguments " + arguments);
 
-                if (executionNode.invoke(sender, arguments)) return true;
+                if (executionNode.invoke(sender, arguments))
+                    return true;
                 return true;
             } catch (CommandException e) {
                 sender.sendMessage(ChatColor.RED + "An error occurred while processing your command.");
@@ -87,35 +86,49 @@ public class ExecutableCommand
     }
 
     @SuppressWarnings({ "rawtypes", "deprecation", "unchecked" })
-    public List<String> tabComplete(CommandSender sender, String cmdLine) {
+    public List<String> tabComplete(CommandSender sender, String args) {
         if (!(sender instanceof Player))
             return Collections.emptyList();
-        String[] rawArgs = cmdLine.replace(this.owningPlugin.getName().toLowerCase() + ":", "").split(" ");
-        if (rawArgs.length < 1) {
+
+        List<String> argList = new ArrayList<>();
+        String replacedArgs = args.replace(this.owningPlugin.getName().toLowerCase() + ":", "");
+        argList.addAll(Arrays.asList(replacedArgs.split(" ")));
+
+        if (argList.size() < 1) {
             return Collections.emptyList();
         }
-        ProvidedArguments arguments = new ProvidedArgumentProcessor().process(rawArgs);
+
+        ProvidedArguments arguments = new ProvidedArgumentProcessor().process(argList);
         CommandNode realNode = this.node.findCommand(arguments);
-        if (!sender.hasPermission(realNode.getPermission()))
+
+        if (!sender.hasPermission(realNode.getPermission())) {
             return Collections.emptyList();
+        }
+
         List<String> realArgs = arguments.getArguments();
-        int currentIndex = realArgs.size() - 1;
-        if (currentIndex < 0)
-            currentIndex = 0;
-        if (cmdLine.endsWith(" ") && realArgs.size() >= 1)
+        int currentIndex = Math.max(realArgs.size() - 1, 0);
+        if (args.endsWith(" ")) {
             currentIndex++;
+        }
+
         ArrayList<String> completions = new ArrayList<>();
+
         if (realNode.hasCommands()) {
             String name = (realArgs.size() == 0) ? "" : realArgs.get(realArgs.size() - 1);
-            completions.addAll((Collection<? extends String>) realNode.getChildren().values().stream()
-                    .filter(node -> (sender.hasPermission(node.getPermission())
-                            && (StringUtils.startsWithIgnoreCase(node.getName(), name) || StringUtils.isEmpty(name))))
-                    .map(CommandNode::getName).collect(Collectors.toList()));
-            if (completions.size() > 0)
+            completions.addAll(realNode.getChildren().values().stream()
+                    .filter(node -> sender.hasPermission(node.getPermission())
+                            && (StringUtils.startsWithIgnoreCase(node.getName(), name) || StringUtils.isEmpty(name)))
+                    .map(CommandNode::getName)
+                    .collect(Collectors.toList()));
+            if (!completions.isEmpty()) {
                 return completions;
+            }
         }
-        if (rawArgs[rawArgs.length - 1].equalsIgnoreCase(realNode.getName()) && !cmdLine.endsWith(" "))
+
+        if (argList.get(argList.size() - 1).equalsIgnoreCase(realNode.getName()) && !args.endsWith(" ")) {
             return Collections.emptyList();
+        }
+
         // if (realNode.getValidFlags() != null && !realNode.getValidFlags().isEmpty())
         // {
         // for (String flags : realNode.getValidFlags()) {
@@ -129,54 +142,52 @@ public class ExecutableCommand
         // if (completions.size() > 0)
         // return completions;
         // }
-        try {
-            ArgumentTypeHandler argumentHandler = null;
-            ArgumentData data = null;
-            if (realNode.getParameters() != null) {
-                List<ArgumentData> params = realNode.getParameters()
-                        .stream()
-                        .filter(d -> d instanceof ArgumentData)
-                        .map(d -> (ArgumentData) d)
-                        .collect(Collectors.toList());
-                int fixed = Math.max(0, currentIndex - 1);
-                data = params.get(fixed);
-                argumentHandler = CommandHandler.getInstance().getRegistry().getArgumentTypeHandler(data.getType());
-                if (data.getArgumentType() != null) {
-                    try {
-                        argumentHandler = data.getArgumentType().newInstance();
-                    } catch (IllegalAccessException | InstantiationException e) {
-                        e.printStackTrace();
-                    }
+
+        ArgumentTypeHandler argumentHandler = null;
+        ArgumentData data = null;
+        if (realNode.getParameters() != null) {
+            List<ArgumentData> params = realNode.getParameters()
+                    .stream()
+                    .filter(d -> d instanceof ArgumentData)
+                    .map(d -> (ArgumentData) d)
+                    .collect(Collectors.toList());
+            int fixed = Math.max(0, currentIndex - 1);
+            data = params.get(fixed);
+            argumentHandler = CommandHandler.getInstance().getRegistry().getArgumentTypeHandler(data.getType());
+            if (data.getArgumentType() != null) {
+                try {
+                    argumentHandler = data.getArgumentType().newInstance();
+                } catch (IllegalAccessException | InstantiationException e) {
+                    e.printStackTrace();
                 }
             }
-            if (data == null) {
-                CommandHandler.getInstance().getLogger().info("Data is null");
-                return completions;
-            }
-            if (argumentHandler != null) {
-                if (currentIndex < realArgs.size()
-                        && ((String) realArgs.get(currentIndex)).equalsIgnoreCase(realNode.getName())) {
-                    realArgs.add("");
-                    currentIndex++;
-                }
-                String argumentBeingCompleted = (currentIndex >= realArgs.size()) ? "" : realArgs.get(currentIndex);
-                List<String> suggested = argumentHandler.tabComplete((Player) sender, data.getTabCompleteFlags(),
-                        argumentBeingCompleted);
-                completions.addAll((Collection<? extends String>) suggested.stream()
-                        .filter(s -> StringUtils.startsWithIgnoreCase(s, argumentBeingCompleted))
-                        .collect(Collectors.toList()));
-            }
-        } catch (Exception exception) {
         }
+        if (data == null) {
+            CommandHandler.getInstance().getLogger().info("Data is null");
+            return completions;
+        }
+        if (argumentHandler != null) {
+            if (currentIndex < realArgs.size()
+                    && ((String) realArgs.get(currentIndex)).equalsIgnoreCase(realNode.getName())) {
+                realArgs.add("");
+                currentIndex++;
+            }
+            String currentArgument = (currentIndex >= realArgs.size()) ? "" : realArgs.get(currentIndex);
+            List<String> suggested = argumentHandler.tabComplete((Player) sender, data.getTabCompleteFlags(),
+                    currentArgument);
+            completions.addAll((Collection<? extends String>) suggested.stream()
+                    .filter(s -> StringUtils.startsWithIgnoreCase(s, currentArgument))
+                    .collect(Collectors.toList()));
+        }
+
         return completions;
     }
 
-    private String[] concat(String label, String[] args) {
-        String[] labelAsArray = { label };
-        String[] newArgs = new String[args.length + 1];
-        System.arraycopy(labelAsArray, 0, newArgs, 0, 1);
-        System.arraycopy(args, 0, newArgs, 1, args.length);
-        return newArgs;
+    private List<String> getCommandLine(String label, String[] args) {
+        List<String> cmdLine = new ArrayList<>();
+        cmdLine.add(label);
+        cmdLine.addAll(Arrays.asList(args));
+        return cmdLine;
     }
 
     public String getFullLabel(CommandNode node) {

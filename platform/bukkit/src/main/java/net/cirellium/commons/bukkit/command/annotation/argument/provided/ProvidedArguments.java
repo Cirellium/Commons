@@ -14,6 +14,14 @@ public class ProvidedArguments {
       this.flags = flags;
     }
 
+    // public static ProvidedArguments of(String commandLine) {
+    //     return of(Arrays.asList(commandLine.split(" ")));
+    // }
+
+    public static ProvidedArguments of(List<String> arguments) {
+        return new ProvidedArgumentProcessor().process(arguments);
+    }
+
     public boolean hasFlag(String flag) {
         return this.flags.contains(flag.toLowerCase());
     }

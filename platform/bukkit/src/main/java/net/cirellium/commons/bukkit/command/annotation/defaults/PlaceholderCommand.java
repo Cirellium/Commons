@@ -7,6 +7,8 @@ import net.cirellium.commons.bukkit.command.abstraction.AbstractCommand.SenderTy
 import net.cirellium.commons.bukkit.command.annotation.annotations.Argument;
 import net.cirellium.commons.bukkit.command.annotation.annotations.Command;
 import net.cirellium.commons.common.util.Message;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 public class PlaceholderCommand {
     
@@ -24,6 +26,8 @@ public class PlaceholderCommand {
     ) {
         CirelliumBukkitPlugin.getProvidingPlugin(getClass()).getLogger().info("Placeholder command: " + test);
 
-        sender.sendMessage(Message.TEST.placeholder("test", test).getComponent().toString());
+        Component testMessage = Message.TEST.placeholder("test", test).getComponent();
+
+        sender.sendMessage(LegacyComponentSerializer.legacy('§').serialize(testMessage));
     }
 }
