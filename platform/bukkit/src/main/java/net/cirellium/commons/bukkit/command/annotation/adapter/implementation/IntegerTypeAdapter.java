@@ -7,7 +7,7 @@
 *
 * Unauthorized copying of this file, via any medium is strictly prohibited
 */
-package net.cirellium.commons.bukkit.command.annotation.argument.implementation;
+package net.cirellium.commons.bukkit.command.annotation.adapter.implementation;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,9 +15,9 @@ import java.util.Set;
 
 import org.bukkit.command.CommandSender;
 
-import net.cirellium.commons.bukkit.command.annotation.argument.ArgumentTypeHandler;
+import net.cirellium.commons.bukkit.command.annotation.adapter.ArgumentTypeAdapter;
 
-public class IntegerArgumentType implements ArgumentTypeHandler<Integer> {
+public class IntegerTypeAdapter implements ArgumentTypeAdapter<Integer> {
 
     @Override
     public Integer parse(CommandSender sender, String argument) {

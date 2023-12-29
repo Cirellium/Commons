@@ -1,4 +1,4 @@
-package net.cirellium.commons.bukkit.command.annotation.annotations;
+package net.cirellium.commons.bukkit.command.annotation.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 @Target({ ElementType.METHOD })
 public @interface SubCommand {
     
-    String name();
+    String label();
 
     String[] aliases() default {};
 

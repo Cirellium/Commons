@@ -7,16 +7,16 @@
 *
 * Unauthorized copying of this file, via any medium is strictly prohibited
 */
-package net.cirellium.commons.bukkit.command.annotation.argument.implementation;
+package net.cirellium.commons.bukkit.command.annotation.adapter.implementation;
 
 import java.util.List;
 import java.util.Set;
 
 import org.bukkit.command.CommandSender;
 
-import net.cirellium.commons.bukkit.command.annotation.argument.ArgumentTypeHandler;
+import net.cirellium.commons.bukkit.command.annotation.adapter.ArgumentTypeAdapter;
 
-public class BooleanArgumentType implements ArgumentTypeHandler<Boolean> {
+public class BooleanTypeAdapter implements ArgumentTypeAdapter<Boolean> {
 
     List<String> validBooleans = List.of("true", "false", "yes", "no", "y", "n", "0", "1");
 

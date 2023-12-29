@@ -21,20 +21,21 @@ public class CommandHandler<P extends CirelliumBukkitPlugin<P>> {
 
     protected final P plugin;
 
-    private CommandRegistry<P> registry;
+    private CommandRegistry registry;
 
     private Logger logger;
 
     public CommandHandler(P plugin) {
         instance = this;
-        this.logger = new CirelliumLogger(Platform.BUKKIT, "CommandsAnnotated");
+        this.logger = new CirelliumLogger(Platform.BUKKIT, "CommandsAnnotated2");
         this.plugin = plugin;
-        this.registry = new CommandRegistry<P>(plugin);
+        this.registry = new CommandRegistry(plugin.getPluginName().toLowerCase());
     }
 
-    public CommandRegistry<P> getRegistry() { return registry; }
+    public CommandRegistry getRegistry() { return registry; }
 
     public Logger getLogger() { return logger; }
 
     public static CommandHandler<?> getInstance() { return instance; }
+
 }
