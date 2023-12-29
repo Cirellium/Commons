@@ -7,14 +7,18 @@
 *
 * Unauthorized copying of this file, via any medium is strictly prohibited
 */
-package net.cirellium.commons.bukkit.command.annotation.argument;
+package net.cirellium.commons.bukkit.command.annotation.adapter;
 
 import java.util.List;
 import java.util.Set;
 
 import org.bukkit.command.CommandSender;
 
-public interface ArgumentTypeHandler<T> {
+import net.cirellium.commons.common.util.Message;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+
+public interface ArgumentTypeAdapter<T> {
     
     T parse(CommandSender sender, String argument);
 
@@ -23,5 +27,11 @@ public interface ArgumentTypeHandler<T> {
     List<?> getPossibleResults();
 
     boolean supports(Class<?> clazz);
+
+    default void handleException(CommandSender sender, String source) {
+        Component errorMessage = Message.COMMAND_ERROR_PARSE_ARG.placeholder("arg", source).getComponent();
+
+        sender.sendMessage(LegacyComponentSerializer.legacy('§').serialize(errorMessage));
+    }
     
 }

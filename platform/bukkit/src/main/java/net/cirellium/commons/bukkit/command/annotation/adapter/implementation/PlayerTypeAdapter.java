@@ -7,7 +7,7 @@
 *
 * Unauthorized copying of this file, via any medium is strictly prohibited
 */
-package net.cirellium.commons.bukkit.command.annotation.argument.implementation;
+package net.cirellium.commons.bukkit.command.annotation.adapter.implementation;
 
 import java.util.List;
 import java.util.Set;
@@ -17,9 +17,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.cirellium.commons.bukkit.command.annotation.argument.ArgumentTypeHandler;
+import net.cirellium.commons.bukkit.command.annotation.adapter.ArgumentTypeAdapter;
 
-public class PlayerArgumentType implements ArgumentTypeHandler<Player> {
+public class PlayerTypeAdapter implements ArgumentTypeAdapter<Player> {
 
     @Override
     public Player parse(CommandSender sender, String argument) {

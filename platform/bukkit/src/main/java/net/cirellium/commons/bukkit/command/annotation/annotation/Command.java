@@ -1,13 +1,4 @@
-/**
-* Copyright (C) 2023 Cirellium Network - All Rights Reserved
-*
-* Created by FearMyShotz on Tue Jan 10 2023 14:12:01
-*
-* Command.java is part of Cirellium Commons
-*
-* Unauthorized copying of this file, via any medium is strictly prohibited
-*/
-package net.cirellium.commons.bukkit.command.annotation.annotations;
+package net.cirellium.commons.bukkit.command.annotation.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -20,7 +11,11 @@ import net.cirellium.commons.bukkit.command.abstraction.AbstractCommand.SenderTy
 @Target({ ElementType.METHOD })
 public @interface Command {
 
-    String[] names() default {};
+    String label();
+
+    String[] aliases() default {};
+
+    String usage() default "";
 
     String permission() default "cirellium.command.other";
 

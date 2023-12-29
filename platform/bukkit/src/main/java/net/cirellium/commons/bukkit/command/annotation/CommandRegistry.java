@@ -1,252 +1,135 @@
-/**
-* Copyright (C) 2023 Cirellium Network - All Rights Reserved
-*
-* Created by FearMyShotz on Tue Jan 10 2023 14:12:21
-*
-* ArgumentRegistry.java is part of Cirellium Commons
-*
-* Unauthorized copying of this file, via any medium is strictly prohibited
-*/
 package net.cirellium.commons.bukkit.command.annotation;
 
+import java.io.File;
 import java.io.IOException;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.VarHandle;
-import java.lang.reflect.Field;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
-import org.bukkit.command.SimpleCommandMap;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.reflections.Reflections;
-import org.reflections.scanners.Scanners;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
 
-import com.google.common.collect.Lists;
-
-import lombok.NonNull;
-import net.cirellium.commons.bukkit.CirelliumBukkitPlugin;
-import net.cirellium.commons.bukkit.command.annotation.annotations.SubCommand;
-import net.cirellium.commons.bukkit.command.annotation.argument.ArgumentTypeHandler;
-import net.cirellium.commons.bukkit.command.annotation.argument.implementation.IntegerArgumentType;
-import net.cirellium.commons.bukkit.command.annotation.argument.implementation.PlayerArgumentType;
-import net.cirellium.commons.bukkit.command.annotation.argument.implementation.StringArgumentType;
+import lombok.Data;
+import net.cirellium.commons.bukkit.command.annotation.adapter.ArgumentTypeAdapter;
+import net.cirellium.commons.bukkit.command.annotation.adapter.implementation.BooleanTypeAdapter;
+import net.cirellium.commons.bukkit.command.annotation.adapter.implementation.DoubleTypeAdapter;
+import net.cirellium.commons.bukkit.command.annotation.adapter.implementation.FloatTypeAdapter;
+import net.cirellium.commons.bukkit.command.annotation.adapter.implementation.IntegerTypeAdapter;
+import net.cirellium.commons.bukkit.command.annotation.adapter.implementation.ItemStackTypeAdapter;
+import net.cirellium.commons.bukkit.command.annotation.adapter.implementation.OfflinePlayerTypeAdapter;
+import net.cirellium.commons.bukkit.command.annotation.adapter.implementation.PlayerTypeAdapter;
+import net.cirellium.commons.bukkit.command.annotation.adapter.implementation.StringTypeAdapter;
+import net.cirellium.commons.bukkit.command.annotation.adapter.implementation.UUIDTypeAdapter;
+import net.cirellium.commons.bukkit.command.annotation.adapter.implementation.WorldTypeAdapter;
+import net.cirellium.commons.bukkit.command.annotation.annotation.Command;
+import net.cirellium.commons.bukkit.command.annotation.annotation.SubCommand;
+import net.cirellium.commons.bukkit.command.annotation.data.CommandData;
+import net.cirellium.commons.bukkit.command.annotation.data.SubCommandData;
+import net.cirellium.commons.common.logger.CirelliumLogger;
 import net.cirellium.commons.common.util.clazz.ClassUtils;
+import net.cirellium.commons.common.version.Platform;
 
-@SuppressWarnings({ "unused" })
-public class CommandRegistry<P extends CirelliumBukkitPlugin> {
+@Data
+public class CommandRegistry {
 
-    public static final CommandNode ROOT_COMMAND_NODE = new CommandNode();
+    private final List<CommandData> registeredCommands;
 
-    private static final VarHandle MODIFIERS;
+    private final List<ArgumentTypeAdapter<?>> typeAdapters;
 
-    private Map<Class<?>, ArgumentTypeHandler<?>> ARGUMENT_TYPE_MAP = new HashMap<>();
+    private final String defaultPrefix;
 
-    private final P plugin;
+    private final Logger logger = new CirelliumLogger(Platform.BUKKIT, "CommandsAnnotated2");
 
-    private CommandMap commandMap;
+    public CommandRegistry(String prefix) {
+        this.defaultPrefix = prefix;
+        this.registeredCommands = new ArrayList<CommandData>();
+        this.typeAdapters = new ArrayList<ArgumentTypeAdapter<?>>();
 
-    private Map<String, Command> registeredCommands;
-
-    private @NonNull Set<Method> registeredMethods;
-
-    static {
-        try {
-            var lookup = MethodHandles.privateLookupIn(Field.class, MethodHandles.lookup());
-            MODIFIERS = lookup.findVarHandle(Field.class, "modifiers", int.class);
-        } catch (IllegalAccessException | NoSuchFieldException ex) {
-            throw new RuntimeException(ex);
-        }
+        this.typeAdapters.addAll(Arrays.asList(
+                new BooleanTypeAdapter(),
+                new DoubleTypeAdapter(),
+                new FloatTypeAdapter(),
+                new IntegerTypeAdapter(),
+                new ItemStackTypeAdapter(),
+                new OfflinePlayerTypeAdapter(),
+                new PlayerTypeAdapter(),
+                new StringTypeAdapter(),
+                new UUIDTypeAdapter(),
+                new WorldTypeAdapter()));
+        initialize();
     }
 
-    public CommandRegistry(P plugin) {
-        this.plugin = plugin;
-        registeredMethods = new HashSet<Method>();
-        initialize(plugin);
-    }
-
-    public void initialize(P plugin) {
-        // registerArgumentType(boolean.class, (ArgumentType<?>) new
-        // BooleanArgumentType());
-        registerArgumentTypeHandler(int.class, (ArgumentTypeHandler<?>) new IntegerArgumentType());
-        // registerArgumentType(double.class, (ArgumentType<?>) new
-        // DoubleArgumentType());
-        // registerArgumentType(float.class, (ArgumentType<?>) new FloatArgumentType());
-        registerArgumentTypeHandler(String.class, (ArgumentTypeHandler<?>) new StringArgumentType());
-        registerArgumentTypeHandler(Player.class, (ArgumentTypeHandler<?>) new PlayerArgumentType());
-        // registerArgumentType(World.class, (ArgumentType<?>) new WorldArgumentType());
-        // registerArgumentType(ItemStack.class, (ArgumentType<?>) new
-        // ItemStackArgumentType());
-        // registerArgumentType(OfflinePlayer.class, (ArgumentType<?>) new
-        // OfflinePlayerArgumentType());
-        // registerArgumentType(UUID.class, (ArgumentType<?>) new UUIDArgumentType());
-        // registerArgumentType(OfflinePlayerWrapper.class, (ArgumentType<?>) new
-        // OfflinePlayerWrapperArgumentType());
-
-        commandMap = getCommandMap();
-
-        plugin.getLogger().info("CommandMap is null: " + String.valueOf(commandMap == null));
-        plugin.getLogger().info("CommandMap: " + commandMap.toString());
-
-        registeredCommands = getRegisteredCommands();
-        registerCommands();
-    }
-
-    public void registerCommands() {
-        // registerClass(TestCommand.class);
+    public void initialize() {
         registerPackage("net.cirellium.commons");
         registerPackage("net.cirellium.core");
-
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-            try {
-                swapCommandMap();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }, 5L);
-    }
-
-    public void registerArgumentTypeHandler(Class<?> clazz, ArgumentTypeHandler<?> type) {
-        ARGUMENT_TYPE_MAP.put(clazz, type);
-    }
-
-    public ArgumentTypeHandler<?> getArgumentTypeHandler(Class<?> clazz) {
-        return ARGUMENT_TYPE_MAP.get(clazz);
-    }
-
-    @SuppressWarnings("unchecked")
-    protected Map<String, Command> getRegisteredCommands() {
-        try {
-            Field knownCommands = SimpleCommandMap.class.getDeclaredField("knownCommands");
-            knownCommands.setAccessible(true);
-
-            return (Map<String, Command>) knownCommands.get(commandMap);
-        } catch (ReflectiveOperationException ignored) {
-        }
-        return null;
-    }
-
-    public void registerMethod(Method method) {
-        method.setAccessible(true);
-        if (!method.isAnnotationPresent(net.cirellium.commons.bukkit.command.annotation.annotations.Command.class)
-                || !method.isAnnotationPresent(SubCommand.class))
-            return;
-
-        Set<CommandNode> nodes = new CommandProcessor().process(method);
-
-        if (nodes == null)
-            return;
-
-        nodes.forEach(node -> {
-            if (node != null) {
-                ExecutableCommand command = new ExecutableCommand(node,
-                        JavaPlugin.getProvidingPlugin(method.getDeclaringClass()));
-                register(command);
-                // node.getChildren().values().forEach(children -> {});
-            }
-        });
-        registeredMethods.add(method);
-    }
-
-    private void register(ExecutableCommand command) {
-        try {
-            Map<String, Command> knownCommands = getRegisteredCommands();
-            Iterator<Map.Entry<String, Command>> iterator = knownCommands.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Map.Entry<String, Command> entry = iterator.next();
-                if (!((Command) entry.getValue()).getName().equalsIgnoreCase(command.getName()))
-                    continue;
-                ((Command) entry.getValue()).unregister(commandMap);
-                iterator.remove();
-            }
-            for (String alias : command.getAliases())
-                knownCommands.put(alias, command);
-            command.register(commandMap);
-            knownCommands.put(command.getName(), command);
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
-    }
-
-    public void registerClass(Class<?> clazz) {
-        boolean hasCommandMethod = false;
-
-        // for (Method m : clazz.getMethods()) {
-        // if
-        // (m.isAnnotationPresent(net.cirellium.commons.bukkit.command.annotation.Command.class))
-        // {
-        // hasCommandMethod = true;
-        // }
-        // }
-
-        // if(!hasCommandMethod) return;
-
-        CommandHandler.getInstance().getLogger().info("Registering class " + clazz.getName() + " to command registry");
-        Lists.newArrayList(clazz.getMethods()).forEach(m -> registerMethod(m));
-    }
-
-    public void unregisterClass(Class<?> clazz) {
-        Map<String, Command> knownCommands = getRegisteredCommands();
-        Iterator<Command> iterator = knownCommands.values().iterator();
-        while (iterator.hasNext()) {
-            Command command = iterator.next();
-            if (!(command instanceof ExecutableCommand)
-                    || ((ExecutableCommand) command).getNode().getOwningClass() != clazz)
-                continue;
-            command.unregister(commandMap);
-            iterator.remove();
-        }
-    }
-
-    public void registerAll(Plugin plugin) {
-        registerPackage(plugin, plugin.getClass().getPackage().getName());
-    }
-
-    public void registerPackage(Plugin plugin, String packageName) {
-        // ClassUtils.getClassesInPackage(plugin, packageName).forEach(clazz ->
-        // registerClass(clazz));
-
-        try {
-            plugin.getLogger().info("PackageName: " + plugin.getClass().getPackageName());
-            ClassUtils.getAllClasses(plugin, plugin.getClass().getPackageName()).forEach(clazz -> registerClass(clazz));
-
-            plugin.getLogger().info(ClassUtils.getAllClasses(plugin, plugin.getClass().getPackageName()).stream().map(Class::getName).collect(Collectors.joining(", ")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public void registerPackage(String packageName) {
-        plugin.getLogger().info("PackageName: " + packageName);
-        getCommandMethods(packageName)
-                .stream()
-                .filter(m -> !(registeredMethods.contains(m)))
-                .forEach(m -> registerMethod(m));
+        logger.info("Registering commands in package " + packageName);
+
+        Set<Class<?>> classes = new HashSet<Class<?>>(
+                ClassUtils.getClassesInPackage(JavaPlugin.getProvidingPlugin(CommandRegistry.class), packageName));
+
+        logger.info("Found " + classes.size() + " classes in package " + packageName);
+
+        classes.stream().forEach(clazz -> registerClass(clazz));
     }
 
-    public Set<Method> getCommandMethods(String packageName) {
-        Reflections reflections = new Reflections(
-                new ConfigurationBuilder()
-                        .setUrls(ClasspathHelper.forPackage(packageName))
-                        .setScanners(Scanners.MethodsAnnotated));
+    public void registerClass(Class<?> clazz) {
+        // logger.info("Checking class " + clazz.getSimpleName());
 
-        return reflections
-                .getMethodsAnnotatedWith(net.cirellium.commons.bukkit.command.annotation.annotations.Command.class);
+        final Set<Method> mainCommandMethods = getMethodsByAnnotation(clazz, Command.class);
+        final Set<Method> subCommandMethods = getMethodsByAnnotation(clazz, SubCommand.class);
+
+        if (mainCommandMethods.isEmpty() && subCommandMethods.isEmpty())
+            return;
+
+        logger.info("Registering commands in class " + clazz.getName());
+
+        final Object object;
+        try {
+            object = clazz.getDeclaredConstructor().newInstance();
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException
+                | InvocationTargetException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        mainCommandMethods.stream()
+                .map(method -> new CommandData(method, object))
+                .forEach(commandData -> {
+                    this.registeredCommands.add(commandData);
+                    this.getCommandMap().register(defaultPrefix, new CirelliumCommand(commandData));
+                });
+
+        subCommandMethods.stream()
+                .filter(method -> registeredCommands.stream()
+                        .anyMatch(commandData -> commandData
+                                .hasSubCommand(method.getAnnotation(SubCommand.class))))
+                .forEach(method -> registeredCommands.stream()
+                        .filter(data -> data.hasSubCommand(method.getAnnotation(SubCommand.class)))
+                        .findFirst().ifPresent(parentCommand -> parentCommand.getSubCommands()
+                                .add(new SubCommandData(method, object))));
     }
 
-    private static CommandMap getCommandMap() {
+    private Set<Method> getMethodsByAnnotation(Class<?> clazz, Class<? extends Annotation> annotation) {
+        return Arrays.stream(clazz.getMethods())
+                .filter(method -> method.getAnnotation(annotation) != null)
+                .collect(Collectors.toSet());
+    }
+
+    private CommandMap getCommandMap() {
         CommandMap commandMap = null;
         try {
             Server server = Bukkit.getServer();
@@ -260,26 +143,9 @@ public class CommandRegistry<P extends CirelliumBukkitPlugin> {
         return null;
     }
 
-    /**
-     * Swap the value of the commandMap field in the Bukkit server instance with a
-     * reference to a new CommandMapAlternative instance.
-     * Allows for overriding the default behaviour of command execution.
-     * 
-     * @throws Exception if an error occurs during the process of modifying the
-     *                   commandMap field in the Bukkit server instance
-     * 
-     */
-    private void swapCommandMap() throws Exception {
-        Field commandMapField = Bukkit.getServer().getClass().getDeclaredField("commandMap");
-        commandMapField.setAccessible(true);
-
-        Object oldCommandMap = commandMapField.get(Bukkit.getServer());
-        CommandMapAlternative newCommandMap = new CommandMapAlternative(Bukkit.getServer());
-
-        Field knownCommandsField = SimpleCommandMap.class.getDeclaredField("knownCommands");
-        knownCommandsField.setAccessible(true);
-        knownCommandsField.set(newCommandMap, knownCommandsField.get(oldCommandMap));
-
-        commandMapField.set(Bukkit.getServer(), newCommandMap);
+    @SuppressWarnings("unchecked")
+    public <T> ArgumentTypeAdapter<T> findTypeAdapter(Class<T> type) {
+        return (ArgumentTypeAdapter<T>) this.typeAdapters.stream().filter(adapter -> adapter.supports(type)).findAny()
+                .orElseThrow(() -> new IllegalArgumentException("No type adapter found for type " + type.getName()));
     }
 }

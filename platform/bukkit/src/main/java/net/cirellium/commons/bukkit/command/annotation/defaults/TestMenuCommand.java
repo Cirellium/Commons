@@ -3,13 +3,14 @@ package net.cirellium.commons.bukkit.command.annotation.defaults;
 import org.bukkit.command.CommandSender;
 
 import net.cirellium.commons.bukkit.command.abstraction.AbstractCommand.SenderType;
-import net.cirellium.commons.bukkit.command.annotation.annotations.Argument;
-import net.cirellium.commons.bukkit.command.annotation.annotations.Command;
+import net.cirellium.commons.bukkit.command.annotation.annotation.Argument;
+import net.cirellium.commons.bukkit.command.annotation.annotation.Command;
 
 public class TestMenuCommand {
     
     @Command(
-        names = {"test", "testmenu"}, 
+        label = "testmenu",
+        aliases = { "testmenucommand", "tm" },
         permission = "",
         description = "Just a simple test menu command",
         senderType = SenderType.PLAYER,
@@ -18,7 +19,7 @@ public class TestMenuCommand {
     )
     public void menu(
         CommandSender sender,
-        @Argument(name = "test", wildcard = true) String test
+        @Argument(name = "test") String test
     ) {
         sender.sendMessage("Test menu command executed: " + test);
     }

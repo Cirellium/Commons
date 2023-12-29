@@ -1,4 +1,4 @@
-package net.cirellium.commons.bukkit.command.annotation.argument;
+package net.cirellium.commons.bukkit.command.annotation.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,7 +7,10 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.PARAMETER })
-@SuppressWarnings("rawtypes")
-public @interface Type {
-    Class<? extends ArgumentTypeHandler> value();
+public @interface Argument {
+    
+    String name();
+
+    String defaultValue() default "";
+
 }
