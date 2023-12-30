@@ -1,14 +1,10 @@
 package net.cirellium.commons.bukkit.command.annotation;
 
-import java.io.File;
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,7 +30,7 @@ import net.cirellium.commons.bukkit.command.annotation.adapter.implementation.UU
 import net.cirellium.commons.bukkit.command.annotation.adapter.implementation.WorldTypeAdapter;
 import net.cirellium.commons.bukkit.command.annotation.annotation.Command;
 import net.cirellium.commons.bukkit.command.annotation.annotation.SubCommand;
-import net.cirellium.commons.bukkit.command.annotation.data.CommandData;
+import net.cirellium.commons.bukkit.command.annotation.data.MainCommandData;
 import net.cirellium.commons.bukkit.command.annotation.data.SubCommandData;
 import net.cirellium.commons.common.logger.CirelliumLogger;
 import net.cirellium.commons.common.util.clazz.ClassUtils;
@@ -43,7 +39,7 @@ import net.cirellium.commons.common.version.Platform;
 @Data
 public class CommandRegistry {
 
-    private final List<CommandData> registeredCommands;
+    private final List<MainCommandData> registeredCommands;
 
     private final List<ArgumentTypeAdapter<?>> typeAdapters;
 
@@ -53,7 +49,7 @@ public class CommandRegistry {
 
     public CommandRegistry(String prefix) {
         this.defaultPrefix = prefix;
-        this.registeredCommands = new ArrayList<CommandData>();
+        this.registeredCommands = new ArrayList<MainCommandData>();
         this.typeAdapters = new ArrayList<ArgumentTypeAdapter<?>>();
 
         this.typeAdapters.addAll(Arrays.asList(
@@ -107,7 +103,7 @@ public class CommandRegistry {
         }
 
         mainCommandMethods.stream()
-                .map(method -> new CommandData(method, object))
+                .map(method -> new MainCommandData(method, object))
                 .forEach(commandData -> {
                     this.registeredCommands.add(commandData);
                     this.getCommandMap().register(defaultPrefix, new CirelliumCommand(commandData));

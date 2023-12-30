@@ -16,7 +16,6 @@ import org.bukkit.command.CommandSender;
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.StyleBuilderApplicable;
@@ -36,7 +35,8 @@ public enum Message implements Sendable<CommandSender> {
     COMMAND_USAGE("command.usage", "Usage: <usage>", Color.RED),
     COMMAND_CONFIRMATION("command.confirmation", "Are you sure you want to <action>?", Color.RED, Format.BOLD),
 
-    COMMAND_ERROR_NO_PERMISSION("command.error.no-permission", "You do not have permission to use this command!",
+    COMMAND_ERROR_NO_PERMISSION("command.error.no-permission",
+            "You do not have permission to use this command! (<permission>)",
             Color.RED),
     COMMAND_ERROR_PLAYER_ONLY("command.error.player-only", "This command can only be executed by a player!", Color.RED),
     COMMAND_ERROR_CONSOLE_ONLY("command.error.console-only", "This command can only be executed by the console!",
@@ -63,8 +63,8 @@ public enum Message implements Sendable<CommandSender> {
                     .resolver(StandardTags.color())
                     .resolver(StandardTags.decorations())
                     // .resolver(this.someResolvers)
-                    .resolver(TagResolver.resolver("test",
-                            Tag.styling(HoverEvent.showText(Component.text("Test Hover!")))))
+                    // .resolver(TagResolver.resolver("test",
+                    // Tag.styling(HoverEvent.showText(Component.text("Test Hover!")))))
                     .build())
             .editTags(t -> t.resolver(TagResolver.resolver("clear", ParserDirective.RESET)))
             .build();
@@ -72,7 +72,7 @@ public enum Message implements Sendable<CommandSender> {
     private Component messageComponent;
 
     @Getter
-    private final String messagePath, fallbackMessage;
+    private final String messagePath, fallbackMessage, legacyString;
 
     @Getter
     @Setter
@@ -88,6 +88,7 @@ public enum Message implements Sendable<CommandSender> {
         this.fallbackMessage = fallbackMessage;
         if (format == null || color == null) {
             this.messageComponent = parser.deserialize(toString());
+            this.legacyString = LegacyComponentSerializer.legacy('§').serialize(messageComponent);
             return;
         }
         TextDecoration[] decorations = new TextDecoration[format.length];
@@ -99,6 +100,7 @@ public enum Message implements Sendable<CommandSender> {
                 .decorate(decorations)
                 .build();
         this.messageComponent = Component.text().content(fallbackMessage).style(messageStyle).build();
+        this.legacyString = LegacyComponentSerializer.legacy('§').serialize(messageComponent);
     }
 
     public Component asComponent() {
@@ -137,6 +139,11 @@ public enum Message implements Sendable<CommandSender> {
                 .deserialize(
                         toString(),
                         Placeholder.parsed(placeholder, value));
+        return this;
+    }
+
+    public Message legacyPlaceholder(String placeholder, String value) {
+        legacyString.replace(placeholder, value);
         return this;
     }
 

@@ -1,32 +1,53 @@
 package net.cirellium.commons.bukkit.command.annotation.data;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.reflect.Parameter;
 
 import lombok.Data;
-import net.cirellium.commons.bukkit.command.annotation.annotation.Command;
+import net.cirellium.commons.bukkit.command.annotation.CommandHandler;
+import net.cirellium.commons.bukkit.command.annotation.annotation.Argument;
 import net.cirellium.commons.bukkit.command.annotation.annotation.SubCommand;
 
 @Data
-public class CommandData {
-    
-    private Method method;
+public abstract class CommandData<A extends Annotation> {
 
-    private Object commandObject;
+    protected Method method;
 
-    private Command command;
+    protected Object commandObject;
 
-    private List<SubCommandData> subCommands;
+    protected A annotation;
 
-    public CommandData(Method method, Object commandObject) {
-        this.method = method;
-        this.commandObject = commandObject;
-        this.command = method.getAnnotation(Command.class);
-        this.subCommands = new ArrayList<SubCommandData>();
+    public String getUsage(String label) {
+        final StringBuilder builder = new StringBuilder().append("/" + label + " ");
+        Parameter[] parameters = method.getParameters();
+
+        if (isSubCommand())
+            builder.append(method.getAnnotation(SubCommand.class).label() + " ");
+
+        for (int i = 0; i < parameters.length; i++) {
+            final Parameter parameter = parameters[i];
+            final Argument argument = parameter.getAnnotation(Argument.class);
+            if (argument == null)
+                continue;
+
+            builder.append("<" + argument.name() + ">");
+            if (i < parameters.length - 1)
+                builder.append(" ");
+        }
+
+        return builder.toString();
     }
 
-    public boolean hasSubCommand(SubCommand subCommand) {
-        return subCommand.mainCommand().equalsIgnoreCase(command.label());
+    public boolean isSubCommand() {
+        return method.getAnnotation(SubCommand.class) != null;
+    }
+
+    public A getAnnotation() {
+        return (A) annotation;
+    }
+
+    public void log(String msg) {
+        CommandHandler.getInstance().getLogger().info(msg);
     }
 }

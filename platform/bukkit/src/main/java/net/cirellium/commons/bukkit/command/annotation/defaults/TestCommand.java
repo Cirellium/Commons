@@ -1,5 +1,8 @@
 package net.cirellium.commons.bukkit.command.annotation.defaults;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 import org.bukkit.command.CommandSender;
 
 import net.cirellium.commons.bukkit.command.abstraction.AbstractCommand.SenderType;
@@ -31,9 +34,9 @@ public class TestCommand {
     )
     public void testCommand(
         CommandSender sender,
-        @Argument(name = "test") String test
+        @Argument(name = "test") String[] test
     ) {
-        sender.sendMessage("Test command executed: " + test);
+        sender.sendMessage("Test command executed: " + Arrays.stream(test).collect(Collectors.joining(" ")));
     }
 
     @SubCommand(label = "help", mainCommand = "cirellium")  
