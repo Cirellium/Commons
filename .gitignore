@@ -100,3 +100,5 @@ node_modules/
 package.json
 package-lock.json
 .ssh/
+core-main/
+*.tar.bz2
