@@ -7,8 +7,8 @@ import java.util.List;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.cirellium.commons.common.command.annotations.Command;
-import net.cirellium.commons.common.command.annotations.SubCommand;
+import net.cirellium.commons.common.command.annotation.annotations.Command;
+import net.cirellium.commons.common.command.annotation.annotations.SubCommand;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
@@ -27,11 +27,11 @@ public final class MainCommandData extends CommandData<Command> {
         this.subCommands = new ArrayList<SubCommandData>();
     }
 
-    public final SubCommandData findSubCommand(String[] passedArguments) {
+    public final SubCommandData findSubCommand(String passedArgument) {
         return getSubCommands().stream()
-                .filter(subCmd -> subCmd.getSubCommand().label().equalsIgnoreCase(passedArguments[0])
+                .filter(subCmd -> subCmd.getSubCommand().label().equalsIgnoreCase(passedArgument)
                         || Arrays.stream(subCmd.getSubCommand().aliases())
-                                .anyMatch(alias -> alias.equalsIgnoreCase(passedArguments[0])))
+                                .anyMatch(alias -> alias.equalsIgnoreCase(passedArgument)))
                 .findFirst().orElse(null);
     }
 

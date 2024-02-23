@@ -1,27 +1,33 @@
 package net.cirellium.commons.bukkit.command.annotation;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginIdentifiableCommand;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import lombok.SneakyThrows;
 import net.cirellium.commons.bukkit.command.annotation.invoker.BukkitCommandInvoker;
 import net.cirellium.commons.common.command.CommandHandler;
-import net.cirellium.commons.common.command.adapter.ArgumentTypeAdapter;
-import net.cirellium.commons.common.command.annotations.Argument;
+import net.cirellium.commons.common.command.annotation.adapter.ArgumentTypeAdapter;
+import net.cirellium.commons.common.command.annotation.annotations.Argument;
 import net.cirellium.commons.common.command.data.CommandData;
 import net.cirellium.commons.common.command.data.MainCommandData;
 import net.cirellium.commons.common.command.data.SubCommandData;
 import net.cirellium.commons.common.util.Message;
 
-public class CirelliumBukkitCommand extends org.bukkit.command.Command implements PluginIdentifiableCommand {
+public class CirelliumBukkitCommand extends org.bukkit.command.Command implements PluginIdentifiableCommand, TabCompleter {
 
     private final MainCommandData data;
 
@@ -37,7 +43,7 @@ public class CirelliumBukkitCommand extends org.bukkit.command.Command implement
     public boolean execute(CommandSender sender, String commandLabel, String[] passedArguments) {
         SubCommandData subCommand = null;
         if (passedArguments.length >= 1 && !data.getSubCommands().isEmpty()) {
-            subCommand = data.findSubCommand(passedArguments);
+            subCommand = data.findSubCommand(passedArguments[0]);
         }
 
         final CommandData<?> commandData = subCommand != null ? subCommand : data;
@@ -106,6 +112,45 @@ public class CirelliumBukkitCommand extends org.bukkit.command.Command implement
             method.invoke(data.getCommandObject(), sender);
         }
         return false;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+        List<String> completions = new ArrayList<String>();
+
+        if (args.length == 1) {
+            data.getSubCommands().stream()
+                .filter(subCmd -> subCmd.getSubCommand().mainCommand().equalsIgnoreCase(label))
+                .filter(subCmd -> subCmd.getAnnotation().label().toLowerCase().startsWith(args[0].toLowerCase()))
+                .filter(subCmd -> sender.hasPermission(subCmd.getSubCommand().permission()))
+                .forEach(subCmd -> completions.add(subCmd.getSubCommand().label()));
+            return completions;
+        } else if (args.length < 1) {
+            CommandData<? extends Annotation> currentCommand = null, subCommand = null;
+
+            for (int i = 0; i < args.length; i++) {
+                if (data.hasSubCommand(args[i])) {
+                    subCommand = data.findSubCommand(args[i]);
+                    
+                    if (subCommand == null) break;
+                }
+                currentCommand = subCommand;
+            }
+
+            Method commandMethod = currentCommand.getMethod();
+
+            Class<?> parameterType = commandMethod.getParameterTypes()[args.length - 1];
+
+            ArgumentTypeAdapter<?> adapter = CommandHandler.getInstance().getRegistry().findTypeAdapter(parameterType);
+
+            if (adapter != null) {
+                completions.addAll(adapter.tabComplete(new BukkitCommandInvoker(sender), Set.of(args), args[args.length - 1]));
+            }
+
+            return completions;
+        }
+
+        return completions;
     }
 
     private boolean sendMessage(BukkitCommandInvoker sender, Message... toSend) {

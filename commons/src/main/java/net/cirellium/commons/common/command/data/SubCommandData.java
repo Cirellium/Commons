@@ -4,8 +4,8 @@ import java.lang.reflect.Method;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.cirellium.commons.common.command.annotations.Command;
-import net.cirellium.commons.common.command.annotations.SubCommand;
+import net.cirellium.commons.common.command.annotation.annotations.Command;
+import net.cirellium.commons.common.command.annotation.annotations.SubCommand;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
