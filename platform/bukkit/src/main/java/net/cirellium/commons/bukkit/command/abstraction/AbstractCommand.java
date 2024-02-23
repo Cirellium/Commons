@@ -22,16 +22,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import net.cirellium.commons.bukkit.CirelliumBukkitPlugin;
-import net.cirellium.commons.bukkit.command.CirelliumBukkitCommand;
 import net.cirellium.commons.bukkit.command.abstraction.result.CommandResult;
+import net.cirellium.commons.common.command.ICommand;
+import net.cirellium.commons.common.command.annotations.Command.SenderType;
 import net.cirellium.commons.common.data.user.AbstractCirelliumUser;
 
-public abstract class AbstractCommand<M extends AbstractCommandService<?, M>>
-        implements CirelliumBukkitCommand {
+public abstract class AbstractCommand<P extends CirelliumBukkitPlugin<P>, M extends AbstractCommandService<P, ?, M>>
+        implements ICommand {
 
     protected final CirelliumBukkitPlugin plugin;
     protected final M manager;
@@ -163,7 +163,6 @@ public abstract class AbstractCommand<M extends AbstractCommandService<?, M>>
         return aliases;
     }
 
-    @Override
     public @Nullable Command getBukkitCommand() {
         return getCommandMap().getCommand(commandName);
     }
@@ -205,19 +204,6 @@ public abstract class AbstractCommand<M extends AbstractCommandService<?, M>>
             }
         }
         return completes;
-    }
-
-    public enum SenderType {
-        PLAYER, CONSOLE, BOTH;
-
-        public boolean matches(CommandSender sender) {
-            return switch (this) {
-                case PLAYER -> sender instanceof Player;
-                case CONSOLE -> sender instanceof ConsoleCommandSender;
-                case BOTH -> true;
-                default -> false;
-            };
-        }
     }
 
     private static CommandMap getCommandMap() {

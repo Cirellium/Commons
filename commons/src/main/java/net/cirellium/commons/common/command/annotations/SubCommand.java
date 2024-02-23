@@ -1,4 +1,4 @@
-package net.cirellium.commons.bukkit.command.annotation.annotation;
+package net.cirellium.commons.common.command.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

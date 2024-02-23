@@ -7,20 +7,19 @@
 *
 * Unauthorized copying of this file, via any medium is strictly prohibited
 */
-package net.cirellium.commons.bukkit.command.annotation.adapter.implementation;
+package net.cirellium.commons.common.command.adapter.implementation;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import org.bukkit.command.CommandSender;
-
-import net.cirellium.commons.bukkit.command.annotation.adapter.ArgumentTypeAdapter;
+import net.cirellium.commons.common.command.adapter.ArgumentTypeAdapter;
+import net.cirellium.commons.common.command.sender.CommandInvoker;
 
 public class IntegerTypeAdapter implements ArgumentTypeAdapter<Integer> {
 
     @Override
-    public Integer parse(CommandSender sender, String argument) {
+    public Integer parse(CommandInvoker sender, String argument) {
         try {
             return Integer.parseInt(argument);
         } catch (NumberFormatException e) {
@@ -30,7 +29,7 @@ public class IntegerTypeAdapter implements ArgumentTypeAdapter<Integer> {
     }
 
     @Override
-    public List<String> tabComplete(CommandSender sender, Set<String> argumentSet, String argument) {
+    public List<String> tabComplete(CommandInvoker sender, Set<String> argumentSet, String argument) {
         // Return possible matching integers
         return Arrays.asList("0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
     }

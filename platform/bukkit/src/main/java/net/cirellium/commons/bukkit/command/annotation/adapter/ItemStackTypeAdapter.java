@@ -1,32 +1,32 @@
 /**
 * Copyright (C) 2023 Cirellium Network - All Rights Reserved
 *
-* Created by FearMyShotz on Tue Jan 10 2023 17:01:02
+* Created by FearMyShotz on Tue Jan 10 2023 17:00:13
 *
-* UUIDArgumentType.java is part of Cirellium Commons
+* ItemStackArgumentType.java is part of Cirellium Commons
 *
 * Unauthorized copying of this file, via any medium is strictly prohibited
 */
-package net.cirellium.commons.bukkit.command.annotation.adapter.implementation;
+package net.cirellium.commons.bukkit.command.annotation.adapter;
 
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
-import org.bukkit.command.CommandSender;
+import org.bukkit.inventory.ItemStack;
 
-import net.cirellium.commons.bukkit.command.annotation.adapter.ArgumentTypeAdapter;
+import net.cirellium.commons.common.command.adapter.ArgumentTypeAdapter;
+import net.cirellium.commons.common.command.sender.CommandInvoker;
 
-public class UUIDTypeAdapter implements ArgumentTypeAdapter<UUID> {
+public class ItemStackTypeAdapter implements ArgumentTypeAdapter<ItemStack> {
 
     @Override
-    public UUID parse(CommandSender sender, String argument) {
+    public ItemStack parse(CommandInvoker sender, String argument) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'parse'");
     }
 
     @Override
-    public List<String> tabComplete(CommandSender sender, Set<String> argumentSet, String argument) {
+    public List<String> tabComplete(CommandInvoker sender, Set<String> argumentSet, String argument) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'tabComplete'");
     }
@@ -39,7 +39,7 @@ public class UUIDTypeAdapter implements ArgumentTypeAdapter<UUID> {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return clazz.equals(UUID.class);
+        return clazz.equals(ItemStack.class);
     }
     
 }

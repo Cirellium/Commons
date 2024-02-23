@@ -1,11 +1,11 @@
-package net.cirellium.commons.bukkit.command.annotation.data;
+package net.cirellium.commons.common.command.data;
 
 import java.lang.reflect.Method;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.cirellium.commons.bukkit.command.annotation.annotation.Command;
-import net.cirellium.commons.bukkit.command.annotation.annotation.SubCommand;
+import net.cirellium.commons.common.command.annotations.Command;
+import net.cirellium.commons.common.command.annotations.SubCommand;
 
 @Data
 @EqualsAndHashCode(callSuper=false)

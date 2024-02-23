@@ -22,8 +22,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import lombok.Getter;
 import lombok.NonNull;
 import net.cirellium.commons.bukkit.CirelliumBukkitPlugin;
+import net.cirellium.commons.bukkit.utils.BukkitPlatform;
 import net.cirellium.commons.common.file.PluginFile;
 import net.cirellium.commons.common.logger.CirelliumLogger;
+import net.cirellium.commons.common.logger.SimpleCirelliumLogger;
 import net.cirellium.commons.common.service.ServiceType;
 import net.cirellium.commons.common.version.Platform;
 
@@ -60,7 +62,7 @@ public abstract class AbstractPluginFile implements PluginFile<FileConfiguration
         this.fileConfig = fileConfig;
         this.fileConfig.options().copyDefaults(true);
         this.name = file.getName().replace(".yml", "");
-        this.logger = new CirelliumLogger(Platform.BUKKIT, file.getName());
+        this.logger = new SimpleCirelliumLogger(BukkitPlatform.INSTANCE, file.getName());
         this.comments = true;
 
         this.plugin = null;
@@ -75,7 +77,7 @@ public abstract class AbstractPluginFile implements PluginFile<FileConfiguration
         this.plugin = plugin;
         this.name = "config";
         this.file = new File(plugin.getDataFolder(), name + ".yml");
-        this.logger = new CirelliumLogger(Platform.BUKKIT, plugin.getService(ServiceType.FILE).getName() + " » " + file.getName());
+        this.logger = new SimpleCirelliumLogger(BukkitPlatform.INSTANCE, plugin.getService(ServiceType.FILE).getName() + " » " + file.getName());
         this.comments = true;
 
         create();
@@ -85,7 +87,7 @@ public abstract class AbstractPluginFile implements PluginFile<FileConfiguration
         this.plugin = plugin;
         this.name = fileName;
         this.file = new File(plugin.getDataFolder(), fileName + ".yml");
-        this.logger = new CirelliumLogger(Platform.BUKKIT, plugin.getService(ServiceType.FILE).getName() + " » " + file.getName());
+        this.logger = new SimpleCirelliumLogger(BukkitPlatform.INSTANCE, plugin.getService(ServiceType.FILE).getName() + " » " + file.getName());
         this.comments = true;
 
         create();

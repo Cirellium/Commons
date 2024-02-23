@@ -2,7 +2,6 @@ package net.cirellium.commons.common.util.clazz;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.security.CodeSource;
 import java.util.ArrayList;
@@ -15,26 +14,22 @@ import java.util.jar.JarFile;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nullable;
-
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.reflections.Reflections;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.ClassPath;
 
-import net.cirellium.commons.common.logger.CirelliumLogger;
+import net.cirellium.commons.common.logger.SimpleCirelliumLogger;
 import net.cirellium.commons.common.version.Platform;
 
 public class ClassUtils {
 
-    static Logger logger = new CirelliumLogger(Platform.getCurrentPlatform(), "ClassUtils");
+    static Logger logger = new SimpleCirelliumLogger(Platform.UNKNOWN, "ClassUtils");
 
-    public static Collection<Class<?>> getClassesInPackage(Plugin plugin, String packageName) {
+    public static Collection<Class<?>> getClassesInPackage(Class<?> pluginClass, String packageName) {
         JarFile jarFile;
         Collection<Class<?>> classes = new ArrayList<>();
-        CodeSource codeSource = plugin.getClass().getProtectionDomain().getCodeSource();
+        CodeSource codeSource = pluginClass.getProtectionDomain().getCodeSource();
         URL resource = codeSource.getLocation();
         String relPath = packageName.replace('.', '/');
         String resPath = resource.getPath().replace("%20", " ");
@@ -114,8 +109,8 @@ public class ClassUtils {
                 .collect(Collectors.toSet());
     }
 
-    public static Set<Class<?>> getAllClasses(Plugin plugin, String packageName) throws IOException {
-        return ClassPath.from(plugin.getClass().getClassLoader())
+    public static Set<Class<?>> getAllClasses(Class<?> pluginClass, String packageName) throws IOException {
+        return ClassPath.from(pluginClass.getClassLoader())
                 .getAllClasses()
                 .stream()
                 .filter(clazz -> clazz.getPackageName().contains(packageName))
@@ -126,28 +121,6 @@ public class ClassUtils {
     public static Set<? extends Class<?>> getAllClasses(String packageName, Class<?> clazz) throws IOException {
         Reflections reflections = new Reflections(packageName);
 
-        // Disable logging of `Reflections`, which is very verbose - used code example
-        // from GitHub
-        // https://github.com/ronmamo/reflections/issues/266#issuecomment-878138509
-        // ch.qos.logback.classic.Logger root;
-        // root = (ch.qos.logback.classic.Logger) org.slf4j.LoggerFactory.getLogger("org.reflections");
-        // root.setLevel(ch.qos.logback.classic.Level.OFF);
-
-        // LoggerFactory.getLogger("org.reflections").
-
         return reflections.getSubTypesOf(clazz);
     }
-
-    public static @Nullable String identifyClassLoader(ClassLoader classLoader) throws ReflectiveOperationException {
-        Class<?> pluginClassLoaderClass = Class.forName("org.bukkit.plugin.java.PluginClassLoader");
-        if (pluginClassLoaderClass.isInstance(classLoader)) {
-            Method getPluginMethod = pluginClassLoaderClass.getDeclaredMethod("getPlugin");
-            getPluginMethod.setAccessible(true);
-
-            JavaPlugin plugin = (JavaPlugin) getPluginMethod.invoke(classLoader);
-            return plugin.getName();
-        }
-        return null;
-    }
-
 }

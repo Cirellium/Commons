@@ -1,3 +1,9 @@
 package net.cirellium.commons.common.data;
 
-public interface Data {}
+import net.cirellium.commons.common.data.cache.FastCache;
+
+public interface Data {
+
+    public FastCache<?, ?> getDataCache();
+
+}

@@ -5,10 +5,10 @@ import java.util.stream.Collectors;
 
 import org.bukkit.command.CommandSender;
 
-import net.cirellium.commons.bukkit.command.abstraction.AbstractCommand.SenderType;
-import net.cirellium.commons.bukkit.command.annotation.annotation.Argument;
-import net.cirellium.commons.bukkit.command.annotation.annotation.Command;
-import net.cirellium.commons.bukkit.command.annotation.annotation.SubCommand;
+import net.cirellium.commons.common.command.annotations.Argument;
+import net.cirellium.commons.common.command.annotations.Command;
+import net.cirellium.commons.common.command.annotations.Command.SenderType;
+import net.cirellium.commons.common.command.annotations.SubCommand;
 
 public class TestCommand {
     

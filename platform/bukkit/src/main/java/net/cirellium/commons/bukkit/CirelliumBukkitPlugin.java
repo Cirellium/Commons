@@ -16,7 +16,9 @@ import java.util.concurrent.Executors;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import lombok.Getter;
+import net.cirellium.commons.bukkit.utils.BukkitPlatform;
 import net.cirellium.commons.common.logger.CirelliumLogger;
+import net.cirellium.commons.common.logger.SimpleCirelliumLogger;
 import net.cirellium.commons.common.plugin.CirelliumPlugin;
 import net.cirellium.commons.common.service.ServiceHandler;
 import net.cirellium.commons.common.service.ServiceHolder;
@@ -97,12 +99,12 @@ public abstract class CirelliumBukkitPlugin extends JavaPlugin implements Cirell
 
     @Override
     public Platform getPlatform() {
-        return Platform.BUKKIT;
+        return BukkitPlatform.INSTANCE;
     }
 
     @Override
     public CirelliumLogger getLogger() {
-        return new CirelliumLogger(getPlatform(), getPluginName().toLowerCase());
+        return new SimpleCirelliumLogger(getPlatform(), getPluginName().toLowerCase());
     }
 
     public abstract boolean load();

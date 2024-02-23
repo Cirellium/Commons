@@ -25,7 +25,6 @@ import net.cirellium.commons.common.data.storage.credentials.SQLOptions.HikariCr
 import net.cirellium.commons.common.data.storage.implementation.sql.connection.SqlConnector;
 import net.cirellium.commons.common.logger.CirelliumLogger;
 import net.cirellium.commons.common.plugin.CirelliumPlugin;
-import net.cirellium.commons.common.util.clazz.ClassUtils;
 
 public abstract class HikariConnector implements SqlConnector {
 
@@ -157,7 +156,7 @@ public abstract class HikariConnector implements SqlConnector {
             ClassLoader loader = clazz.getClassLoader();
             String loaderName;
             try {
-                loaderName = ClassUtils.identifyClassLoader(loader) + " (" + loader.toString() + ")";
+                loaderName = " (" + loader.toString() + ")";
             } catch (Throwable e) {
                 loaderName = loader.toString();
             }

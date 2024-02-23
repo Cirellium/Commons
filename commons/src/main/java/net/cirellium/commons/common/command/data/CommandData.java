@@ -1,13 +1,13 @@
-package net.cirellium.commons.bukkit.command.annotation.data;
+package net.cirellium.commons.common.command.data;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
 import lombok.Data;
-import net.cirellium.commons.bukkit.command.annotation.CommandHandler;
-import net.cirellium.commons.bukkit.command.annotation.annotation.Argument;
-import net.cirellium.commons.bukkit.command.annotation.annotation.SubCommand;
+import net.cirellium.commons.common.command.CommandHandler;
+import net.cirellium.commons.common.command.annotations.Argument;
+import net.cirellium.commons.common.command.annotations.SubCommand;
 
 @Data
 public abstract class CommandData<A extends Annotation> {

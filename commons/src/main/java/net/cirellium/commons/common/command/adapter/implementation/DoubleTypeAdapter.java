@@ -1,31 +1,30 @@
 /**
 * Copyright (C) 2023 Cirellium Network - All Rights Reserved
 *
-* Created by FearMyShotz on Tue Jan 10 2023 17:00:05
+* Created by FearMyShotz on Tue Jan 10 2023 17:00:00
 *
-* FloatArgumentType.java is part of Cirellium Commons
+* DoubleArgumentType.java is part of Cirellium Commons
 *
 * Unauthorized copying of this file, via any medium is strictly prohibited
 */
-package net.cirellium.commons.bukkit.command.annotation.adapter.implementation;
+package net.cirellium.commons.common.command.adapter.implementation;
 
 import java.util.List;
 import java.util.Set;
 
-import org.bukkit.command.CommandSender;
+import net.cirellium.commons.common.command.adapter.ArgumentTypeAdapter;
+import net.cirellium.commons.common.command.sender.CommandInvoker;
 
-import net.cirellium.commons.bukkit.command.annotation.adapter.ArgumentTypeAdapter;
-
-public class FloatTypeAdapter implements ArgumentTypeAdapter<Float> {
+public class DoubleTypeAdapter implements ArgumentTypeAdapter<Double> {
 
     @Override
-    public Float parse(CommandSender sender, String argument) {
+    public Double parse(CommandInvoker sender, String argument) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'parse'");
     }
 
     @Override
-    public List<String> tabComplete(CommandSender sender, Set<String> argumentSet, String argument) {
+    public List<String> tabComplete(CommandInvoker sender, Set<String> argumentSet, String argument) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'tabComplete'");
     }
@@ -38,7 +37,7 @@ public class FloatTypeAdapter implements ArgumentTypeAdapter<Float> {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return clazz.equals(Float.class) || clazz.equals(float.class);
+        return clazz.equals(Double.class) || clazz.equals(double.class);
     }
     
 }

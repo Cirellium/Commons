@@ -7,29 +7,27 @@
 *
 * Unauthorized copying of this file, via any medium is strictly prohibited
 */
-package net.cirellium.commons.bukkit.command.annotation;
+package net.cirellium.commons.common.command;
 
 import java.util.logging.Logger;
 
-import net.cirellium.commons.bukkit.CirelliumBukkitPlugin;
-import net.cirellium.commons.common.logger.CirelliumLogger;
-import net.cirellium.commons.common.version.Platform;
+import net.cirellium.commons.common.logger.SimpleCirelliumLogger;
+import net.cirellium.commons.common.plugin.CirelliumPlugin;
 
-public class CommandHandler<P extends CirelliumBukkitPlugin> {
+public class CommandHandler<P extends CirelliumPlugin<P>> {
     
     private static CommandHandler<?> instance;
 
-    protected final CirelliumBukkitPlugin plugin;
+    protected final P plugin;
 
-    private CommandRegistry registry;
+    protected CommandRegistry registry;
 
-    private Logger logger;
+    protected Logger logger;
 
     public CommandHandler(P plugin) {
         instance = this;
-        this.logger = new CirelliumLogger(Platform.BUKKIT, "CommandsAnnotated2");
+        this.logger = new SimpleCirelliumLogger(plugin.getPlatform(), "CommandsAnnotated2");
         this.plugin = plugin;
-        this.registry = new CommandRegistry(plugin.getPluginName().toLowerCase());
     }
 
     public CommandRegistry getRegistry() { return registry; }

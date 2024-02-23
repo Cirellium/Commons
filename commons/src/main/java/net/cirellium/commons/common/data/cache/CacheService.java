@@ -3,8 +3,11 @@ package net.cirellium.commons.common.data.cache;
 import java.util.logging.Logger;
 
 import net.cirellium.commons.common.collection.CList;
+import net.cirellium.commons.common.logger.CirelliumLogger;
+import net.cirellium.commons.common.logger.SimpleCirelliumLogger;
 import net.cirellium.commons.common.plugin.CirelliumPlugin;
 import net.cirellium.commons.common.service.AbstractService;
+import net.cirellium.commons.common.version.Platform;
 
 public class CacheService<P extends CirelliumPlugin<P>> extends AbstractService<P> {
 
@@ -15,21 +18,22 @@ public class CacheService<P extends CirelliumPlugin<P>> extends AbstractService<
     }
 
     @Override
-    public void initialize(P plugin) {
-
+    public void initialize() {
+        
     }
 
     @Override
-    public void shutdown(P plugin) {
-
+    public void shutdown() {
+        
     }
 
     @Override
     public Logger getLogger() {
-        return Logger.getLogger(getClass().getSimpleName());
+        return new SimpleCirelliumLogger(getClass().getSimpleName());
     }
 
     public CList<FastCache<?, ?>> getCaches() {
         return caches;
     }
+    
 }

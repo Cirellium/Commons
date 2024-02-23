@@ -1,11 +1,9 @@
-package net.cirellium.commons.bukkit.command.annotation.annotation;
+package net.cirellium.commons.common.command.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import net.cirellium.commons.bukkit.command.abstraction.AbstractCommand.SenderType;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD })
@@ -30,5 +28,22 @@ public @interface Command {
     boolean async() default false;
 
     boolean debug() default false;
+
+    public enum SenderType {
+        PLAYER, CONSOLE, BOTH;
+
+        public boolean matches(Object sender) {
+            if (this == BOTH) {
+                return true;
+            }
+            if (this == PLAYER) {
+                return sender.getClass().getSimpleName().contains("Player");
+            }
+            if (this == CONSOLE) {
+                return sender.getClass().getSimpleName().contains("Console");
+            }
+            return false;
+        }
+    }
 
 }

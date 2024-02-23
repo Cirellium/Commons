@@ -141,8 +141,7 @@ public class FastCache<Key, Value> extends ConcurrentHashMap<Key, Value> {
      *
      * @param size       the maximum number of entries the cache can hold
      * @param numBuckets the number of buckets to use for storing the cache entries
-     * @param ignoreMe   ignore this parameter, it is only used to differentiate
-     *                   this constructor from the others
+     * @param ignoreMe   ignore this parameter, it is only used to differentiate this constructor from the others
      */
     FastCache(int size, int numBuckets, boolean ignoreMe) {
         this.maxEntries = size;
@@ -165,41 +164,27 @@ public class FastCache<Key, Value> extends ConcurrentHashMap<Key, Value> {
      *                                  factor is not a positive finite value.
      */
     public FastCache(int size, double loadFactor) {
-        checkSize(size);
-        checkLoadFactor(loadFactor);
-        
-        maxEntries = (int) (loadFactor * (double) size);
-        checkMaxEntries(size, loadFactor, maxEntries);
-
-        // required for array
-        @SuppressWarnings({ "unchecked" })
-        SoftReference<Record<Key, Value>>[] bucketsTemp = (SoftReference<Record<Key, Value>>[]) new SoftReference[size];
-        mBuckets = bucketsTemp;
-    }
-
-    private void checkSize(int size) {
         if (size < 1) {
             String msg = "Cache size must be at least 1."
                     + " Found cache size=" + size;
             throw new IllegalArgumentException(msg);
         }
-    }
-
-    private void checkLoadFactor(double loadFactor) {
         if (loadFactor < 0.0 || Double.isNaN(loadFactor) || Double.isInfinite(loadFactor)) {
             String msg = "Load factor must be finite and positive."
                     + " found loadFactor=" + loadFactor;
             throw new IllegalArgumentException(msg);
         }
-    }
-
-    private void checkMaxEntries(int size, double loadFactor, int maxEntries) {
+        maxEntries = (int) (loadFactor * (double) size);
         if (maxEntries < 1) {
             String msg = "size * loadFactor must be > 0."
                     + " Found size=" + size
                     + " loadFactor=" + loadFactor;
             throw new IllegalArgumentException(msg);
         }
+        // required for array
+        @SuppressWarnings({ "unchecked" })
+        SoftReference<Record<Key, Value>>[] bucketsTemp = (SoftReference<Record<Key, Value>>[]) new SoftReference[size];
+        mBuckets = bucketsTemp;
     }
 
     Record<Key, Value> getFirstRecord(int bucketId) {

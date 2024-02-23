@@ -1,31 +1,31 @@
 /**
 * Copyright (C) 2023 Cirellium Network - All Rights Reserved
 *
-* Created by FearMyShotz on Tue Jan 10 2023 17:00:00
+* Created by FearMyShotz on Tue Jan 10 2023 17:01:02
 *
-* DoubleArgumentType.java is part of Cirellium Commons
+* UUIDArgumentType.java is part of Cirellium Commons
 *
 * Unauthorized copying of this file, via any medium is strictly prohibited
 */
-package net.cirellium.commons.bukkit.command.annotation.adapter.implementation;
+package net.cirellium.commons.common.command.adapter.implementation;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
-import org.bukkit.command.CommandSender;
+import net.cirellium.commons.common.command.adapter.ArgumentTypeAdapter;
+import net.cirellium.commons.common.command.sender.CommandInvoker;
 
-import net.cirellium.commons.bukkit.command.annotation.adapter.ArgumentTypeAdapter;
-
-public class DoubleTypeAdapter implements ArgumentTypeAdapter<Double> {
+public class UUIDTypeAdapter implements ArgumentTypeAdapter<UUID> {
 
     @Override
-    public Double parse(CommandSender sender, String argument) {
+    public UUID parse(CommandInvoker sender, String argument) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'parse'");
     }
 
     @Override
-    public List<String> tabComplete(CommandSender sender, Set<String> argumentSet, String argument) {
+    public List<String> tabComplete(CommandInvoker sender, Set<String> argumentSet, String argument) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'tabComplete'");
     }
@@ -38,7 +38,7 @@ public class DoubleTypeAdapter implements ArgumentTypeAdapter<Double> {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return clazz.equals(Double.class) || clazz.equals(double.class);
+        return clazz.equals(UUID.class);
     }
     
 }

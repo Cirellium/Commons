@@ -7,21 +7,20 @@
 *
 * Unauthorized copying of this file, via any medium is strictly prohibited
 */
-package net.cirellium.commons.bukkit.command.annotation.adapter.implementation;
+package net.cirellium.commons.common.command.adapter.implementation;
 
 import java.util.List;
 import java.util.Set;
 
-import org.bukkit.command.CommandSender;
-
-import net.cirellium.commons.bukkit.command.annotation.adapter.ArgumentTypeAdapter;
+import net.cirellium.commons.common.command.adapter.ArgumentTypeAdapter;
+import net.cirellium.commons.common.command.sender.CommandInvoker;
 
 public class BooleanTypeAdapter implements ArgumentTypeAdapter<Boolean> {
 
     List<String> validBooleans = List.of("true", "false", "yes", "no", "y", "n", "0", "1");
 
     @Override
-    public Boolean parse(CommandSender sender, String argument) {
+    public Boolean parse(CommandInvoker sender, String argument) {
         if (!isValidBoolean(argument)) {
             sender.sendMessage("Invalid boolean: " + argument);
             return null;
@@ -31,7 +30,7 @@ public class BooleanTypeAdapter implements ArgumentTypeAdapter<Boolean> {
     }
     
     @Override
-    public List<String> tabComplete(CommandSender sender, Set<String> argumentSet, String argument) {
+    public List<String> tabComplete(CommandInvoker sender, Set<String> argumentSet, String argument) {
         return List.of("true", "false");
     }
 

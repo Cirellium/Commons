@@ -16,6 +16,7 @@ import net.cirellium.commons.common.util.Provider;
 
 public interface MessageProvider extends Provider<String, MessageKey> {
     
+    @Override
     String provide(MessageKey key);
 
     MessageProvider defaultMessageProvider = new MessageProvider() { 
