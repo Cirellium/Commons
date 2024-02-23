@@ -1,4 +1,4 @@
-package net.cirellium.commons.common.command.annotations;
+package net.cirellium.commons.common.command.annotation.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

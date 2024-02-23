@@ -7,12 +7,12 @@
 *
 * Unauthorized copying of this file, via any medium is strictly prohibited
 */
-package net.cirellium.commons.common.command.adapter.implementation;
+package net.cirellium.commons.common.command.annotation.adapter.implementation;
 
 import java.util.List;
 import java.util.Set;
 
-import net.cirellium.commons.common.command.adapter.ArgumentTypeAdapter;
+import net.cirellium.commons.common.command.annotation.adapter.ArgumentTypeAdapter;
 import net.cirellium.commons.common.command.sender.CommandInvoker;
 
 public class BooleanTypeAdapter implements ArgumentTypeAdapter<Boolean> {

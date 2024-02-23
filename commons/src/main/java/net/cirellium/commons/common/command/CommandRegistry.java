@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import lombok.Data;
-import net.cirellium.commons.common.command.adapter.ArgumentTypeAdapter;
+import net.cirellium.commons.common.command.annotation.adapter.ArgumentTypeAdapter;
 import net.cirellium.commons.common.command.data.MainCommandData;
 import net.cirellium.commons.common.logger.SimpleCirelliumLogger;
 import net.cirellium.commons.common.version.Platform;

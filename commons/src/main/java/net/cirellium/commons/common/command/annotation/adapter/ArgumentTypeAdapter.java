@@ -7,7 +7,7 @@
 *
 * Unauthorized copying of this file, via any medium is strictly prohibited
 */
-package net.cirellium.commons.common.command.adapter;
+package net.cirellium.commons.common.command.annotation.adapter;
 
 import java.util.List;
 import java.util.Set;
