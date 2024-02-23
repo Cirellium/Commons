@@ -27,7 +27,7 @@ import org.bukkit.entity.Player;
 import net.cirellium.commons.bukkit.CirelliumBukkitPlugin;
 import net.cirellium.commons.bukkit.command.abstraction.result.CommandResult;
 import net.cirellium.commons.common.command.ICommand;
-import net.cirellium.commons.common.command.annotations.Command.SenderType;
+import net.cirellium.commons.common.command.annotation.annotations.Command.SenderType;
 import net.cirellium.commons.common.data.user.AbstractCirelliumUser;
 
 public abstract class AbstractCommand<P extends CirelliumBukkitPlugin<P>, M extends AbstractCommandService<P, ?, M>>

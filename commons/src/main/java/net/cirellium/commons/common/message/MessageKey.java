@@ -19,10 +19,15 @@ public interface MessageKey {
 
     Enum<?> getEnum();
 
+    default Message placeholder(String key, String value) {
+        return new Message(this, new MessagePlaceholder(key, value));
+    }
+
     public enum Default implements MessageKey {
         TEST("test", "<red>This is a test message with a test tag: <test>"),
 
         PREFIX("prefix", "<dark_gray>[<gold>Cirellium<dark_gray>]"),
+
         ;
 
         private String key;
