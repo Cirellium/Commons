@@ -1,25 +1,24 @@
 /**
 * Copyright (C) 2023 Cirellium Network - All Rights Reserved
 *
-* Created by FearMyShotz on Tue Jan 10 2023 17:01:02
+* Created by FearMyShotz on Tue Jan 10 2023 17:00:05
 *
-* UUIDArgumentType.java is part of Cirellium Commons
+* FloatArgumentType.java is part of Cirellium Commons
 *
 * Unauthorized copying of this file, via any medium is strictly prohibited
 */
-package net.cirellium.commons.common.command.adapter.implementation;
+package net.cirellium.commons.common.command.annotation.adapter.implementation;
 
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
-import net.cirellium.commons.common.command.adapter.ArgumentTypeAdapter;
+import net.cirellium.commons.common.command.annotation.adapter.ArgumentTypeAdapter;
 import net.cirellium.commons.common.command.sender.CommandInvoker;
 
-public class UUIDTypeAdapter implements ArgumentTypeAdapter<UUID> {
+public class FloatTypeAdapter implements ArgumentTypeAdapter<Float> {
 
     @Override
-    public UUID parse(CommandInvoker sender, String argument) {
+    public Float parse(CommandInvoker sender, String argument) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'parse'");
     }
@@ -38,7 +37,7 @@ public class UUIDTypeAdapter implements ArgumentTypeAdapter<UUID> {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return clazz.equals(UUID.class);
+        return clazz.equals(Float.class) || clazz.equals(float.class);
     }
     
 }
