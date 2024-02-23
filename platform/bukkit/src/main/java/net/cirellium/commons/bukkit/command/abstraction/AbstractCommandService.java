@@ -12,8 +12,6 @@ import net.cirellium.commons.bukkit.command.abstraction.result.CommandOutcome;
 import net.cirellium.commons.bukkit.command.abstraction.result.CommandResult;
 import net.cirellium.commons.bukkit.service.AbstractBukkitService;
 import net.cirellium.commons.common.service.ServiceType;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextColor;
 
 public abstract class AbstractCommandService<
         P extends CirelliumBukkitPlugin<P>,               // The plugin class that extends CirelliumPlugin
@@ -64,16 +62,16 @@ public abstract class AbstractCommandService<
 
         if (commands.get(args[0]) == null) return new CommandResult(CommandOutcome.ERROR_NO_COMMAND_FOUND);
 
-        for (String commandName : commands.keySet()) { // ! TODO Untested
+        for (String commandName : commands.keySet()) {
             if (!(args[0].equalsIgnoreCase(commandName))) continue;
 
             AbstractCommand<P, M> cmd = commands.get(commandName);
 
             if (cmd.isDirectCommand()) return cmd.executePlayer(null, command, args);
 
-            if (args.length == 1) return new CommandResult(CommandOutcome.ERROR_NO_SUBCOMMAND, Component.text("Please provide a subcommand", TextColor.fromHexString("#ff523b")));
+            if (args.length == 1) return new CommandResult(CommandOutcome.ERROR_NO_SUBCOMMAND);
 
-            if (!cmd.hasSubCommand(args[1])) return new CommandResult(CommandOutcome.ERROR_NO_SUBCOMMAND_FOUND, Component.text("No subcommand was found for " + commandName, TextColor.fromHexString("#ff523b")));
+            if (!cmd.hasSubCommand(args[1])) return new CommandResult(CommandOutcome.ERROR_NO_SUBCOMMAND_FOUND.withPlaceholder("subcommand", args[1]));
 
             return cmd.getSubCommand(args[1]).executePlayer(null, command, args);
 
@@ -83,15 +81,15 @@ public abstract class AbstractCommandService<
             //     return cmd.getSubCommands().get(subCommandName).executePlayer(null, command, args);
             // }
         }
-        return new CommandResult(CommandOutcome.ERROR, Component.text("An unknown error occurred whilst trying to execute command", TextColor.fromHexString("#ff523b")));
+        return new CommandResult(CommandOutcome.ERROR);
     }
 
     protected CommandResult executeConsole(org.bukkit.command.Command command, String[] args) {
         if (args.length == 0) {
-            return new CommandResult(CommandOutcome.ERROR_NO_COMMAND, Component.text("Please provide a command", TextColor.fromHexString("#ff523b")));
+            return new CommandResult(CommandOutcome.ERROR_NO_COMMAND);
         }
 
-        if (commands.get(args[0]) == null) return new CommandResult(CommandOutcome.ERROR_NO_COMMAND_FOUND, Component.text("No command was found for " + args[0], TextColor.fromHexString("#ff523b")));
+        if (commands.get(args[0]) == null) return new CommandResult(CommandOutcome.ERROR_NO_COMMAND_FOUND.withPlaceholder("command", args[0]));
         
         for (String commandName : commands.keySet()) { // ! TODO Untested
             if (!(args[0].equalsIgnoreCase(commandName))) continue;
@@ -100,13 +98,13 @@ public abstract class AbstractCommandService<
 
             if (cmd.isDirectCommand()) return cmd.executeConsole(command, args);
 
-            if (args.length == 1) return new CommandResult(CommandOutcome.ERROR_NO_SUBCOMMAND, Component.text("Please provide a subcommand", TextColor.fromHexString("#ff523b")));
+            if (args.length == 1) return new CommandResult(CommandOutcome.ERROR_NO_SUBCOMMAND);
 
-            if (!cmd.hasSubCommand(args[1])) return new CommandResult(CommandOutcome.ERROR_NO_SUBCOMMAND_FOUND, Component.text("No subcommand was found for " + commandName, TextColor.fromHexString("#ff523b")));
+            if (!cmd.hasSubCommand(args[1])) return new CommandResult(CommandOutcome.ERROR_NO_SUBCOMMAND_FOUND.withPlaceholder("subcommand", args[1]));
 
             return cmd.getSubCommand(args[1]).executeConsole(command, args);
         }
-        return new CommandResult(CommandOutcome.ERROR, Component.text("An unknown error occurred whilst trying to execute command", TextColor.fromHexString("#ff523b")));
+        return new CommandResult(CommandOutcome.ERROR);
     }
 
     public List<AbstractCommand<P, M>> getCommands() {

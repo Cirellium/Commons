@@ -56,6 +56,8 @@ public final class Message {
     public Message(MessageKey messageKey, @Nullable List<MessagePlaceholder> placeholders) {
         this.messageKey = messageKey;
         this.placeholders = placeholders;
+
+        placeholders.forEach(placeholder -> placeholder(placeholder.key(), placeholder.value()));
     }
 
     public static Message of(MessageKey messageKey, @Nullable MessagePlaceholder... placeholders) {
@@ -76,10 +78,6 @@ public final class Message {
         this.component = parser.deserialize(getString(), Placeholder.parsed(String.valueOf(key), String.valueOf(value)));
         return this;
     }
-
-    // public String getString() {
-    //     return messageKey.getEnum().toString();
-    // }
 
     public String getString() {
         return DEFAULT_PROVIDER.provide(messageKey);

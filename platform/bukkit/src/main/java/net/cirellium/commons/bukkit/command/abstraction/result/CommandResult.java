@@ -9,32 +9,31 @@
 */
 package net.cirellium.commons.bukkit.command.abstraction.result;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.Style;
+import net.cirellium.commons.common.message.Message;
+import net.cirellium.commons.common.message.MessageKey;
 
 public class CommandResult {
     
-    public static final CommandResult INVALID_SENDER = new CommandResult(CommandOutcome.ERROR_INVALID_SENDER, Component.text("This command has to be executed by either a player or a console.", Style.style(NamedTextColor.RED)));
+    public static final CommandResult INVALID_SENDER = new CommandResult(CommandOutcome.ERROR_INVALID_SENDER);
 
     private CommandOutcome outcome;
     
-    private Component message;
+    private Message message;
     
     public CommandResult(CommandOutcome outcome) {
         this.outcome = outcome;
     }
 
-    public CommandResult(CommandOutcome outcome, Component message) {
+    public CommandResult(CommandOutcome outcome, MessageKey key) {
         this.outcome = outcome;
-        this.message = message;
+        this.message = new Message(key);
     }
     
     public CommandOutcome getOutcome() {
         return outcome;
     }
     
-    public Component getMessage() {
+    public Message getMessage() {
         return message;
     }
 
