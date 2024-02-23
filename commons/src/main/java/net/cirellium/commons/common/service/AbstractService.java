@@ -21,6 +21,7 @@ import net.cirellium.commons.common.exception.service.ServiceDependencyException
 import net.cirellium.commons.common.exception.service.ServiceNotFoundException;
 import net.cirellium.commons.common.exception.service.ServiceStateException;
 import net.cirellium.commons.common.logger.CirelliumLogger;
+import net.cirellium.commons.common.logger.SimpleCirelliumLogger;
 import net.cirellium.commons.common.plugin.CirelliumPlugin;
 
 public abstract class AbstractService<CP extends CirelliumPlugin<CP>> {
@@ -54,7 +55,7 @@ public abstract class AbstractService<CP extends CirelliumPlugin<CP>> {
     public AbstractService(CP plugin, ServiceType type, boolean autoInitialize, ServiceType... dependencies) {
         this.plugin = plugin;
         this.serviceType = type;
-        this.logger = new CirelliumLogger(plugin.getPlatform(), getName());
+        this.logger = new SimpleCirelliumLogger(plugin.getPlatform(), getName());
 
         this.autoInitialize = autoInitialize;
 

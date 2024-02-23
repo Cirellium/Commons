@@ -18,14 +18,14 @@ import net.cirellium.commons.bukkit.command.abstraction.result.CommandResult;
 public class CommandHandler<
     P extends CirelliumBukkitPlugin<P>, 
     H, 
-    M extends AbstractCommandManager<P, H, M>
+    M extends AbstractCommandService<P, H, M>
     > implements CommandExecutor, TabCompleter {
 
     public static final BiPredicate<CommandSender, ? super AbstractCommand<?, ?>> HAS_PERMISSION = (s, c) -> s.hasPermission(c.getPermission());
 
-    private AbstractCommandManager<P, H, M> manager; 
+    private AbstractCommandService<P, H, M> manager; 
 
-    public CommandHandler(AbstractCommandManager<P, H, M> abstractCommandManager) {
+    public CommandHandler(AbstractCommandService<P, H, M> abstractCommandManager) {
         this.manager = abstractCommandManager;
     }
 

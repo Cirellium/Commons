@@ -21,6 +21,8 @@ public class Version implements Comparable<Version> {
     
     private static final String SEPARATOR = "[_.-]";
 
+    public static final Version UNKNOWN = new Version("UNKNOWN");
+
     private String version;
 
     /*

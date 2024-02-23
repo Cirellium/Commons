@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 // import net.cirellium.commons.bukkit.service.AbstractBukkitService;
 import net.cirellium.commons.common.exception.service.ServiceDependencyException;
 import net.cirellium.commons.common.exception.service.ServiceException;
-import net.cirellium.commons.common.logger.CirelliumLogger;
+import net.cirellium.commons.common.logger.SimpleCirelliumLogger;
 import net.cirellium.commons.common.plugin.CirelliumPlugin;
 import net.cirellium.commons.common.util.ExceptionUtils;
 import net.cirellium.commons.common.util.clazz.ClassUtils;
@@ -51,7 +51,7 @@ public class ServiceHandler<P extends CirelliumPlugin<P>> {
         // if(plugin.getPlatform() == Platform.BUKKIT) this.bukkitPlugin = (CirelliumBukkitPlugin<?>) plugin;
         this.registry = new ServiceRegistry<P>();
         this.provider = new ServiceProvider<P>(registry);
-        this.logger = new CirelliumLogger(Platform.getCurrentPlatform(), "ServiceHandler");
+        this.logger = new SimpleCirelliumLogger(Platform.UNKNOWN, "ServiceHandler");
 
         // CompletableFuture.runAsync(() -> loadServices(), plugin.getExecutorService())
                         // .thenRun(() -> initializeServices());

@@ -11,10 +11,9 @@ package net.cirellium.commons.common.util;
 
 import javax.annotation.Nullable;
 
-import org.bukkit.command.CommandSender;
-
 import lombok.Getter;
 import lombok.Setter;
+import net.cirellium.commons.common.command.sender.CommandInvoker;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.Style;
@@ -27,8 +26,9 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.minimessage.tag.standard.StandardTags;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.md_5.bungee.api.CommandSender;
 
-public enum Message implements Sendable<CommandSender> {
+public enum Message implements Sendable<CommandInvoker> {
 
     TEST("test", "<red>This is a test message with a test tag: <test>"),
 
@@ -151,8 +151,8 @@ public enum Message implements Sendable<CommandSender> {
         return LegacyComponentSerializer.legacy('§').serialize(messageComponent);
     }
 
-    public void send(CommandSender sender) {
-        sender.sendMessage(messageComponent);
+    public void send(CommandInvoker sender) {
+        sender.sendMessage(toLegacyString());
     }
 
     public static enum Color {

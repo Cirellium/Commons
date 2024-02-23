@@ -2,9 +2,9 @@ package net.cirellium.commons.bukkit.command.annotation.defaults;
 
 import org.bukkit.command.CommandSender;
 
-import net.cirellium.commons.bukkit.command.abstraction.AbstractCommand.SenderType;
-import net.cirellium.commons.bukkit.command.annotation.annotation.Argument;
-import net.cirellium.commons.bukkit.command.annotation.annotation.Command;
+import net.cirellium.commons.common.command.annotations.Argument;
+import net.cirellium.commons.common.command.annotations.Command;
+import net.cirellium.commons.common.command.annotations.Command.SenderType;
 
 public class TestMenuCommand {
     
