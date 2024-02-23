@@ -24,10 +24,8 @@ import lombok.NonNull;
 import net.cirellium.commons.bukkit.CirelliumBukkitPlugin;
 import net.cirellium.commons.bukkit.utils.BukkitPlatform;
 import net.cirellium.commons.common.file.PluginFile;
-import net.cirellium.commons.common.logger.CirelliumLogger;
 import net.cirellium.commons.common.logger.SimpleCirelliumLogger;
 import net.cirellium.commons.common.service.ServiceType;
-import net.cirellium.commons.common.version.Platform;
 
 /**
  * This class an abstract implementation of a plugin file.

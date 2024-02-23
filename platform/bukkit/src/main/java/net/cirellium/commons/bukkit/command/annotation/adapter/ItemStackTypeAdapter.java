@@ -14,7 +14,7 @@ import java.util.Set;
 
 import org.bukkit.inventory.ItemStack;
 
-import net.cirellium.commons.common.command.adapter.ArgumentTypeAdapter;
+import net.cirellium.commons.common.command.annotation.adapter.ArgumentTypeAdapter;
 import net.cirellium.commons.common.command.sender.CommandInvoker;
 
 public class ItemStackTypeAdapter implements ArgumentTypeAdapter<ItemStack> {

@@ -14,7 +14,7 @@ import java.util.Set;
 
 import org.bukkit.OfflinePlayer;
 
-import net.cirellium.commons.common.command.adapter.ArgumentTypeAdapter;
+import net.cirellium.commons.common.command.annotation.adapter.ArgumentTypeAdapter;
 import net.cirellium.commons.common.command.sender.CommandInvoker;
 
 public class OfflinePlayerTypeAdapter implements ArgumentTypeAdapter<OfflinePlayer> {
