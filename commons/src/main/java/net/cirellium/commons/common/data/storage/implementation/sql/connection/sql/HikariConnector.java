@@ -21,12 +21,12 @@ import com.zaxxer.hikari.HikariDataSource;
 
 import net.cirellium.commons.common.data.storage.credentials.SQLOptions;
 import net.cirellium.commons.common.data.storage.credentials.SQLOptions.HikariCredentials;
-import net.cirellium.commons.common.data.storage.implementation.sql.connection.Connector;
+import net.cirellium.commons.common.data.storage.implementation.sql.connection.SqlConnector;
 import net.cirellium.commons.common.logger.CirelliumLogger;
 import net.cirellium.commons.common.plugin.CirelliumPlugin;
 import net.cirellium.commons.common.util.clazz.ClassUtils;
 
-public abstract class HikariConnector implements Connector {
+public abstract class HikariConnector implements SqlConnector {
 
     private final SQLOptions options;
 

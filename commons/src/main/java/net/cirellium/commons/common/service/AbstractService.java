@@ -40,11 +40,11 @@ public abstract class AbstractService<CP extends CirelliumPlugin<CP>> {
     protected boolean initialized = false, autoInitialize = false;
 
     public AbstractService(CP plugin) {
-        this(plugin, ServiceType.OTHER, true);
+        this(plugin, ServiceType.NONE, true);
     }
 
     public AbstractService(CP plugin, boolean autoInitialize) {
-        this(plugin, ServiceType.OTHER, autoInitialize);
+        this(plugin, ServiceType.NONE, autoInitialize);
     }
 
     public AbstractService(CP plugin, ServiceType type, ServiceType... dependencies) {
@@ -97,11 +97,7 @@ public abstract class AbstractService<CP extends CirelliumPlugin<CP>> {
     }
 
     public String getName() {
-        return serviceType.getName();
-    }
-
-    public void setName(String name) {
-        serviceType.setName(name);
+        return serviceType.getClass().getSimpleName();
     }
 
     public final boolean isInitialized() {

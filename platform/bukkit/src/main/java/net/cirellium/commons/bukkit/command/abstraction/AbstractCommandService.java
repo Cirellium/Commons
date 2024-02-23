@@ -15,10 +15,10 @@ import net.cirellium.commons.common.service.ServiceType;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 
-public abstract class AbstractCommandManager<
+public abstract class AbstractCommandService<
         P extends CirelliumBukkitPlugin<P>,               // The plugin class that extends CirelliumPlugin
         H,                                          // The command handler class that extends this class
-        M extends AbstractCommandManager<P, H, M>   // The actual command manager that extends this class
+        M extends AbstractCommandService<P, H, M>   // The actual command manager that extends this class
         > extends AbstractBukkitService<P> {
 
     protected final P plugin;
@@ -26,22 +26,22 @@ public abstract class AbstractCommandManager<
 
     protected final HashMap<String, AbstractCommand<P, M>> commands;
 
-    public AbstractCommandManager(P plugin) {
+    public AbstractCommandService(P plugin) {
         super(plugin, 
             ServiceType.COMMAND, 
             true, 
-            new ServiceType[] { ServiceType.DATABASE, ServiceType.FILE, ServiceType.CACHE });
+            new ServiceType[] { ServiceType.DATABASE, ServiceType.CACHE });
         this.plugin = plugin;
         this.commandHandler = new CommandHandler<P, H, M>(this);
 
         this.commands = new HashMap<>();
     }
 
-    public AbstractCommandManager(P plugin, CommandHandler<P, H, M> handler, ServiceType type, boolean autoInitialize, ServiceType[] dependencies) {
+    public AbstractCommandService(P plugin, CommandHandler<P, H, M> handler, ServiceType type, boolean autoInitialize, ServiceType[] dependencies) {
         super(plugin, 
             ServiceType.COMMAND, 
             true, 
-            new ServiceType[] { ServiceType.DATABASE, ServiceType.FILE, ServiceType.CACHE });
+            new ServiceType[] { ServiceType.DATABASE, ServiceType.CACHE });
         this.plugin = plugin;
         this.commandHandler = handler;
 

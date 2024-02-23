@@ -10,6 +10,9 @@
 
 package net.cirellium.commons.common.service;
 
+import net.cirellium.commons.common.data.DatabaseService;
+import net.cirellium.commons.common.data.cache.CacheService;
+
 /**
  * An enum that represents the type of a service.
  * This is used to map services to their type.
@@ -18,35 +21,21 @@ package net.cirellium.commons.common.service;
  */
 public enum ServiceType {
     
-    CACHE("Cache"),
-    CONFIG("Config"),
-    COMMAND("Command"),
-    DATABASE("Database"),
-    FILE("File"),
-    LISTENER("Listener"),
-    TASK("Task"),
-    PLAYER("Player"),
-    ENTITY("Entity"),
-    WORLD("World"),
-    INVENTORY("Inventory"),
-    ITEM("Item"),
-    CHAT("Chat"),
-    MESSAGE("Message"),
-    PERMISSION("Permission"),
-    SCOREBOARD("Scoreboard"),
-    OTHER("Other"),
+    CACHE(CacheService.class),
+    COMMAND(null),
+    DATABASE(DatabaseService.class),
+    FILE(null),
+   
 
     // This is used for services that have no dependencies
-    NONE("No dependency");
+    NONE(null);
 
-    private String name;
+    private Class<?> serviceClass;
 
-    ServiceType(String name) {
-        this.name = name;
+    ServiceType(Class<?> serviceClass) {
+        this.serviceClass = serviceClass;
     }
 
-    public String getName() { return name + "Service"; }
-
-    public void setName(String newName) { this.name = newName; }
+    public Class<?> getServiceClass() { return serviceClass; }
 
 }

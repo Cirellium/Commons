@@ -20,7 +20,8 @@ import net.cirellium.commons.bukkit.file.implementation.DatabaseFile;
 import net.cirellium.commons.bukkit.service.AbstractBukkitService;
 import net.cirellium.commons.common.service.ServiceType;
 
-public abstract class AbstractFileHandlerService<P extends CirelliumBukkitPlugin<P>> extends AbstractBukkitService<P> {
+public abstract class AbstractFileHandlerService<P extends CirelliumBukkitPlugin<P>> 
+    extends AbstractBukkitService<P> {
 
     protected Map<String, AbstractPluginFile<P>> files = new HashMap<>();
 

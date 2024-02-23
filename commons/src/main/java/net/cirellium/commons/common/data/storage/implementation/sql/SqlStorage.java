@@ -21,7 +21,7 @@ import java.util.function.Supplier;
 
 import net.cirellium.commons.common.collection.CMap;
 import net.cirellium.commons.common.data.storage.implementation.Storage;
-import net.cirellium.commons.common.data.storage.implementation.sql.connection.Connector;
+import net.cirellium.commons.common.data.storage.implementation.sql.connection.SqlConnector;
 import net.cirellium.commons.common.data.user.AbstractCirelliumUser;
 
 /**
@@ -37,7 +37,7 @@ import net.cirellium.commons.common.data.user.AbstractCirelliumUser;
  */
 public abstract class SqlStorage<CUser extends AbstractCirelliumUser> implements Storage<CUser> {
 
-    protected Connector connector;
+    protected SqlConnector connector;
 
     @Override
     public abstract CMap<UUID, CUser> getUsers();

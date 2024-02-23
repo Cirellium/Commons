@@ -30,7 +30,7 @@ import net.cirellium.commons.bukkit.command.CirelliumBukkitCommand;
 import net.cirellium.commons.bukkit.command.abstraction.result.CommandResult;
 import net.cirellium.commons.common.data.user.AbstractCirelliumUser;
 
-public abstract class AbstractCommand<P extends CirelliumBukkitPlugin<P>, M extends AbstractCommandManager<P, ?, M>>
+public abstract class AbstractCommand<P extends CirelliumBukkitPlugin<P>, M extends AbstractCommandService<P, ?, M>>
         implements CirelliumBukkitCommand {
 
     protected final P plugin;

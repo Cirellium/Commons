@@ -182,7 +182,7 @@ public class ServiceHandler<P extends CirelliumPlugin<P>> {
                     Set<ServiceType> missingDependencies = new HashSet<>(service.getDependencies());
                     missingDependencies.stream().filter(type -> !initializedServices.contains(type)).forEach(dependencyType -> {
                         try {
-                            logger.info("Attempting to prepare dependency " + dependencyType.getName());
+                            logger.info("Attempting to prepare dependency " + dependencyType.getClass().getSimpleName());
                             service.getService(dependencyType).prepare();
                             initializedServices.add(dependencyType);
                             toInitialize.remove(service.getService(dependencyType));

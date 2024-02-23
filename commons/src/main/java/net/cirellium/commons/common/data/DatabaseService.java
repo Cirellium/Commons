@@ -26,7 +26,7 @@ public abstract class DatabaseService<P extends CirelliumPlugin<P>> extends Abst
     }
 
     public DatabaseService(P plugin, StorageType storageType) {
-        super(plugin, ServiceType.DATABASE, ServiceType.FILE);
+        super(plugin, ServiceType.DATABASE);
 
     }
 
