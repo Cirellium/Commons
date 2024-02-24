@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * A provider is a supplier that provides an object.
+ * A provider extends the functionality of a {@link Supplier} interface by providing an object of type T while also taking a parameter of type P.
  * 
  * @author Fear
  * @param <T> The type of the object to provide

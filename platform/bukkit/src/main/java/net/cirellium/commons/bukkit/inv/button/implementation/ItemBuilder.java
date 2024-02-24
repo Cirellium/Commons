@@ -7,6 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import net.cirellium.commons.bukkit.inv.button.Button;
@@ -40,7 +41,8 @@ public class ItemBuilder implements Button.Builder.Item {
     @Override
     public <T extends ItemMeta> Item meta(Class<T> clazz, Consumer<T> consumer) {
         return meta(itemMeta -> {
-            if (clazz.isInstance(itemMeta)) consumer.accept(clazz.cast(itemMeta));
+            if (clazz.isInstance(itemMeta))
+                consumer.accept(clazz.cast(itemMeta));
         });
     }
 
@@ -72,7 +74,7 @@ public class ItemBuilder implements Button.Builder.Item {
     public Item lore(String... lore) {
         Item addedLore = null;
 
-        for(String lorePart : lore) {
+        for (String lorePart : lore) {
             addedLore = lore(lorePart);
         }
         return addedLore;
@@ -80,50 +82,43 @@ public class ItemBuilder implements Button.Builder.Item {
 
     @Override
     public Item lore(List<String> lore) {
-        
-        return this;
+        return meta(itemMeta -> itemMeta.setLore(lore));
     }
 
     @Override
     public Item glowing(boolean glowing) {
-        
-        return this;
+        return enchantment(Enchantment.LUCK);
     }
 
     @Override
     public Item enchantment(Enchantment enchantment) {
-        
-        return this;
+        return meta(itemMeta -> itemMeta.addEnchant(enchantment, 1, true));
     }
 
     @Override
     public Item enchantment(Enchantment enchantment, int level) {
-        
-        return this;
+        return meta(itemMeta -> itemMeta.addEnchant(enchantment, level, true));
     }
 
     @Override
     public Item flag(ItemFlag flag) {
-        
-        return this;
+        return meta(itemMeta -> itemMeta.addItemFlags(flag));
     }
 
     @Override
     public Item damage(int damage) {
-        
-        return this;
+        return meta(itemMeta -> {
+            if (itemMeta instanceof Damageable d) d.setDamage(damage);
+        });
     }
 
     @Override
     public Item unbreakable() {
-        
-        return this;
+        return flag(ItemFlag.HIDE_UNBREAKABLE);
     }
 
     @Override
     public ItemStack build() {
         return itemStack;
     }
-
-    
 }

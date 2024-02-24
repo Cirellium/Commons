@@ -12,9 +12,11 @@ package net.cirellium.commons.bukkit;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import lombok.Getter;
+import net.cirellium.commons.bukkit.inv.InventoryListener;
 import net.cirellium.commons.bukkit.utils.BukkitPlatform;
 import net.cirellium.commons.common.logger.CirelliumLogger;
 import net.cirellium.commons.common.logger.SimpleCirelliumLogger;
@@ -67,8 +69,8 @@ public abstract class CirelliumBukkitPlugin<P extends CirelliumBukkitPlugin<P>> 
     public void onEnable() {
         serviceHandler.initializeServices();
         this.adventure = BukkitAudiences.create(this);
+        Bukkit.getPluginManager().registerEvents(new InventoryListener(), this);
 
-        // ! First, load all services, then run the custom enable method
         enable();
     }
 

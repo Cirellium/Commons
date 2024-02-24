@@ -1,4 +1,4 @@
-package net.cirellium.commons.bukkit.inv.implementation;
+package net.cirellium.commons.bukkit.inv.content;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -7,7 +7,6 @@ import java.util.Map;
 import org.bukkit.inventory.ItemStack;
 
 import net.cirellium.commons.bukkit.inv.button.Button;
-import net.cirellium.commons.common.collection.CList;
 
 /**
  * This class represents the contents of an inventory.
@@ -18,8 +17,11 @@ public class InventoryContent implements Iterable<ItemStack> {
     
     public final Map<Integer, Button> buttons;
 
-    public InventoryContent() {
-        this.buttons = new HashMap<>();
+    public final int size;
+
+    public InventoryContent(int size) {
+        this.buttons = new HashMap<>(size);
+        this.size = size;
     }
 
     public Button get(int index) {
@@ -34,8 +36,12 @@ public class InventoryContent implements Iterable<ItemStack> {
         buttons.remove(button.slot());
     }
 
-    public HashMap<Integer, Button> getButtons() {
-        return new HashMap<>(buttons);
+    public int getSize() {
+        return size;
+    }
+
+    public Map<Integer, Button> getButtons() {
+        return buttons;
     }
 
     @Override

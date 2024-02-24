@@ -21,6 +21,10 @@ import net.cirellium.commons.bukkit.inv.click.ClickHandler;
  */
 public record Button(ItemStack itemStack, int slot, ClickHandler clickHandler) {
 
+    @Override
+    public String toString() {
+        return "Button [itemStack=" + itemStack + ", slot=" + slot + ", clickHandler=" + clickHandler + "]";
+    }
     /**
      * This interface provides a builder for the {@link Button} record.
      * 

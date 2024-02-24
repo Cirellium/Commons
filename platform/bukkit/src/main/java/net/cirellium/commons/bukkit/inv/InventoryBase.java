@@ -1,4 +1,4 @@
-package net.cirellium.commons.bukkit.inv.implementation;
+package net.cirellium.commons.bukkit.inv;
 
 import java.util.function.Consumer;
 
@@ -6,12 +6,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
 
-import net.cirellium.commons.bukkit.inv.CustomInventory;
 import net.cirellium.commons.bukkit.inv.button.Button;
 import net.cirellium.commons.bukkit.inv.click.ClickHandler.ClickInformation;
 import net.cirellium.commons.bukkit.inv.click.ClickResponse;
+import net.cirellium.commons.bukkit.inv.content.InventoryContent;
+import net.cirellium.commons.bukkit.inv.content.InventoryDesign.InventorySize;
 
 /**
  * This class provides an implementation of the {@link CustomInventory} interface.
@@ -23,20 +23,36 @@ public abstract class InventoryBase implements CustomInventory, InventoryHolder 
     protected final Inventory inventory;
     protected InventoryContent content;
 
+    protected int size;
+
     protected Consumer<Player> closeAction;
 
-    public InventoryBase(int size, String title) {
-        this.inventory = Bukkit.createInventory(null, size, title);
-        this.content = new InventoryContentBuilder().empty().build();
+    public InventoryBase(InventorySize size, String title, InventoryContent content) {
+        this(size.getSize(), title, content);
+    }
+
+    public InventoryBase(int size, String title, InventoryContent content) {
+        this.inventory = Bukkit.createInventory(this, size, title);
+        this.content = content;
+        this.size = size;
 
         this.closeAction = (p) -> {};
+
+        // fillInventory();
+        updateInventory();
+    }
+
+    public void fillInventory() {
+        for (int i = 0; i < inventory.getSize(); i++) {
+            inventory.setItem(i, content.get(i).itemStack());
+        }
     }
 
     public void updateInventory() {
         inventory.clear();
 
-        for (Button button : content.getButtons().values()) {
-            inventory.setItem(button.slot(), button.itemStack());
+        for (int i = 0; i < size; i++) {
+            inventory.setItem(i, content.get(i).itemStack());
         }
     }
 
@@ -45,22 +61,27 @@ public abstract class InventoryBase implements CustomInventory, InventoryHolder 
     }
 
     @Override
+    public Inventory getInventory() {
+        return inventory;
+    }
+
+    @Override
     public void openInventory(Player player) {
         player.closeInventory();
         this.updateInventory();
         player.openInventory(inventory);
-        // player.updateInventory();
+        player.updateInventory();
     }
 
     @Override
     public void closeInventory(Player player) {
-        player.closeInventory();
-
         closeAction.accept(player);
     }
 
     @Override
     public ClickResponse onClick(ClickInformation clickInformation, Button clicked) {
+        
+        Bukkit.getLogger().info("Returning clickhandler: " + clicked.clickHandler());
         return clicked.clickHandler().click(clickInformation);
     }
 
