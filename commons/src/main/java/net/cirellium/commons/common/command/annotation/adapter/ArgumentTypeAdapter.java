@@ -12,10 +12,8 @@ package net.cirellium.commons.common.command.annotation.adapter;
 import java.util.List;
 import java.util.Set;
 
+import net.cirellium.commons.common.command.result.CommandOutcome;
 import net.cirellium.commons.common.command.sender.CommandInvoker;
-import net.cirellium.commons.common.util.Message;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 public interface ArgumentTypeAdapter<T> {
     
@@ -28,9 +26,7 @@ public interface ArgumentTypeAdapter<T> {
     boolean supports(Class<?> clazz);
 
     default void handleException(CommandInvoker sender, String source) {
-        Component errorMessage = Message.COMMAND_ERROR_PARSE_ARG.placeholder("arg", source).getComponent();
-
-        sender.sendMessage(LegacyComponentSerializer.legacy('§').serialize(errorMessage));
+        sender.sendMessage(CommandOutcome.ERROR_PARSE_ARG.placeholder("arg", source));
     }
     
 }

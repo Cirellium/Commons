@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 import net.cirellium.commons.common.command.annotation.adapter.ArgumentTypeAdapter;
+import net.cirellium.commons.common.command.result.CommandOutcome;
 import net.cirellium.commons.common.command.sender.CommandInvoker;
 
 public class IntegerTypeAdapter implements ArgumentTypeAdapter<Integer> {
@@ -23,7 +24,7 @@ public class IntegerTypeAdapter implements ArgumentTypeAdapter<Integer> {
         try {
             return Integer.parseInt(argument);
         } catch (NumberFormatException e) {
-            sender.sendMessage("§cPlease enter a valid integer.");
+            sender.sendMessage(CommandOutcome.ERROR_INVALID_TYPE.placeholder("type", "integer"));
         }
         return null;
     }

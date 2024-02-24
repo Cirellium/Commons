@@ -1,14 +1,11 @@
 package net.cirellium.commons.bukkit.command.annotation.defaults;
 
-import org.bukkit.command.CommandSender;
-
 import net.cirellium.commons.bukkit.CirelliumBukkitPlugin;
+import net.cirellium.commons.bukkit.command.annotation.invoker.BukkitCommandInvoker;
 import net.cirellium.commons.common.command.annotation.annotations.Argument;
 import net.cirellium.commons.common.command.annotation.annotations.Command;
 import net.cirellium.commons.common.command.annotation.annotations.Command.SenderType;
-import net.cirellium.commons.common.util.Message;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.cirellium.commons.common.message.MessageKey.Default;
 
 public class PlaceholderCommand {
     
@@ -21,13 +18,11 @@ public class PlaceholderCommand {
         debug = true
     )
     public void placeholder(
-        CommandSender sender,
+        BukkitCommandInvoker sender,
         @Argument(name = "test") String test
     ) {
         CirelliumBukkitPlugin.getProvidingPlugin(getClass()).getLogger().info("Placeholder command: " + test);
 
-        Component testMessage = Message.TEST.placeholder("test", test).getComponent();
-
-        sender.sendMessage(LegacyComponentSerializer.legacy('§').serialize(testMessage));
+        sender.sendMessage(Default.TEST.placeholder("test", test).getComponent());
     }
 }

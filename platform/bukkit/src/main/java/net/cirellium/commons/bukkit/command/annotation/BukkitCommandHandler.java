@@ -10,5 +10,8 @@ public class BukkitCommandHandler<P extends CirelliumBukkitPlugin<P>> extends Co
         
         super.registry = new BukkitCommandRegistry(plugin.getPluginName().toLowerCase());
     }
-    
+
+    public static BukkitCommandHandler<?> getInstance() {
+        return (BukkitCommandHandler<?>) instance;
+    }
 }

@@ -9,7 +9,6 @@
  */
 package net.cirellium.commons.bukkit;
 
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -24,6 +23,7 @@ import net.cirellium.commons.common.service.ServiceHandler;
 import net.cirellium.commons.common.service.ServiceHolder;
 import net.cirellium.commons.common.version.Platform;
 import net.cirellium.commons.common.version.Version;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 
 /**
  * This class represents the base class for all Cirellium Bukkit plugins.
@@ -36,7 +36,9 @@ public abstract class CirelliumBukkitPlugin extends JavaPlugin implements Cirell
 
     @Getter
     private ExecutorService executorService;
-    
+
+    private BukkitAudiences adventure;
+
     @Override
     public void onLoad() {
         plugin = this;
@@ -63,6 +65,7 @@ public abstract class CirelliumBukkitPlugin extends JavaPlugin implements Cirell
     @Override
     public void onEnable() {
         serviceHandler.initializeServices();
+        this.adventure = BukkitAudiences.create(this);
 
         // ! First, load all services, then run the custom enable method
         enable();
@@ -71,6 +74,11 @@ public abstract class CirelliumBukkitPlugin extends JavaPlugin implements Cirell
     @Override
     public void onDisable() {
         serviceHandler.shutdownServices();
+
+        if (this.adventure != null) {
+            this.adventure.close();
+            this.adventure = null;
+        }
 
         disable();
     }
@@ -112,5 +120,5 @@ public abstract class CirelliumBukkitPlugin extends JavaPlugin implements Cirell
     public abstract void enable();
 
     public abstract void disable();
-    
+
 }

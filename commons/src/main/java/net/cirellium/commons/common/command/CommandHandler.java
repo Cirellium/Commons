@@ -16,7 +16,7 @@ import net.cirellium.commons.common.plugin.CirelliumPlugin;
 
 public class CommandHandler<P extends CirelliumPlugin<P>> {
     
-    private static CommandHandler<?> instance;
+    protected static CommandHandler<?> instance;
 
     protected final P plugin;
 
@@ -29,6 +29,8 @@ public class CommandHandler<P extends CirelliumPlugin<P>> {
         this.logger = new SimpleCirelliumLogger(plugin.getPlatform(), "CommandsAnnotated2");
         this.plugin = plugin;
     }
+
+    public P getPlugin() { return plugin; }
 
     public CommandRegistry getRegistry() { return registry; }
 
