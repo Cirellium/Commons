@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
@@ -51,7 +52,8 @@ public class BukkitCommandRegistry extends CommandRegistry {
         logger.info("Registering commands in package " + packageName);
 
         Set<Class<?>> classes = new HashSet<Class<?>>(
-                ClassUtils.getClassesInPackage(JavaPlugin.getProvidingPlugin(CommandRegistry.class).getClass(), packageName));
+                ClassUtils.getClassesInPackage(JavaPlugin.getProvidingPlugin(CommandRegistry.class).getClass(),
+                        packageName));
 
         logger.info("Found " + classes.size() + " classes in package " + packageName);
 
@@ -82,8 +84,15 @@ public class BukkitCommandRegistry extends CommandRegistry {
         mainCommandMethods.stream()
                 .map(method -> new MainCommandData(method, object))
                 .forEach(commandData -> {
+                    logger.info("Registering command with name '" + commandData.getCommand().label() + "'");
                     this.registeredCommands.add(commandData);
                     this.getCommandMap().register(defaultPrefix, new CirelliumBukkitCommand(commandData));
+                    this.getCommandMap().getCommand(commandData.getCommand().label())
+                            .setPermission(commandData.getCommand().permission());
+                    this.getCommandMap().getCommand(commandData.getCommand().label())
+                            .setAliases(List.of(commandData.getCommand().aliases()));
+                    this.getCommandMap().getCommand(commandData.getCommand().label())
+                            .setUsage(commandData.getCommand().usage());
                 });
 
         subCommandMethods.stream()

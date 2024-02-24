@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 import net.cirellium.commons.common.command.annotation.adapter.ArgumentTypeAdapter;
+import net.cirellium.commons.common.command.result.CommandOutcome;
 import net.cirellium.commons.common.command.sender.CommandInvoker;
 
 public class BooleanTypeAdapter implements ArgumentTypeAdapter<Boolean> {
@@ -22,7 +23,7 @@ public class BooleanTypeAdapter implements ArgumentTypeAdapter<Boolean> {
     @Override
     public Boolean parse(CommandInvoker sender, String argument) {
         if (!isValidBoolean(argument)) {
-            sender.sendMessage("Invalid boolean: " + argument);
+            sender.sendMessage(CommandOutcome.ERROR_INVALID_TYPE.placeholder("type", "integer"));
             return null;
         }
 

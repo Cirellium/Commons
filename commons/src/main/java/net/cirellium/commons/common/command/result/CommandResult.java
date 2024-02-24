@@ -7,7 +7,7 @@
 *
 * Unauthorized copying of this file, via any medium is strictly prohibited
 */
-package net.cirellium.commons.bukkit.command.abstraction.result;
+package net.cirellium.commons.common.command.result;
 
 import net.cirellium.commons.common.message.Message;
 import net.cirellium.commons.common.message.MessageKey;

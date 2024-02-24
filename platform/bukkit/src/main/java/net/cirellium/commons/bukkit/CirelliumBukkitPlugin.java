@@ -9,7 +9,6 @@
  */
 package net.cirellium.commons.bukkit;
 
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -24,11 +23,13 @@ import net.cirellium.commons.common.service.ServiceHandler;
 import net.cirellium.commons.common.service.ServiceHolder;
 import net.cirellium.commons.common.version.Platform;
 import net.cirellium.commons.common.version.Version;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 
 /**
  * This class represents the base class for all Cirellium Bukkit plugins.
  */
-public abstract class CirelliumBukkitPlugin<P extends CirelliumBukkitPlugin<P>> extends JavaPlugin implements CirelliumPlugin<P>, ServiceHolder<P> {
+public abstract class CirelliumBukkitPlugin<P extends CirelliumBukkitPlugin<P>> extends JavaPlugin
+        implements CirelliumPlugin<P>, ServiceHolder<P> {
 
     protected CirelliumPlugin<P> plugin;
 
@@ -36,7 +37,9 @@ public abstract class CirelliumBukkitPlugin<P extends CirelliumBukkitPlugin<P>> 
 
     @Getter
     private ExecutorService executorService;
-    
+
+    private BukkitAudiences adventure;
+
     @Override
     public void onLoad() {
         plugin = this;
@@ -55,7 +58,7 @@ public abstract class CirelliumBukkitPlugin<P extends CirelliumBukkitPlugin<P>> 
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
-        
+
         serviceHandler = new ServiceHandler<P>(plugin);
         serviceHandler.loadServices();
     }
@@ -63,6 +66,7 @@ public abstract class CirelliumBukkitPlugin<P extends CirelliumBukkitPlugin<P>> 
     @Override
     public void onEnable() {
         serviceHandler.initializeServices();
+        this.adventure = BukkitAudiences.create(this);
 
         // ! First, load all services, then run the custom enable method
         enable();
@@ -72,10 +76,22 @@ public abstract class CirelliumBukkitPlugin<P extends CirelliumBukkitPlugin<P>> 
     public void onDisable() {
         serviceHandler.shutdownServices();
 
+        if (this.adventure != null) {
+            this.adventure.close();
+            this.adventure = null;
+        }
+
         disable();
     }
 
     public abstract P getSelf();
+
+    public BukkitAudiences adventure() {
+        if (this.adventure == null) {
+            throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
+        }
+        return this.adventure;
+    }
 
     @Override
     public String getPluginName() {
@@ -112,5 +128,5 @@ public abstract class CirelliumBukkitPlugin<P extends CirelliumBukkitPlugin<P>> 
     public abstract void enable();
 
     public abstract void disable();
-    
+
 }

@@ -3,11 +3,9 @@ package net.cirellium.commons.common.data.cache;
 import java.util.logging.Logger;
 
 import net.cirellium.commons.common.collection.CList;
-import net.cirellium.commons.common.logger.CirelliumLogger;
 import net.cirellium.commons.common.logger.SimpleCirelliumLogger;
 import net.cirellium.commons.common.plugin.CirelliumPlugin;
 import net.cirellium.commons.common.service.AbstractService;
-import net.cirellium.commons.common.version.Platform;
 
 public class CacheService<P extends CirelliumPlugin<P>> extends AbstractService<P> {
 

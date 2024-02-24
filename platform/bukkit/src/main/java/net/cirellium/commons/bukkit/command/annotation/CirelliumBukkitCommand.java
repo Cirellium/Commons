@@ -7,13 +7,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.bukkit.command.Command;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginIdentifiableCommand;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -25,9 +22,9 @@ import net.cirellium.commons.common.command.annotation.annotations.Argument;
 import net.cirellium.commons.common.command.data.CommandData;
 import net.cirellium.commons.common.command.data.MainCommandData;
 import net.cirellium.commons.common.command.data.SubCommandData;
-import net.cirellium.commons.common.util.Message;
+import net.cirellium.commons.common.command.result.CommandOutcome;
 
-public class CirelliumBukkitCommand extends org.bukkit.command.Command implements PluginIdentifiableCommand, TabCompleter {
+public class CirelliumBukkitCommand extends org.bukkit.command.Command implements PluginIdentifiableCommand {
 
     private final MainCommandData data;
 
@@ -48,21 +45,23 @@ public class CirelliumBukkitCommand extends org.bukkit.command.Command implement
 
         final CommandData<?> commandData = subCommand != null ? subCommand : data;
 
-        final String[] args = subCommand != null ? Arrays.copyOfRange(passedArguments, 1, passedArguments.length) : passedArguments;
+        final String[] args = subCommand != null ? Arrays.copyOfRange(passedArguments, 1, passedArguments.length)
+                : passedArguments;
         final Method method = subCommand != null ? subCommand.getMethod() : data.getMethod();
-        final String permission = subCommand != null ? subCommand.getSubCommand().permission() : data.getCommand().permission();
+        final String permission = subCommand != null ? subCommand.getSubCommand().permission()
+                : data.getCommand().permission();
 
         final BukkitCommandInvoker invoker = new BukkitCommandInvoker(sender);
 
-        if (!sender.hasPermission(permission)) {
-            return sendMessage(invoker, Message.COMMAND_ERROR_NO_PERMISSION.placeholder("permission", permission));
+        if (!invoker.hasPermission(permission)) {
+            invoker.sendMessage(CommandOutcome.ERROR_NO_PERMISSION.placeholder("permission", permission));
+            return true;
         }
 
         return invoke(commandData, method, invoker, commandLabel, passedArguments, args);
     }
 
     @SneakyThrows
-    @SuppressWarnings("deprecation")
     private boolean invoke(CommandData<?> commandData, Method method, BukkitCommandInvoker sender, String commandLabel,
             String[] passedArguments, String[] args) {
         final Parameter[] parameters = Arrays.copyOfRange(method.getParameters(), 1, method.getParameters().length);
@@ -71,8 +70,9 @@ public class CirelliumBukkitCommand extends org.bukkit.command.Command implement
             final Object[] invokeParams = new Object[parameters.length];
 
             if (passedArguments.length == 0) {
-                return sendMessage(sender, Message.COMMAND_ERROR_NOT_ENOUGH_ARGUMENTS,
-                        Message.COMMAND_USAGE.placeholder("usage", commandData.getUsage(commandLabel)));
+                sender.sendMessage(CommandOutcome.NOT_ENOUGH_ARGUMENTS.toMessage(),
+                        CommandOutcome.USAGE.placeholder("usage", commandData.getUsage(commandLabel)));
+                return true;
             }
 
             for (int i = 0; i < parameters.length; i++) {
@@ -81,8 +81,9 @@ public class CirelliumBukkitCommand extends org.bukkit.command.Command implement
                 final String value;
 
                 if (i >= args.length && (arg == null || arg.defaultValue().isEmpty())) {
-                    return sendMessage(sender, Message.COMMAND_ERROR_NOT_ENOUGH_ARGUMENTS, Message.COMMAND_USAGE
-                            .placeholder("usage", commandData.getUsage(commandLabel)));
+                    sender.sendMessage(CommandOutcome.NOT_ENOUGH_ARGUMENTS.toMessage(),
+                            CommandOutcome.USAGE.placeholder("usage", commandData.getUsage(commandLabel)));
+                    return true;
                 } else {
                     value = arg != null && !arg.defaultValue().isEmpty() && i >= args.length ? arg.defaultValue()
                             : args[i];
@@ -103,7 +104,11 @@ public class CirelliumBukkitCommand extends org.bukkit.command.Command implement
                 }
             }
 
-            final Object[] finalParams = ArrayUtils.add(invokeParams, 0, method.getParameters()[0].getType().cast(sender));
+            Bukkit.getLogger().info("Parameter type: " + method.getParameters()[0].getType());
+
+            final Object[] finalParams = new Object[invokeParams.length + 1];
+            finalParams[0] = method.getParameters()[0].getType().cast(sender);
+            System.arraycopy(invokeParams, 0, finalParams, 1, invokeParams.length);
 
             method.invoke(data.getCommandObject(), finalParams);
         } else if (parameters.length == 1 && parameters[0].getType().isArray()) {
@@ -115,15 +120,15 @@ public class CirelliumBukkitCommand extends org.bukkit.command.Command implement
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+    public List<String> tabComplete(CommandSender sender, String label, String[] args) {
         List<String> completions = new ArrayList<String>();
 
         if (args.length == 1) {
             data.getSubCommands().stream()
-                .filter(subCmd -> subCmd.getSubCommand().mainCommand().equalsIgnoreCase(label))
-                .filter(subCmd -> subCmd.getAnnotation().label().toLowerCase().startsWith(args[0].toLowerCase()))
-                .filter(subCmd -> sender.hasPermission(subCmd.getSubCommand().permission()))
-                .forEach(subCmd -> completions.add(subCmd.getSubCommand().label()));
+                    .filter(subCmd -> subCmd.getSubCommand().mainCommand().equalsIgnoreCase(label))
+                    .filter(subCmd -> subCmd.getAnnotation().label().toLowerCase().startsWith(args[0].toLowerCase()))
+                    .filter(subCmd -> sender.hasPermission(subCmd.getSubCommand().permission()))
+                    .forEach(subCmd -> completions.add(subCmd.getSubCommand().label()));
             return completions;
         } else if (args.length < 1) {
             CommandData<? extends Annotation> currentCommand = null, subCommand = null;
@@ -131,8 +136,9 @@ public class CirelliumBukkitCommand extends org.bukkit.command.Command implement
             for (int i = 0; i < args.length; i++) {
                 if (data.hasSubCommand(args[i])) {
                     subCommand = data.findSubCommand(args[i]);
-                    
-                    if (subCommand == null) break;
+
+                    if (subCommand == null)
+                        break;
                 }
                 currentCommand = subCommand;
             }
@@ -144,7 +150,8 @@ public class CirelliumBukkitCommand extends org.bukkit.command.Command implement
             ArgumentTypeAdapter<?> adapter = CommandHandler.getInstance().getRegistry().findTypeAdapter(parameterType);
 
             if (adapter != null) {
-                completions.addAll(adapter.tabComplete(new BukkitCommandInvoker(sender), Set.of(args), args[args.length - 1]));
+                completions.addAll(
+                        adapter.tabComplete(new BukkitCommandInvoker(sender), Set.of(args), args[args.length - 1]));
             }
 
             return completions;
@@ -153,12 +160,6 @@ public class CirelliumBukkitCommand extends org.bukkit.command.Command implement
         return completions;
     }
 
-    private boolean sendMessage(BukkitCommandInvoker sender, Message... toSend) {
-        sender.sendMessage(Message.LEGACY_PREFIX
-                + Arrays.stream(toSend).map(msg -> msg.toLegacyString()).collect(Collectors.joining(" ")));
-        return true;
-    }
-    
     @Override
     public Plugin getPlugin() {
         return JavaPlugin.getProvidingPlugin(getClass());

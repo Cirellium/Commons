@@ -8,9 +8,9 @@ import java.util.logging.Logger;
 import org.bukkit.entity.Player;
 
 import net.cirellium.commons.bukkit.CirelliumBukkitPlugin;
-import net.cirellium.commons.bukkit.command.abstraction.result.CommandOutcome;
-import net.cirellium.commons.bukkit.command.abstraction.result.CommandResult;
 import net.cirellium.commons.bukkit.service.AbstractBukkitService;
+import net.cirellium.commons.common.command.result.CommandOutcome;
+import net.cirellium.commons.common.command.result.CommandResult;
 import net.cirellium.commons.common.service.ServiceType;
 
 public abstract class AbstractCommandService<

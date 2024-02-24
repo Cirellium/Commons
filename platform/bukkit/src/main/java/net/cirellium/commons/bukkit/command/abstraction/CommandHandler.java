@@ -13,7 +13,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import net.cirellium.commons.bukkit.CirelliumBukkitPlugin;
-import net.cirellium.commons.bukkit.command.abstraction.result.CommandResult;
+import net.cirellium.commons.common.command.result.CommandResult;
 
 public class CommandHandler<
     P extends CirelliumBukkitPlugin<P>, 

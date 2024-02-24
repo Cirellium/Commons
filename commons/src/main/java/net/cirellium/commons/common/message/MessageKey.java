@@ -19,6 +19,10 @@ public interface MessageKey {
 
     Enum<?> getEnum();
 
+    default Message toMessage() {
+        return new Message(this);
+    }
+
     default Message placeholder(String key, String value) {
         return new Message(this, new MessagePlaceholder(key, value));
     }

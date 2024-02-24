@@ -15,7 +15,12 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import lombok.Getter;
+import net.cirellium.commons.common.command.sender.CommandInvoker;
+import net.cirellium.commons.common.message.MessageProvider.ComponentMessageProvider;
+import net.cirellium.commons.common.message.MessageProvider.StringMessageProvider;
+import net.cirellium.commons.common.util.Sendable;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.ParserDirective;
@@ -24,11 +29,12 @@ import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.minimessage.tag.standard.StandardTags;
 
-public final class Message {
+public final class Message implements Sendable<CommandInvoker>, ComponentLike {
 
     public static final String PLACEHOLDER_BOUNDS = "<>";
 
-    private static final MessageProvider DEFAULT_PROVIDER = MessageProvider.defaultMessageProvider;
+    private static final StringMessageProvider DEFAULT_PROVIDER = StringMessageProvider.defaultMessageProvider;
+    private static final ComponentMessageProvider DEFAULT_COMPONENT_PROVIDER = ComponentMessageProvider.defaultMessageProvider;
 
     @Getter
     private final MessageKey messageKey;
@@ -38,7 +44,7 @@ public final class Message {
 
     private Component component;
 
-    private static final MiniMessage parser = MiniMessage.builder()
+    public static final MiniMessage PARSER = MiniMessage.builder()
             .tags(TagResolver.builder()
                     .resolver(StandardTags.color())
                     .resolver(StandardTags.decorations())
@@ -56,26 +62,32 @@ public final class Message {
     public Message(MessageKey messageKey, @Nullable List<MessagePlaceholder> placeholders) {
         this.messageKey = messageKey;
         this.placeholders = placeholders;
+        this.component = DEFAULT_COMPONENT_PROVIDER.provide(messageKey);
 
-        placeholders.forEach(placeholder -> placeholder(placeholder.key(), placeholder.value()));
+        replacePlaceholders();
     }
 
     public static Message of(MessageKey messageKey, @Nullable MessagePlaceholder... placeholders) {
         return new Message(messageKey, placeholders);
     }
 
-    public Component replacePlaceholders(String msg) {
-        if(placeholders == null || placeholders.isEmpty()) return parser.deserialize(msg);
+    @Override
+    public void send(CommandInvoker invoker) {
+        invoker.sendMessage(getComponent());
+    }
 
-        for(MessagePlaceholder placeholder : placeholders) {
-            placeholder(placeholder.key(), placeholder.value());
-        }
+    public Component replacePlaceholders() {
+        if (placeholders == null || placeholders.isEmpty())
+            return getComponent();
+
+        placeholders.forEach(placeholder -> placeholder(placeholder.key(), placeholder.value()));
 
         return getComponent();
     }
 
     public Message placeholder(Object key, Object value) {
-        this.component = parser.deserialize(getString(), Placeholder.parsed(String.valueOf(key), String.valueOf(value)));
+        this.component = PARSER.deserialize(getString(),
+                Placeholder.parsed(String.valueOf(key), String.valueOf(value)));
         return this;
     }
 
@@ -83,11 +95,16 @@ public final class Message {
         return DEFAULT_PROVIDER.provide(messageKey);
     }
 
-    public String getStringReplaced() {
-        return replacePlaceholders(getString()).toString();
+    public String toLegacyString() {
+        return StringMessageProvider.legacyMessageProvider.provide(messageKey);
+    }
+    
+    @Override
+    public Component asComponent() {
+        return getComponent();
     }
 
     public Component getComponent() {
-        return Component.text(Message.of(MessageKey.Default.PREFIX).getString()).append(component);
+        return component;
     }
 }

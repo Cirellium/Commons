@@ -1,14 +1,11 @@
 package net.cirellium.commons.bukkit.command.annotation.defaults;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
-import org.bukkit.command.CommandSender;
-
+import net.cirellium.commons.bukkit.command.annotation.invoker.BukkitCommandInvoker;
 import net.cirellium.commons.common.command.annotation.annotations.Argument;
 import net.cirellium.commons.common.command.annotation.annotations.Command;
-import net.cirellium.commons.common.command.annotation.annotations.SubCommand;
 import net.cirellium.commons.common.command.annotation.annotations.Command.SenderType;
+import net.cirellium.commons.common.command.annotation.annotations.SubCommand;
+import net.cirellium.commons.common.message.MessageKey.Default;
 
 public class TestCommand {
     
@@ -21,7 +18,7 @@ public class TestCommand {
         async = false,
         debug = true
     )
-    public void cirellium(CommandSender sender) {
+    public void cirellium(BukkitCommandInvoker sender) {
         sender.sendMessage("Cirellium command executed");
     }
 
@@ -33,17 +30,16 @@ public class TestCommand {
         description = "Just a simple test command"
     )
     public void testCommand(
-        CommandSender sender,
+        BukkitCommandInvoker sender,
         @Argument(name = "test") String[] test
     ) {
-        sender.sendMessage("Test command executed: " + Arrays.stream(test).collect(Collectors.joining(" ")));
+        // sender.sendMessage("Test command executed: " + Arrays.stream(test).collect(Collectors.joining(" ")));
+
+        sender.sendMessage(Default.TEST.placeholder("test", String.join(" ", test)));
     }
 
     @SubCommand(label = "help", mainCommand = "cirellium")  
-    public void helpCommand(CommandSender sender) {
+    public void helpCommand(BukkitCommandInvoker sender) {
         sender.sendMessage("Help command executed");
     }
-
-
-
 }
