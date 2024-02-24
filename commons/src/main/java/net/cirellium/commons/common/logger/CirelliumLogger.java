@@ -30,12 +30,13 @@ public class CirelliumLogger extends Logger {
     }
 
     @Override
-    public void info(String msg) {
-        if (platform == Platform.BUKKIT) {
-            Bukkit.getConsoleSender().sendMessage(StringUtils.translateColorCodes("&8[&6Cirellium: &3" + name + "&8] &7" + msg));
-        }
+    public abstract void info(String msg);
+    
+    public Platform getPlatform() {
+        return platform;
     }
 
-    
-    
+    public String getName() {
+        return name;
+    }
 }

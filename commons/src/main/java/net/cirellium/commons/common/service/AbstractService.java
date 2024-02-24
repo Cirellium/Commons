@@ -20,7 +20,7 @@ import com.google.common.reflect.TypeToken;
 import net.cirellium.commons.common.exception.service.ServiceDependencyException;
 import net.cirellium.commons.common.exception.service.ServiceNotFoundException;
 import net.cirellium.commons.common.exception.service.ServiceStateException;
-import net.cirellium.commons.common.logger.CirelliumLogger;
+import net.cirellium.commons.common.logger.SimpleCirelliumLogger;
 import net.cirellium.commons.common.plugin.CirelliumPlugin;
 
 public abstract class AbstractService<CP extends CirelliumPlugin<CP>> {

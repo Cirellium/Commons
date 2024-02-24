@@ -30,6 +30,10 @@ public class Version implements Comparable<Version> {
      * @throws NullPointerException If the version is null
      */
     public Version(String version) {
+        if (version == "UNKNOWN") {
+            this.version = "";
+            return;
+        }
         if (version == null) {
             throw new NullPointerException("Version can not be null");
         }

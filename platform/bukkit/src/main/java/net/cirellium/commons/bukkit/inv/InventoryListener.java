@@ -9,7 +9,6 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import net.cirellium.commons.bukkit.inv.button.Button;
 import net.cirellium.commons.bukkit.inv.click.ClickHandler.ClickInformation;
 import net.cirellium.commons.bukkit.inv.click.ClickResponse;
-import net.cirellium.commons.bukkit.inv.implementation.InventoryBase;
 
 public class InventoryListener implements Listener {
     

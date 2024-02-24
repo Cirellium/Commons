@@ -38,7 +38,7 @@
         </includes>
       </resource>
     </resources>
-    
+
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -46,8 +46,6 @@
         <version>3.5.2</version>
         <configuration>
           <!--<failOnError>false</failOnError>-->
-          <source>${java.version}</source>
-          <target>${java.version}</target>
         </configuration>
         <executions>
           <execution>
@@ -82,7 +80,15 @@
                 <relocation>
                   <pattern>net.kyori</pattern>
                   <shadedPattern>net.cirellium.libs.net.kyori</shadedPattern>
+                  <excludes>
+                    <exclude>net.kyori</exclude>
+                  </excludes>
                 </relocation>
+
+                <!-- <relocation>
+                  <pattern>net.kyori.adventure.text</pattern>
+                  <shadedPattern>net.cirellium.libs.net.kyori.adventure.text</shadedPattern>
+                </relocation> -->
 
                 <relocation>
                   <pattern>com.google</pattern>
@@ -123,12 +129,6 @@
                   <pattern>org.reflections</pattern>
                   <shadedPattern>net.cirellium.libs.org.reflections</shadedPattern>
                 </relocation>
-
-                <!-- SLF4J throws random errors when relocated -->
-                <!-- <relocation>
-                  <pattern>org.slf4j</pattern>
-                <shadedPattern>net.cirellium.libs.org.slf4j</shadedPattern>
-                </relocation> -->
               </relocations>
               <artifactSet>
                 <excludes>
@@ -149,7 +149,7 @@
         <version>3.3.0</version>
         <configuration>
           <!--<failOnError>false</failOnError>-->
-          <artifactItems>
+          <!-- <artifactItems>
             <artifactItem>
               <groupId>${project.groupId}</groupId>
               <artifactId>${project.artifactId}</artifactId>
@@ -159,10 +159,10 @@
               <classifier>jar-with-dependencies</classifier>
               <overWrite>true</overWrite>
               <destFileName>${project.name}.jar</destFileName>
-              <!-- <directory>/home/fear/code/commons</directory> -->
-              <!-- <outputDirectory>/home/fear/code/commons</outputDirectory> -->
+              <directory>/home/fear/code/commons</directory>
+              <outputDirectory>/home/fear/code/commons</outputDirectory>
             </artifactItem>
-          </artifactItems>
+          </artifactItems> -->
           <!-- <outputDirectory>/home/fear/code/commons</outputDirectory> -->
         </configuration>
       </plugin>
@@ -193,7 +193,7 @@
           </execution>
         </executions>
       </plugin>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
@@ -228,18 +228,35 @@
   </developers>
 
   <repositories>
-      <repository>
-          <id>spigot-repo</id>
-          <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-      </repository>
+    <repository>
+      <id>spigot-repo</id>
+      <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+    </repository>
 
-      <repository>
-        <id>projectlombok.org</id>
-        <url>https://projectlombok.org/edge-releases</url>
-      </repository>
+    <repository>
+      <id>projectlombok.org</id>
+      <url>https://projectlombok.org/edge-releases</url>
+    </repository>
   </repositories>
 
   <dependencies>
+
+    <!-- <dependency>
+      <groupId>net.cirellium</groupId>
+      <artifactId>commons</artifactId>
+      <version>1.0</version>
+      <scope>system</scope>
+      <systemPath>/home/vscode/.m2/repository/net/cirellium/commons/1.0/commons-1.0.jar</systemPath>
+    </dependency> -->
+
+    <!-- <dependency>
+      <groupId>net.cirellium</groupId>
+      <artifactId>commons</artifactId>
+      <version>1.0</version>
+      <scope>system</scope>
+      <systemPath>/workspaces/code/commons/commons/target/commons-1.0-8289153-SNAPSHOT.jar</systemPath>
+    </dependency> -->
+
 
     <dependency>
       <groupId>net.cirellium</groupId>
@@ -248,12 +265,25 @@
     </dependency>
 
     <dependency>
+      <groupId>net.kyori</groupId>
+      <artifactId>adventure-platform-bukkit</artifactId>
+      <version>4.3.2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.10.1</version>
+    </dependency>
+
+
+    <!-- <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>craftbukkit</artifactId>
       <version>1.20-R0.1-SNAPSHOT</version>
       <scope>system</scope>
       <systemPath>${project.basedir}/libs/craftbukkit-1.20.1-R0.1-SNAPSHOT.jar</systemPath>
-    </dependency>
+    </dependency> -->
 
     <dependency>
       <groupId>org.spigotmc</groupId>
@@ -288,9 +318,15 @@
       <scope>provided</scope>
     </dependency>
 
-    <dependency>
+    <!-- <dependency>
       <groupId>net.kyori</groupId>
       <artifactId>adventure-text-minimessage</artifactId>
+      <version>4.16.0</version>
+    </dependency> -->
+
+    <dependency>
+      <groupId>net.kyori</groupId>
+      <artifactId>adventure-text-serializer-legacy</artifactId>
       <version>4.16.0</version>
     </dependency>
 
