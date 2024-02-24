@@ -1,6 +1,5 @@
 package net.cirellium.commons.bukkit.inv;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

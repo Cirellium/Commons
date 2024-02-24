@@ -52,7 +52,7 @@ public record Button(ItemStack itemStack, int slot, ClickHandler clickHandler) {
         /**
          * Sets the item builder of the button.
          * 
-         * @param itemStack The item builder of the button
+         * @param itemBuilder The item builder of the button
          * @return The builder
          */
         Builder itemBuilder(Item itemBuilder);
