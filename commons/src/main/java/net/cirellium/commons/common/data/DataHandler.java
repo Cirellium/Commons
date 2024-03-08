@@ -18,7 +18,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public abstract class DataHandler<L extends Loadable<?>, D extends Data> {
-    
+
     protected final List<L> loadableData;
     protected final List<? extends D> registeredData;
 
@@ -27,8 +27,8 @@ public abstract class DataHandler<L extends Loadable<?>, D extends Data> {
         this.registeredData = new ArrayList<>();
     }
 
-    abstract void load(L loadable);
+    public abstract void load(L loadable);
 
-    abstract void loadAll();
+    public abstract void loadAll();
 
 }

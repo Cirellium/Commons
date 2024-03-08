@@ -11,20 +11,23 @@ package net.cirellium.commons.common.data.user;
 
 import java.util.UUID;
 
+import net.cirellium.commons.common.collection.CList;
+import net.cirellium.commons.common.data.Data;
+import net.cirellium.commons.common.data.Loadable;
 import net.cirellium.commons.common.file.PluginFile;
 
 /**
  * Represents a user that can be loaded, saved and unloaded.
  */
-public interface LoadableUser {
+public interface LoadableUser extends Loadable<Data> {
+
+    CList<Data> getData();
 
     void saveUser();
 
     void loadUser();
 
-    void unloadUser();
-
-    UUID getUUID();
+    UUID getUniqueId();
 
     String getName();
 
