@@ -37,6 +37,8 @@ import net.cirellium.commons.common.version.Platform;
  */
 public class ServiceHandler<P extends CirelliumPlugin<P>> {
 
+    private static ServiceHandler<?> INSTANCE;
+
     protected final CirelliumPlugin<P> plugin;
 
     // protected @Nullable CirelliumBukkitPlugin<?> bukkitPlugin;
@@ -47,6 +49,7 @@ public class ServiceHandler<P extends CirelliumPlugin<P>> {
     private Logger logger;
 
     public ServiceHandler(CirelliumPlugin<P> plugin) {
+        INSTANCE = this;
         this.plugin = plugin;
         // if(plugin.getPlatform() == Platform.BUKKIT) this.bukkitPlugin = (CirelliumBukkitPlugin<?>) plugin;
         this.registry = new ServiceRegistry<P>();
@@ -55,6 +58,10 @@ public class ServiceHandler<P extends CirelliumPlugin<P>> {
 
         // CompletableFuture.runAsync(() -> loadServices(), plugin.getExecutorService())
                         // .thenRun(() -> initializeServices());
+    }
+
+    public static ServiceHandler<?> getInstance() {
+        return INSTANCE;
     }
 
     public ServiceRegistry<P> getRegistry() {
@@ -202,9 +209,10 @@ public class ServiceHandler<P extends CirelliumPlugin<P>> {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void shutdownServices() {
         for (AbstractService<P> service : registry.getServiceMap().values()) {
-            service.shutdown();
+            service.shutdown((P) plugin);
             
             registry.unregisterService(service.getServiceType());
         }

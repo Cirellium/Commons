@@ -13,12 +13,15 @@ import java.util.Collection;
 import java.util.Optional;
 
 import net.cirellium.commons.common.plugin.CirelliumPlugin;
+import net.cirellium.commons.common.util.SimpleProvider;
 
 /**
- * @author Fear
  * This interface provides methods to get services from the service handler.
+ * It extends the {@link SimpleProvider} interface, as it also serves as a provider for the service handler.
+ * 
+ * @author Fear
  */
-public interface ServiceHolder<P extends CirelliumPlugin<P>> {
+public interface ServiceHolder<P extends CirelliumPlugin<P>> extends SimpleProvider<ServiceHandler<P>> {
     
     /**
      * Returns the service handler.
@@ -26,6 +29,15 @@ public interface ServiceHolder<P extends CirelliumPlugin<P>> {
      */
     public ServiceHandler<P> getServiceHandler();
     
+    /**
+     * Provides the service handler by calling the {@link #getServiceHandler()} method.
+     * @return The service handler.
+     */
+    @Override
+    default ServiceHandler<P> provide() {
+        return getServiceHandler();
+    }
+
     /**
      * Returns the service registry.
      * @return The service registry.

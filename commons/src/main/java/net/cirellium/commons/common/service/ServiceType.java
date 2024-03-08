@@ -12,6 +12,7 @@ package net.cirellium.commons.common.service;
 
 import net.cirellium.commons.common.data.DatabaseService;
 import net.cirellium.commons.common.data.cache.CacheService;
+import net.cirellium.commons.common.data.user.UserDataHandler;
 
 /**
  * An enum that represents the type of a service.
@@ -23,6 +24,7 @@ public enum ServiceType {
     
     CACHE(CacheService.class),
     COMMAND(null),
+    USER_DATA(UserDataHandler.class),
     DATABASE(DatabaseService.class),
     FILE(null),
    
