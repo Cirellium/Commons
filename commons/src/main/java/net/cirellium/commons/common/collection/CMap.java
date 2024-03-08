@@ -27,6 +27,9 @@ import net.cirellium.commons.common.util.TriConsumer;
  */
 public class CMap<Key, Value> extends FastCache<Key, Value> {
 
+    public CMap() {
+        super(100);
+    }
     /**
      * Constructs a new {@link CMap} object with the specified map.
      * 

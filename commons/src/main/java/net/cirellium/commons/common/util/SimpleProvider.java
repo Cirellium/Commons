@@ -5,10 +5,15 @@ import javax.inject.Provider;
 @FunctionalInterface
 public interface SimpleProvider<T> extends Provider<T> {
     
-    @Override
-    T get();
+    /**
+     * Provides a fully-constructed instance of type {@code T}.
+     * 
+     * @return The instance of type {@code T}.
+     */
+    T provide();
 
-    default T provide() {
-        return get();
+    @Override
+    default T get() {
+        return provide();
     }
 }
