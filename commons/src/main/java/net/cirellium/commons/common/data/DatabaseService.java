@@ -9,7 +9,7 @@
 */
 package net.cirellium.commons.common.data;
 
-import net.cirellium.commons.common.data.config.DatabaseOptions;
+import net.cirellium.commons.common.data.config.DatabaseCredentials;
 import net.cirellium.commons.common.data.storage.StorageType;
 import net.cirellium.commons.common.plugin.CirelliumPlugin;
 import net.cirellium.commons.common.service.AbstractService;
@@ -17,7 +17,8 @@ import net.cirellium.commons.common.service.ServiceType;
 
 public abstract class DatabaseService<P extends CirelliumPlugin<P>> extends AbstractService<P> {
 
-    protected DatabaseOptions options;
+    protected DatabaseCredentials options;
+    protected StorageType storageType;
 
     // protected AbstractDatabaseConnector connector;
 
@@ -28,16 +29,18 @@ public abstract class DatabaseService<P extends CirelliumPlugin<P>> extends Abst
     public DatabaseService(P plugin, StorageType storageType) {
         super(plugin, ServiceType.DATABASE);
 
-    }
-
-    @Override
-    public void initialize() {
-
+        this.storageType = storageType;
 
     }
 
     @Override
-    public void shutdown() {
+    public void initialize(P plugin) {
+
+
+    }
+
+    @Override
+    public void shutdown(P plugin) {
         
     }  
 }
