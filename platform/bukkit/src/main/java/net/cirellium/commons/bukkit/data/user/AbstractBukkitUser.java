@@ -23,14 +23,14 @@ import net.cirellium.commons.bukkit.file.implementation.DatabaseFile;
 import net.cirellium.commons.common.data.user.AbstractCirelliumUser;
 import net.cirellium.commons.common.file.PluginFile;
 
-public abstract class AbstractBukkitUser extends AbstractCirelliumUser implements LoadableBukkitUser {
+public abstract class AbstractBukkitUser extends AbstractCirelliumUser<AbstractBukkitUser> implements LoadableBukkitUser {
 
     @Getter
-    private final transient CirelliumBukkitPlugin<?> plugin;
+    protected final transient CirelliumBukkitPlugin plugin;
 
-    private @Nullable Player player;
+    protected @Nullable Player player;
 
-    public AbstractBukkitUser(CirelliumBukkitPlugin<?> plugin) {
+    public AbstractBukkitUser(CirelliumBukkitPlugin plugin) {
         super(plugin);
         this.plugin = plugin;
     }
@@ -48,14 +48,13 @@ public abstract class AbstractBukkitUser extends AbstractCirelliumUser implement
     }
 
     @Override
-    public void unloadUser() {
-        
-        
+    public UUID getUniqueId() {
+        return uuid;
     }
 
     @Override
-    public UUID getUUID() {
-        return uuid;
+    public void setUniqueId(UUID uuid) {
+        throw new UnsupportedOperationException("Cannot change the unique id of a player!");
     }
 
     @Override
@@ -69,14 +68,14 @@ public abstract class AbstractBukkitUser extends AbstractCirelliumUser implement
             throw new IllegalArgumentException("Cannot write to null file!");
         }
 
-        if (file instanceof DatabaseFile<?> db) {
+        if (file instanceof DatabaseFile db) {
             db.saveUser(this);
         }
     }
 
     @Override
     public Player getPlayer() {
-        return (player != null) ? player : plugin.getServer().getPlayer(getUUID());
+        return (player != null) ? player : plugin.getServer().getPlayer(getUniqueId());
     }
 
     @Override

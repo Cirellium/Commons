@@ -20,17 +20,16 @@ import net.cirellium.commons.bukkit.file.implementation.DatabaseFile;
 import net.cirellium.commons.bukkit.service.AbstractBukkitService;
 import net.cirellium.commons.common.service.ServiceType;
 
-public abstract class AbstractFileHandlerService<P extends CirelliumBukkitPlugin<P>> 
-    extends AbstractBukkitService<P> {
+public abstract class AbstractFileHandlerService extends AbstractBukkitService {
 
-    protected Map<String, AbstractPluginFile<P>> files = new HashMap<>();
+    protected Map<String, AbstractPluginFile> files = new HashMap<>();
 
-    public AbstractFileHandlerService(P plugin) {
+    public AbstractFileHandlerService(CirelliumBukkitPlugin plugin) {
         super(plugin, ServiceType.FILE, ServiceType.NONE);
     }
 
     @Override
-    public void initialize() {
+    public void initialize(CirelliumBukkitPlugin plugin) {
         logger.info("§aInitializing files...");
         addFiles();
 
@@ -45,25 +44,25 @@ public abstract class AbstractFileHandlerService<P extends CirelliumBukkitPlugin
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown(CirelliumBukkitPlugin plugin) {
         getFiles().stream().filter(file -> file instanceof DatabaseFile).forEach(file -> file.save());
     }
 
-    public void addFile(AbstractPluginFile<P> file) {
+    public void addFile(AbstractPluginFile file) {
         files.putIfAbsent(file.getFile().getName(), file);
     }
 
-    public AbstractPluginFile<P> getFile(String name) {
-        AbstractPluginFile<P> file = files.get(name);
+    public AbstractPluginFile getFile(String name) {
+        AbstractPluginFile file = files.get(name);
 
-        return file == null ? new ConfigFile<P>(plugin, name): files.get(name);
+        return file == null ? new ConfigFile(plugin, name): files.get(name);
     }
 
     public Set<String> getFileNames() {
         return files.keySet();
     }
 
-    public Set<AbstractPluginFile<P>> getFiles() {
+    public Set<AbstractPluginFile> getFiles() {
         return Set.copyOf(files.values());
     }
 

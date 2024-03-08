@@ -14,12 +14,12 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
@@ -46,7 +46,7 @@ import net.cirellium.commons.bukkit.command.annotation.argument.implementation.S
 import net.cirellium.commons.common.util.clazz.ClassUtils;
 
 @SuppressWarnings({ "unused" })
-public class CommandRegistry<P extends CirelliumBukkitPlugin<P>> {
+public class CommandRegistry<P extends CirelliumBukkitPlugin> {
 
     public static final CommandNode ROOT_COMMAND_NODE = new CommandNode();
 
@@ -74,10 +74,10 @@ public class CommandRegistry<P extends CirelliumBukkitPlugin<P>> {
     public CommandRegistry(P plugin) {
         this.plugin = plugin;
         registeredMethods = new HashSet<Method>();
-        initialize();
+        initialize(plugin);
     }
 
-    public void initialize() {
+    public void initialize(P plugin) {
         // registerArgumentType(boolean.class, (ArgumentType<?>) new
         // BooleanArgumentType());
         registerArgumentTypeHandler(int.class, (ArgumentTypeHandler<?>) new IntegerArgumentType());
@@ -220,7 +220,9 @@ public class CommandRegistry<P extends CirelliumBukkitPlugin<P>> {
 
         try {
             plugin.getLogger().info("PackageName: " + plugin.getClass().getPackageName());
-            ClassUtils.getAllClasses(plugin.getClass().getPackageName()).forEach(clazz -> registerClass(clazz));
+            ClassUtils.getAllClasses(plugin, plugin.getClass().getPackageName()).forEach(clazz -> registerClass(clazz));
+
+            plugin.getLogger().info(ClassUtils.getAllClasses(plugin, plugin.getClass().getPackageName()).stream().map(Class::getName).collect(Collectors.joining(", ")));
         } catch (IOException e) {
             e.printStackTrace();
         }

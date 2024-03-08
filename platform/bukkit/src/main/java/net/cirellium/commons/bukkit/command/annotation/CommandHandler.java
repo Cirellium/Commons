@@ -15,11 +15,11 @@ import net.cirellium.commons.bukkit.CirelliumBukkitPlugin;
 import net.cirellium.commons.common.logger.CirelliumLogger;
 import net.cirellium.commons.common.version.Platform;
 
-public class CommandHandler<P extends CirelliumBukkitPlugin<P>> {
+public class CommandHandler<P extends CirelliumBukkitPlugin> {
     
     private static CommandHandler<?> instance;
 
-    protected final P plugin;
+    protected final CirelliumBukkitPlugin plugin;
 
     private CommandRegistry<P> registry;
 

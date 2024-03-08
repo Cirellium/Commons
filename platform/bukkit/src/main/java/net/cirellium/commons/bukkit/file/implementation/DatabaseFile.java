@@ -42,18 +42,18 @@ import net.kyori.adventure.text.Component;
  * 
  * @author Fear
  */
-public class DatabaseFile<P extends CirelliumBukkitPlugin<P>> extends AbstractPluginFile<P> {
+public class DatabaseFile extends AbstractPluginFile {
 
     /**
      * Creates a new database file.
      * 
      * @param plugin The bukkit plugin that the file belongs to.
      */
-    public DatabaseFile(P plugin) {
+    public DatabaseFile(CirelliumBukkitPlugin plugin) {
         super(plugin);
     }
 
-    public DatabaseFile(P plugin, String fileName) {
+    public DatabaseFile(CirelliumBukkitPlugin plugin, String fileName) {
         super(plugin, fileName);
     }
 
@@ -148,10 +148,10 @@ public class DatabaseFile<P extends CirelliumBukkitPlugin<P>> extends AbstractPl
     }
 
     public void saveUser(LoadableBukkitUser user) {
-        set("users." + user.getUUID().toString() + ".name", user.getName());
-        setValue("users." + user.getUUID().toString() + ".location", user.getPlayer().getLocation());
-        setValue("users." + user.getUUID().toString() + ".inventory", user.getPlayer().getInventory());
-        setValue("users." + user.getUUID().toString() + ".lastSaved", Instant.now().getEpochSecond());
+        set("users." + user.getUniqueId().toString() + ".name", user.getName());
+        setValue("users." + user.getUniqueId().toString() + ".location", user.getPlayer().getLocation());
+        setValue("users." + user.getUniqueId().toString() + ".inventory", user.getPlayer().getInventory());
+        setValue("users." + user.getUniqueId().toString() + ".lastSaved", Instant.now().getEpochSecond());
     }
 
     /**

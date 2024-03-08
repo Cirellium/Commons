@@ -22,10 +22,11 @@ import net.cirellium.commons.common.exception.service.ServiceNotFoundException;
 import net.cirellium.commons.common.exception.service.ServiceStateException;
 import net.cirellium.commons.common.logger.CirelliumLogger;
 import net.cirellium.commons.common.plugin.CirelliumPlugin;
+import net.cirellium.commons.common.util.Lifecycle;
 
-public abstract class AbstractService<CP extends CirelliumPlugin<CP>> {
+public abstract class AbstractService<C extends CirelliumPlugin<C>> implements Lifecycle<C> {
 
-    protected final CP plugin;
+    protected final C plugin;
 
     protected final Logger logger;
 
@@ -33,25 +34,25 @@ public abstract class AbstractService<CP extends CirelliumPlugin<CP>> {
 
     protected Set<ServiceType> dependencies;
 
-    protected final TypeToken<CP> typeToken = new TypeToken<CP>(getClass()) {};
+    protected final TypeToken<C> typeToken = new TypeToken<C>(getClass()) {};
 
     protected final Type type = typeToken.getType(); // or getRawType() to return Class<? super T>
 
     protected boolean initialized = false, autoInitialize = false;
 
-    public AbstractService(CP plugin) {
+    public AbstractService(C plugin) {
         this(plugin, ServiceType.NONE, true);
     }
 
-    public AbstractService(CP plugin, boolean autoInitialize) {
+    public AbstractService(C plugin, boolean autoInitialize) {
         this(plugin, ServiceType.NONE, autoInitialize);
     }
 
-    public AbstractService(CP plugin, ServiceType type, ServiceType... dependencies) {
+    public AbstractService(C plugin, ServiceType type, ServiceType... dependencies) {
         this(plugin, type, true, dependencies);
     }
 
-    public AbstractService(CP plugin, ServiceType type, boolean autoInitialize, ServiceType... dependencies) {
+    public AbstractService(C plugin, ServiceType type, boolean autoInitialize, ServiceType... dependencies) {
         this.plugin = plugin;
         this.serviceType = type;
         this.logger = new CirelliumLogger(plugin.getPlatform(), getName());
@@ -73,7 +74,7 @@ public abstract class AbstractService<CP extends CirelliumPlugin<CP>> {
         }
 
         if (!hasDependencies()) {
-            initialize();
+            initialize(plugin);
             logger.fine("Service successfully initialized");
             initialized = true;
             return;
@@ -91,7 +92,7 @@ public abstract class AbstractService<CP extends CirelliumPlugin<CP>> {
             throw new ServiceDependencyException(this, "Dependencies not initialized for " + getName(),
                     missingDependencies);
 
-        initialize();
+        initialize(plugin);
         logger.fine("Service successfully initialized");
         initialized = true;
     }
@@ -108,7 +109,7 @@ public abstract class AbstractService<CP extends CirelliumPlugin<CP>> {
         return autoInitialize;
     }
 
-    public final CirelliumPlugin<CP> getPlugin() {
+    public final CirelliumPlugin<?> getPlugin() {
         return plugin;
     }
 
@@ -132,9 +133,9 @@ public abstract class AbstractService<CP extends CirelliumPlugin<CP>> {
         return serviceType;
     }
 
-    public abstract void initialize();
+    public abstract void initialize(C plugin);
 
-    public abstract void shutdown();
+    public abstract void shutdown(C plugin);
 
     public abstract Logger getLogger();
 

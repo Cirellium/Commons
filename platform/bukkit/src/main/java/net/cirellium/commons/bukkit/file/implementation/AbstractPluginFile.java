@@ -31,9 +31,9 @@ import net.cirellium.commons.common.version.Platform;
  * This class an abstract implementation of a plugin file.
  * It uses the {@link FileConfiguration} class as well as the {@link YamlConfiguration} class to load and save the file.
  */
-public abstract class AbstractPluginFile<P extends CirelliumBukkitPlugin<P>> implements PluginFile<FileConfiguration> {
+public abstract class AbstractPluginFile implements PluginFile<FileConfiguration> {
 
-    private final P plugin;
+    private final CirelliumBukkitPlugin plugin;
 
     public File file;
 
@@ -68,7 +68,7 @@ public abstract class AbstractPluginFile<P extends CirelliumBukkitPlugin<P>> imp
         create();
     }
 
-    public AbstractPluginFile(P plugin) {
+    public AbstractPluginFile(CirelliumBukkitPlugin plugin) {
         plugin.getConfig().options().copyDefaults(true);
         plugin.saveConfig();
 
@@ -81,7 +81,7 @@ public abstract class AbstractPluginFile<P extends CirelliumBukkitPlugin<P>> imp
         create();
     }
 
-    public AbstractPluginFile(P plugin, String fileName) {
+    public AbstractPluginFile(CirelliumBukkitPlugin plugin, String fileName) {
         this.plugin = plugin;
         this.name = fileName;
         this.file = new File(plugin.getDataFolder(), fileName + ".yml");
