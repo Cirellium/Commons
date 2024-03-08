@@ -85,6 +85,13 @@ public abstract class CirelliumBukkitPlugin extends JavaPlugin implements Cirell
 
     // public abstract P getSelf();
 
+    public BukkitAudiences adventure() {
+        if (this.adventure == null) {
+            throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
+        }
+        return this.adventure;
+    }
+
     @Override
     public String getPluginName() {
         return getDescription().getName();

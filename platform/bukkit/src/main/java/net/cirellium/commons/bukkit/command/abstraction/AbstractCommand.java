@@ -30,7 +30,7 @@ import net.cirellium.commons.common.command.annotation.annotations.Command.Sende
 import net.cirellium.commons.common.command.result.CommandResult;
 import net.cirellium.commons.common.data.user.AbstractCirelliumUser;
 
-public abstract class AbstractCommand<P extends CirelliumBukkitPlugin<P>, M extends AbstractCommandService<P, ?, M>>
+public abstract class AbstractCommand<M extends AbstractCommandService<?, M>>
         implements ICommand {
 
     protected final CirelliumBukkitPlugin plugin;
