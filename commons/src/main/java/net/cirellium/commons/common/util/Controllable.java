@@ -1,8 +1,5 @@
 package net.cirellium.commons.common.util;
 
-import java.lang.reflect.ParameterizedType;
-import java.util.Arrays;
-
 public interface Controllable<T> {
 
     // @SuppressWarnings("unchecked")
