@@ -1,4 +1,4 @@
-package net.cirellium.commons.bukkit.inv.implementation;
+package net.cirellium.commons.bukkit.inv;
 
 import java.util.function.Consumer;
 
@@ -7,9 +7,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
-import net.cirellium.commons.bukkit.inv.CustomInventory;
 import net.cirellium.commons.bukkit.inv.button.Button;
 import net.cirellium.commons.bukkit.inv.click.ClickHandler.ClickInformation;
+import net.cirellium.commons.bukkit.inv.implementation.InventoryContent;
+import net.cirellium.commons.bukkit.inv.implementation.InventoryContentBuilder;
 import net.cirellium.commons.bukkit.inv.click.ClickResponse;
 
 /**
@@ -48,7 +49,6 @@ public abstract class InventoryBase implements CustomInventory, InventoryHolder 
         player.closeInventory();
         this.updateInventory();
         player.openInventory(inventory);
-        // player.updateInventory();
     }
 
     @Override

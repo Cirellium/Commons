@@ -7,7 +7,6 @@ import java.util.Map;
 import org.bukkit.inventory.ItemStack;
 
 import net.cirellium.commons.bukkit.inv.button.Button;
-import net.cirellium.commons.common.collection.CList;
 
 /**
  * This class represents the contents of an inventory.
