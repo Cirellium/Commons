@@ -36,24 +36,24 @@ public abstract class AbstractBukkitUser extends AbstractCirelliumUser<AbstractB
     }
 
     @Override
-    public void saveUser() {
+    public void save() {
         
         
     }
 
     @Override
-    public void loadUser() {
+    public void load() {
         
         
     }
 
     @Override
-    public UUID getUniqueId() {
+    public UUID getId() {
         return uuid;
     }
 
     @Override
-    public void setUniqueId(UUID uuid) {
+    public void setId(UUID uuid) {
         throw new UnsupportedOperationException("Cannot change the unique id of a player!");
     }
 
@@ -75,7 +75,7 @@ public abstract class AbstractBukkitUser extends AbstractCirelliumUser<AbstractB
 
     @Override
     public Player getPlayer() {
-        return (player != null) ? player : plugin.getServer().getPlayer(getUniqueId());
+        return (player != null) ? player : plugin.getServer().getPlayer(getId());
     }
 
     @Override

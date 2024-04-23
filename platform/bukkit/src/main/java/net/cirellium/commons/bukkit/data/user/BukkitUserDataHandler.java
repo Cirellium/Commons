@@ -8,7 +8,10 @@ import net.cirellium.commons.common.util.Lifecycle;
 
 public abstract class BukkitUserDataHandler extends UserDataHandler<AbstractBukkitUser> implements Lifecycle.Controller<CirelliumBukkitPlugin> {
 
-    public BukkitUserDataHandler() {
+    protected final CirelliumBukkitPlugin plugin;
+
+    public BukkitUserDataHandler(CirelliumBukkitPlugin plugin) {
+        this.plugin = plugin;
     }
 
     @Override

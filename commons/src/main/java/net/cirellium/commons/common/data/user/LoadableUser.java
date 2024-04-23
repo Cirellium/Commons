@@ -21,13 +21,17 @@ import net.cirellium.commons.common.file.PluginFile;
  */
 public interface LoadableUser extends Loadable<Data> {
 
+    @Override
     CList<Data> getData();
 
-    void saveUser();
+    @Override
+    default Data getData(UUID id) {
+        throw new UnsupportedOperationException("Unimplemented method 'getData'");
+    }
 
-    void loadUser();
+    void save();
 
-    UUID getUniqueId();
+    void load();
 
     String getName();
 

@@ -17,7 +17,7 @@ import net.cirellium.commons.bukkit.file.implementation.ConfigFile;
 import net.cirellium.commons.bukkit.utils.BukkitPlatform;
 import net.cirellium.commons.common.logger.SimpleCirelliumLogger;
 
-public class DefaultFileHandler extends AbstractFileHandlerService {
+public final class DefaultFileHandler extends AbstractFileHandlerService {
 
     public DefaultFileHandler(CirelliumBukkitPlugin plugin) {
         super(plugin);
@@ -25,15 +25,6 @@ public class DefaultFileHandler extends AbstractFileHandlerService {
     
     @Override
     public void addFiles() {
-        logger.info("Adding files...");
-        logger.info("Adding files...");
-        logger.info("Adding files...");
-        logger.info("Adding files...");
-        logger.info("Adding files...");
-        logger.info("Adding files...");
-        logger.info("Adding files...");
-        logger.info("Adding files...");
-        logger.info("Adding files...");
         logger.info("Adding files...");
 
         addFile(new ConfigFile(plugin, "config"));

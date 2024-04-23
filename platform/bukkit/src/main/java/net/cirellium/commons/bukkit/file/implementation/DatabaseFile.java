@@ -148,10 +148,10 @@ public class DatabaseFile extends AbstractPluginFile {
     }
 
     public void saveUser(LoadableBukkitUser user) {
-        set("users." + user.getUniqueId().toString() + ".name", user.getName());
-        setValue("users." + user.getUniqueId().toString() + ".location", user.getPlayer().getLocation());
-        setValue("users." + user.getUniqueId().toString() + ".inventory", user.getPlayer().getInventory());
-        setValue("users." + user.getUniqueId().toString() + ".lastSaved", Instant.now().getEpochSecond());
+        set("users." + user.getId().toString() + ".name", user.getName());
+        setValue("users." + user.getId().toString() + ".location", user.getPlayer().getLocation());
+        setValue("users." + user.getId().toString() + ".inventory", user.getPlayer().getInventory());
+        setValue("users." + user.getId().toString() + ".lastSaved", Instant.now().getEpochSecond());
     }
 
     /**

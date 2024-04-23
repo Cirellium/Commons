@@ -9,21 +9,31 @@
 */
 package net.cirellium.commons.common.data.user;
 
+import java.util.Collection;
 import java.util.UUID;
 
+import net.cirellium.commons.common.collection.CList;
 import net.cirellium.commons.common.collection.CMap;
-import net.cirellium.commons.common.util.Provider;
+import net.cirellium.commons.common.data.DataHolder;
 
-public interface UserDataHolder<L extends LoadableUser> extends Provider<L, UUID> {
+public interface UserDataHolder<L extends LoadableUser> extends DataHolder<L, UUID> {
 
     L getUser(UUID uuid);
 
     @Override
-    default L provide(UUID uuid) {
+    default L getData(UUID uuid) {
         return getUser(uuid);
     }
 
+    @Override
+    void setData(Collection<L> data);
+
     CMap<UUID, L> getUsers();
+
+    @Override
+    default CList<L> getData() {
+        return new CList<>(getUsers().values());
+    }
 
     void addUser(L user);
 

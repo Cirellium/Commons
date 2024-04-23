@@ -31,4 +31,9 @@ import net.cirellium.commons.common.util.Controllable;
 
         // getService().getLogger().info("User created for plugin: " + plugin.getPluginName());
     }
+
+    @Override
+    public UUID getId() {
+        return uuid;
+    }
 }

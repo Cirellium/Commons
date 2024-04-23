@@ -10,14 +10,8 @@ public abstract class CirelliumLogger extends Logger {
 
     private static final Function<String, String> newName = name -> name.equals("cirelliumcore") ? "Core" : name;
 
-    private final Platform platform;
-
-    private final String name;
-
     public CirelliumLogger(Platform platform, String name) {
         super("Cirellium: " + newName.apply(name), null);
-        this.platform = platform;
-        this.name = newName.apply(name);
 
         setLevel(Level.ALL);
     }
@@ -25,6 +19,4 @@ public abstract class CirelliumLogger extends Logger {
     @Override
     public abstract void info(String msg);
 
-    
-    
 }

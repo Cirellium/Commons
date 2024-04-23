@@ -4,18 +4,25 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.UUID;
 
-public interface Loadable<D extends Data> {
+import net.cirellium.commons.common.util.Identifiable;
 
-    UUID getUniqueId();
+public interface Loadable<D extends Data> extends Identifiable<UUID>, DataHolder<D, UUID> {
 
-    void setUniqueId(UUID uuid);
+    @Override
+    UUID getId();
 
+    @Override
+    void setId(UUID uuid);
+
+    @Override
     Collection<D> getData();
 
+    @Override
     void setData(Collection<D> data);
 
     default public <K extends D> K findData(Class<K> clazz) {
-        return getData().stream()
+        return getData()
+                .stream()
                 .filter(Objects::nonNull)
                 .filter(data -> clazz.isAssignableFrom(data.getClass()))
                 .map(clazz::cast)

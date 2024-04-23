@@ -29,7 +29,8 @@ import net.cirellium.commons.common.service.ServiceType;
 
 /**
  * This class an abstract implementation of a plugin file.
- * It uses the {@link FileConfiguration} class as well as the {@link YamlConfiguration} class to load and save the file.
+ * It uses the {@link FileConfiguration} class as well as the
+ * {@link YamlConfiguration} class to load and save the file.
  */
 public abstract class AbstractPluginFile implements PluginFile<FileConfiguration> {
 
@@ -75,7 +76,8 @@ public abstract class AbstractPluginFile implements PluginFile<FileConfiguration
         this.plugin = plugin;
         this.name = "config";
         this.file = new File(plugin.getDataFolder(), name + ".yml");
-        this.logger = new SimpleCirelliumLogger(BukkitPlatform.INSTANCE, plugin.getService(ServiceType.FILE).getName() + " » " + file.getName());
+        this.logger = new SimpleCirelliumLogger(BukkitPlatform.INSTANCE,
+                plugin.getService(ServiceType.FILE).getName() + " » " + file.getName());
         this.comments = true;
 
         create();
@@ -85,7 +87,8 @@ public abstract class AbstractPluginFile implements PluginFile<FileConfiguration
         this.plugin = plugin;
         this.name = fileName;
         this.file = new File(plugin.getDataFolder(), fileName + ".yml");
-        this.logger = new SimpleCirelliumLogger(BukkitPlatform.INSTANCE, plugin.getService(ServiceType.FILE).getName() + " » " + file.getName());
+        this.logger = new SimpleCirelliumLogger(BukkitPlatform.INSTANCE,
+                plugin.getService(ServiceType.FILE).getName() + " » " + file.getName());
         this.comments = true;
 
         create();
@@ -115,11 +118,18 @@ public abstract class AbstractPluginFile implements PluginFile<FileConfiguration
     public FileConfiguration load() {
         fileConfig = YamlConfiguration.loadConfiguration(file);
         fileConfig.options().copyDefaults(true);
-        fileConfig.options().parseComments(comments);        
+        fileConfig.options().parseComments(comments);
 
         return fileConfig;
     }
 
+    /**
+     * Loads the configuration from the specified file and returns a
+     * FileConfiguration object.
+     *
+     * @param file The file to load the configuration from.
+     * @return The loaded FileConfiguration object.
+     */
     public FileConfiguration load(File file) {
         fileConfig = YamlConfiguration.loadConfiguration(file);
         fileConfig.options().copyDefaults(true);
@@ -157,8 +167,9 @@ public abstract class AbstractPluginFile implements PluginFile<FileConfiguration
         this.comments = useComments;
     }
 
-        /**
+    /**
      * Gets the value of a given path.
+     * 
      * @param path The path to get the value from.
      * @return An object of the value at the given path.
      */
@@ -168,14 +179,17 @@ public abstract class AbstractPluginFile implements PluginFile<FileConfiguration
 
     /**
      * Gets the value of a given path as a specific type.
-     * @param c The class of the type to get the value as.
+     * 
+     * @param c    The class of the type to get the value as.
      * @param path The path to get the value from.
-     * @return An optional of the value at the given path, or an empty optional if the value is not of the given type.
+     * @return An optional of the value at the given path, or an empty optional if
+     *         the value is not of the given type.
      */
     public <T> Optional<T> getValueAs(Class<T> c, String path) {
         Object object = getValue(path);
 
-        if(object == null) return Optional.empty();
+        if (object == null)
+            return Optional.empty();
 
         return (c.isInstance(object)) ? Optional.of(c.cast(object)) : Optional.empty();
     }
