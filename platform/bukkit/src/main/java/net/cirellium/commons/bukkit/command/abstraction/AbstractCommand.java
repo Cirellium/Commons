@@ -22,21 +22,21 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import net.cirellium.commons.bukkit.CirelliumBukkitPlugin;
-import net.cirellium.commons.bukkit.command.CirelliumBukkitCommand;
-import net.cirellium.commons.bukkit.command.abstraction.result.CommandResult;
+import net.cirellium.commons.common.command.ICommand;
+import net.cirellium.commons.common.command.annotation.annotations.Command.SenderType;
+import net.cirellium.commons.common.command.result.CommandResult;
 import net.cirellium.commons.common.data.user.AbstractCirelliumUser;
 
-public abstract class AbstractCommand<P extends CirelliumBukkitPlugin<P>, M extends AbstractCommandManager<P, ?, M>>
-        implements CirelliumBukkitCommand {
+public abstract class AbstractCommand<M extends AbstractCommandService<?, M>>
+        implements ICommand {
 
-    protected final P plugin;
+    protected final CirelliumBukkitPlugin plugin;
     protected final M manager;
 
-    protected HashMap<String, AbstractCommand<P, M>> subCommands;
+    protected HashMap<String, AbstractCommand<M>> subCommands;
 
     protected int minArgs, maxArgs;
 
@@ -48,11 +48,11 @@ public abstract class AbstractCommand<P extends CirelliumBukkitPlugin<P>, M exte
 
     protected boolean isPlayerCommand, isConsoleCommand, isSubCommand;
 
-    public AbstractCommand(P plugin, M manager, String name, boolean register) {
+    public AbstractCommand(CirelliumBukkitPlugin plugin, M manager, String name, boolean register) {
         this.plugin = plugin;
         this.manager = manager;
         this.commandName = name;
-        this.subCommands = new HashMap<String, AbstractCommand<P, M>>();
+        this.subCommands = new HashMap<String, AbstractCommand<M>>();
         this.aliases = new ArrayList<String>();
 
         if (register)
@@ -132,13 +132,13 @@ public abstract class AbstractCommand<P extends CirelliumBukkitPlugin<P>, M exte
         return commandName;
     }
 
-    public void addSubCommand(AbstractCommand<P, M> command) {
+    public void addSubCommand(AbstractCommand<M> command) {
         if (command instanceof SubCommand) {
             subCommands.put(command.getCommandName(), command);
         }
     }
 
-    public Map<String, AbstractCommand<P, M>> getSubCommands() {
+    public Map<String, AbstractCommand<M>> getSubCommands() {
         return subCommands;
     }
 
@@ -146,7 +146,7 @@ public abstract class AbstractCommand<P extends CirelliumBukkitPlugin<P>, M exte
         return subCommands.containsKey(subCommand);
     }
 
-    public AbstractCommand<P, M> getSubCommand(String name) {
+    public AbstractCommand<M> getSubCommand(String name) {
         return hasSubCommand(name) ? subCommands.get(name) : null;
     }
 
@@ -163,24 +163,23 @@ public abstract class AbstractCommand<P extends CirelliumBukkitPlugin<P>, M exte
         return aliases;
     }
 
-    @Override
     public @Nullable Command getBukkitCommand() {
         return getCommandMap().getCommand(commandName);
     }
 
-    public abstract CommandResult executePlayer(AbstractCirelliumUser player, org.bukkit.command.Command command,
+    public abstract CommandResult executePlayer(AbstractCirelliumUser<?> player, org.bukkit.command.Command command,
             String[] arguments);
 
     public abstract CommandResult executeConsole(org.bukkit.command.Command command, String[] arguments);
 
-    public abstract List<String> onTabComplete(AbstractCirelliumUser player, String[] arguments);
+    public abstract List<String> onTabComplete(AbstractCirelliumUser<?> player, String[] arguments);
 
     public final List<String> tabComplete(CommandSender sender, String[] args) {
         List<String> completes = new ArrayList<String>();
         if (sender instanceof Player) {
             // Player p = (Player) sender;
 
-            AbstractCirelliumUser cp = null; // TODO add support for CirelliumUser
+            AbstractCirelliumUser<?> cp = null; // TODO add support for CirelliumUser
 
             List<String> commandCompletes = onTabComplete(cp, args);
             String cmdName = args[1];
@@ -189,7 +188,7 @@ public abstract class AbstractCommand<P extends CirelliumBukkitPlugin<P>, M exte
 
             if (args.length == 2) {
                 List<String> cmds = new ArrayList<>();
-                for (AbstractCommand<P, M> command : this.subCommands.values()) {
+                for (AbstractCommand<M> command : this.subCommands.values()) {
                     if (command.hasPermissions(sender))
                         cmds.add(command.getCommandName());
                 }
@@ -199,25 +198,12 @@ public abstract class AbstractCommand<P extends CirelliumBukkitPlugin<P>, M exte
                 }
                 return completes;
             }
-            for (AbstractCommand<P, M> command : this.subCommands.values()) {
+            for (AbstractCommand<M> command : this.subCommands.values()) {
                 if (command.matches(cmdName))
                     completes.addAll(command.tabComplete(sender, Arrays.<String>copyOfRange(args, 1, args.length)));
             }
         }
         return completes;
-    }
-
-    public enum SenderType {
-        PLAYER, CONSOLE, BOTH;
-
-        public boolean matches(CommandSender sender) {
-            return switch (this) {
-                case PLAYER -> sender instanceof Player;
-                case CONSOLE -> sender instanceof ConsoleCommandSender;
-                case BOTH -> true;
-                default -> false;
-            };
-        }
     }
 
     private static CommandMap getCommandMap() {

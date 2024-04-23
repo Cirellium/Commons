@@ -13,20 +13,40 @@ import java.util.NoSuchElementException;
 
 import net.cirellium.commons.common.file.PluginFile;
 import net.cirellium.commons.common.util.Provider;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.Style;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
-public interface MessageProvider extends Provider<String, MessageKey> {
+public interface MessageProvider<M> extends Provider<M, MessageKey> {
+
+    M provide(MessageKey key);
+
+    public interface StringMessageProvider extends MessageProvider<String> {
     
-    String provide(MessageKey key);
-
-    MessageProvider defaultMessageProvider = new MessageProvider() { 
         @Override
-        public String provide(MessageKey key) {
-            return key.getFallbackValue();
-        }
+        String provide(MessageKey key);
 
-    };
+        StringMessageProvider defaultMessageProvider = (key) -> key.getFallbackValue();
 
-    public class YmlMessageProvider implements MessageProvider {
+        StringMessageProvider legacyMessageProvider = (key) -> LegacyComponentSerializer.legacy('§').serialize(key.toMessage().getComponent());
+
+    }
+    public interface ComponentMessageProvider extends MessageProvider<Component> {
+        
+        @Override
+        Component provide(MessageKey key);
+
+        ComponentMessageProvider defaultMessageProvider = (key) -> Message.PARSER.deserialize(key.getFallbackValue());
+        
+        ComponentMessageProvider componentMessageProvider = (key) -> {
+            Style style = Message.PARSER.deserialize(key.getFallbackValue()).style();
+            
+            return Component.text().content(key.getFallbackValue()).style(style).build();
+        };
+    }
+
+
+    public class YmlMessageProvider implements StringMessageProvider {
         private final PluginFile<?> ymlFile;
 
         public YmlMessageProvider(PluginFile<?> ymlFile) {

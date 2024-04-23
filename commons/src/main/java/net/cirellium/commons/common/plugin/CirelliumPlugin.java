@@ -34,13 +34,15 @@ public interface CirelliumPlugin<P> {
 
     public Platform getPlatform();
 
-    public ServiceHolder<?> getServiceHolder();
+    public ServiceHolder<? super P> getServiceHolder();
 
     public CirelliumLogger getLogger();
 
     public ExecutorService getExecutorService();
 
-    public MessageProvider getMessageProvider();
+    public MessageProvider<?> getMessageProvider();
+
+    public P getPlugin();
     
     // ! Other methods:
     // ! Platform getPlatform();

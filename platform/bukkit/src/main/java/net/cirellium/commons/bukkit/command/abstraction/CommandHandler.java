@@ -12,21 +12,19 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-import net.cirellium.commons.bukkit.CirelliumBukkitPlugin;
-import net.cirellium.commons.bukkit.command.abstraction.result.CommandResult;
+import net.cirellium.commons.common.command.result.CommandResult;
 
 public class CommandHandler<
-    P extends CirelliumBukkitPlugin<P>, 
     H, 
-    M extends AbstractCommandManager<P, H, M>
+    M extends AbstractCommandService<H, M>
     > implements CommandExecutor, TabCompleter {
 
-    public static final BiPredicate<CommandSender, ? super AbstractCommand<?, ?>> HAS_PERMISSION = (s, c) -> s.hasPermission(c.getPermission());
+    public static final BiPredicate<CommandSender, ? super AbstractCommand<?>> HAS_PERMISSION = (s, c) -> s.hasPermission(c.getPermission());
 
-    private AbstractCommandManager<P, H, M> manager; 
+    private AbstractCommandService<H, M> manager; 
 
-    public CommandHandler(AbstractCommandManager<P, H, M> abstractCommandManager) {
-        this.manager = abstractCommandManager;
+    public CommandHandler(AbstractCommandService<H, M> AbstractCommandService) {
+        this.manager = AbstractCommandService;
     }
 
     @Override
@@ -52,7 +50,7 @@ public class CommandHandler<
     @Override
     public List<String> onTabComplete(CommandSender sender, org.bukkit.command.Command unused, String alias, String[] args) {
         List<String> completes = new ArrayList<String>();
-        List<AbstractCommand<P, M>> cmds = new ArrayList<>(manager.getCommands());
+        List<AbstractCommand<M>> cmds = new ArrayList<>(manager.getCommands());
 
         String commandName = args[0];
 

@@ -12,6 +12,7 @@ package net.cirellium.commons.common.collection;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -29,8 +30,12 @@ public class Registry<K, E> implements Iterable<E> {
 
     protected BiMap<K, E> elements;
 
-    protected Registry() {
+    public Registry() {
         this.elements = HashBiMap.create();
+    }
+
+    public Registry(Map<K, E> m) {
+        this.elements = HashBiMap.create(m);
     }
 
     public static <K, E> Registry<K, E> create() {
@@ -94,6 +99,10 @@ public class Registry<K, E> implements Iterable<E> {
 
     public void clear() {
         elements.clear();
+    }
+
+    public Map<K, E> getMap() {
+        return elements;
     }
 
     public Stream<E> stream() {

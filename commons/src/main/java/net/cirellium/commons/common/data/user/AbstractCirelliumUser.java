@@ -13,11 +13,12 @@ import java.util.UUID;
 
 import lombok.Getter;
 import net.cirellium.commons.common.plugin.CirelliumPlugin;
+import net.cirellium.commons.common.util.Controllable;
 
 /**
  * This class represents a user of the plugin.
  */
-public abstract class AbstractCirelliumUser implements LoadableUser {
+ public abstract class AbstractCirelliumUser<A extends AbstractCirelliumUser<A>> implements Controllable<UserDataHandler<A>>, LoadableUser {
     
     @Getter
     protected transient final CirelliumPlugin<?> plugin;
@@ -27,8 +28,12 @@ public abstract class AbstractCirelliumUser implements LoadableUser {
 
     public AbstractCirelliumUser(CirelliumPlugin<?> plugin) {
         this.plugin = plugin;
+
+        // getService().getLogger().info("User created for plugin: " + plugin.getPluginName());
     }
 
-
-
+    @Override
+    public UUID getId() {
+        return uuid;
+    }
 }

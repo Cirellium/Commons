@@ -10,7 +10,6 @@
 package net.cirellium.commons.common.data.storage.implementation.sql.action;
 
 import net.cirellium.commons.common.collection.CMap;
-import net.cirellium.commons.common.util.Provider;
 import net.cirellium.commons.common.util.SimpleProvider;
 
 /**

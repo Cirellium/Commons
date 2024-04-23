@@ -22,13 +22,13 @@ import net.cirellium.commons.bukkit.CirelliumBukkitPlugin;
  * The implementation of the {@link AbstractPluginFile} class for config files.
  * Provides some simple methods for reading config values.
  */
-public class ConfigFile<P extends CirelliumBukkitPlugin<P>> extends AbstractPluginFile<P> {
+public class ConfigFile extends AbstractPluginFile {
 
     /**
      * Creates a new config file.
      * @param plugin The bukkit plugin that the file belongs to.
      */
-    public ConfigFile(P plugin) {
+    public ConfigFile(CirelliumBukkitPlugin plugin) {
         super(plugin);
     }
 
@@ -37,7 +37,7 @@ public class ConfigFile<P extends CirelliumBukkitPlugin<P>> extends AbstractPlug
      * @param plugin The bukkit plugin that the file belongs to.
      * @param fileName The name of the file.
      */
-    public ConfigFile(P plugin, String fileName) {
+    public ConfigFile(CirelliumBukkitPlugin plugin, String fileName) {
         super(plugin, fileName);
     }
 

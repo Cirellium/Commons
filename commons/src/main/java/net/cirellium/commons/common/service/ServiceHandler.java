@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 // import net.cirellium.commons.bukkit.service.AbstractBukkitService;
 import net.cirellium.commons.common.exception.service.ServiceDependencyException;
 import net.cirellium.commons.common.exception.service.ServiceException;
-import net.cirellium.commons.common.logger.CirelliumLogger;
+import net.cirellium.commons.common.logger.SimpleCirelliumLogger;
 import net.cirellium.commons.common.plugin.CirelliumPlugin;
 import net.cirellium.commons.common.util.ExceptionUtils;
 import net.cirellium.commons.common.util.clazz.ClassUtils;
@@ -37,6 +37,8 @@ import net.cirellium.commons.common.version.Platform;
  */
 public class ServiceHandler<P extends CirelliumPlugin<P>> {
 
+    private static ServiceHandler<?> INSTANCE;
+
     protected final CirelliumPlugin<P> plugin;
 
     // protected @Nullable CirelliumBukkitPlugin<?> bukkitPlugin;
@@ -47,14 +49,19 @@ public class ServiceHandler<P extends CirelliumPlugin<P>> {
     private Logger logger;
 
     public ServiceHandler(CirelliumPlugin<P> plugin) {
+        INSTANCE = this;
         this.plugin = plugin;
         // if(plugin.getPlatform() == Platform.BUKKIT) this.bukkitPlugin = (CirelliumBukkitPlugin<?>) plugin;
         this.registry = new ServiceRegistry<P>();
         this.provider = new ServiceProvider<P>(registry);
-        this.logger = new CirelliumLogger(Platform.getCurrentPlatform(), "ServiceHandler");
+        this.logger = new SimpleCirelliumLogger(Platform.UNKNOWN, "ServiceHandler");
 
         // CompletableFuture.runAsync(() -> loadServices(), plugin.getExecutorService())
                         // .thenRun(() -> initializeServices());
+    }
+
+    public static ServiceHandler<?> getInstance() {
+        return INSTANCE;
     }
 
     public ServiceRegistry<P> getRegistry() {
@@ -182,7 +189,7 @@ public class ServiceHandler<P extends CirelliumPlugin<P>> {
                     Set<ServiceType> missingDependencies = new HashSet<>(service.getDependencies());
                     missingDependencies.stream().filter(type -> !initializedServices.contains(type)).forEach(dependencyType -> {
                         try {
-                            logger.info("Attempting to prepare dependency " + dependencyType.getName());
+                            logger.info("Attempting to prepare dependency " + dependencyType.getClass().getSimpleName());
                             service.getService(dependencyType).prepare();
                             initializedServices.add(dependencyType);
                             toInitialize.remove(service.getService(dependencyType));
@@ -202,9 +209,10 @@ public class ServiceHandler<P extends CirelliumPlugin<P>> {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void shutdownServices() {
         for (AbstractService<P> service : registry.getServiceMap().values()) {
-            service.shutdown();
+            service.shutdown((P) plugin);
             
             registry.unregisterService(service.getServiceType());
         }

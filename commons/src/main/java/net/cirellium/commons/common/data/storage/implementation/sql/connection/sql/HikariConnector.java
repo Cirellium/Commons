@@ -19,14 +19,14 @@ import com.google.common.collect.ImmutableList;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+import net.cirellium.commons.common.data.config.DatabaseCredentials;
 import net.cirellium.commons.common.data.storage.credentials.SQLOptions;
 import net.cirellium.commons.common.data.storage.credentials.SQLOptions.HikariCredentials;
-import net.cirellium.commons.common.data.storage.implementation.sql.connection.Connector;
+import net.cirellium.commons.common.data.storage.implementation.sql.connection.SqlConnector;
 import net.cirellium.commons.common.logger.CirelliumLogger;
 import net.cirellium.commons.common.plugin.CirelliumPlugin;
-import net.cirellium.commons.common.util.clazz.ClassUtils;
 
-public abstract class HikariConnector implements Connector {
+public abstract class HikariConnector implements SqlConnector {
 
     private final SQLOptions options;
 
@@ -47,15 +47,17 @@ public abstract class HikariConnector implements Connector {
             throw e;
         }
 
-        config.setPoolName(options.getDatabase() + "-hikari");
+        DatabaseCredentials c = options.credentials();
 
-        String username = options.getUsername();
-        String[] fullAddress = options.getAddress().split(":");
+        config.setPoolName(c.tablePrefix() + "-hikari");
+
+        String username = c.username();
+        String[] fullAddress = c.address().split(":");
         String address = fullAddress[0];
         String port = fullAddress.length > 1 ? fullAddress[1] : defaultPort();
-        String password = options.getPassword();
-        String database = options.getDatabase();
-        String tablePrefix = options.getTablePrefix();
+        String password = c.password();
+        String database = c.database();
+        String tablePrefix = c.tablePrefix();
 
         HikariCredentials credentials = HikariCredentials.builder()
                 .address(address)
@@ -73,17 +75,16 @@ public abstract class HikariConnector implements Connector {
             throw e;
         }
 
-        Map<String, String> properties = options.getProperties();
+        Map<String, String> properties = options.properties();
 
         defaultProperties(properties);
-
         setProperties(config, properties);
 
-        config.setMaximumPoolSize(options.getMaxPoolSize());
-        config.setMinimumIdle(options.getMinIdle());
-        config.setMaxLifetime(options.getMaxLifetime());
-        config.setConnectionTimeout(options.getConnectionTimeout());
-        config.setKeepaliveTime(options.getKeepaliveTime());
+        config.setMaximumPoolSize(options.maxPoolSize());
+        config.setMinimumIdle(options.minIdle());
+        config.setMaxLifetime(options.maxLifetime());
+        config.setConnectionTimeout(options.connectionTimeout());
+        config.setKeepaliveTime(options.keepaliveTime());
 
         config.setInitializationFailTimeout(-1);
 
@@ -155,7 +156,7 @@ public abstract class HikariConnector implements Connector {
             ClassLoader loader = clazz.getClassLoader();
             String loaderName;
             try {
-                loaderName = ClassUtils.identifyClassLoader(loader) + " (" + loader.toString() + ")";
+                loaderName = " (" + loader.toString() + ")";
             } catch (Throwable e) {
                 loaderName = loader.toString();
             }
