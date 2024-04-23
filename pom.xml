@@ -57,7 +57,6 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.2.5</version>
-        <version>3.2.5</version>
         <configuration>
           <!--<failOnError>false</failOnError>-->
           <parallel>all</parallel>
@@ -67,7 +66,6 @@
           <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.10.2</version>
             <version>5.10.2</version>
           </dependency>
         </dependencies>
@@ -121,6 +119,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.12.1</version>
+        <version>3.12.1</version>
         <configuration>
           <showDeprecation>false</showDeprecation>
           <showWarnings>false</showWarnings>
@@ -133,6 +132,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
+        <version>3.3.0</version>
         <version>3.3.0</version>
         <configuration>
           <!--<failOnError>false</failOnError>-->
@@ -149,6 +149,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.6.3</version>
         <version>3.6.3</version>
         <configuration>
           <!--<failOnError>false</failOnError>-->
@@ -214,7 +215,6 @@
       <groupId>net.md-5</groupId>
       <artifactId>bungeecord-api</artifactId>
       <version>1.20-R0.2</version>
-      <version>1.20-R0.2</version>
       <type>jar</type>
       <scope>provided</scope>
     </dependency>
@@ -237,7 +237,6 @@
       <groupId>org.spongepowered</groupId>
       <artifactId>spongeapi</artifactId>
       <version>10.0.0</version>
-      <version>10.0.0</version>
       <type>jar</type>
       <scope>provided</scope>
     </dependency>
@@ -246,6 +245,7 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.13.2</version>
+      <version>4.13.2</version>
       <scope>test</scope>
     </dependency>
 
@@ -253,13 +253,11 @@
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
       <version>2.15.1</version>
-      <version>2.15.1</version>
     </dependency>
 
     <dependency>
       <groupId>com.zaxxer</groupId>
       <artifactId>HikariCP</artifactId>
-      <version>5.1.0</version>
       <version>5.1.0</version>
     </dependency>
 
@@ -267,19 +265,22 @@
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <version>1.18.30</version>
+      <version>1.18.30</version>
       <scope>provided</scope>
     </dependency>
 
     <!-- <dependency>
+    <!-- <dependency>
       <groupId>net.kyori</groupId>
       <artifactId>adventure-text-minimessage</artifactId>
+      <version>4.16.0</version>
+    </dependency> -->
       <version>4.16.0</version>
     </dependency> -->
 
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>33.0.0-jre</version>
       <version>33.0.0-jre</version>
     </dependency>
 

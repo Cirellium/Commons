@@ -13,7 +13,6 @@ import java.io.File;
 import java.util.concurrent.ExecutorService;
 
 import net.cirellium.commons.common.logger.CirelliumLogger;
-import net.cirellium.commons.common.message.MessageProvider;
 import net.cirellium.commons.common.service.ServiceHolder;
 import net.cirellium.commons.common.version.Platform;
 import net.cirellium.commons.common.version.Version;
