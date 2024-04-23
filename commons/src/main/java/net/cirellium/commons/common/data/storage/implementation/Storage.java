@@ -15,6 +15,7 @@ import java.util.UUID;
 import net.cirellium.commons.common.collection.CMap;
 import net.cirellium.commons.common.data.storage.implementation.sql.SqlStorage;
 import net.cirellium.commons.common.data.user.AbstractCirelliumUser;
+import net.cirellium.commons.common.plugin.CirelliumPlugin;
 
 /**
  * This interface is used to provide methods for the storage of users.
@@ -22,7 +23,7 @@ import net.cirellium.commons.common.data.user.AbstractCirelliumUser;
  * 
  * @param <CUser> The type of user that this storage will store. (extends {@link AbstractCirelliumUser})
  */
-public interface Storage<CUser extends AbstractCirelliumUser> {
+public interface Storage<CUser extends AbstractCirelliumUser<?>> {
     
     public CMap<UUID, CUser> getUsers();
 
@@ -43,6 +44,10 @@ public interface Storage<CUser extends AbstractCirelliumUser> {
     public UUID getPlayerUUID(String name);
 
     public String getPlayerName(UUID uuid);
+
+    public CirelliumPlugin<?> getPlugin();
+
+    // ! TODO: Add logging
 
     // ! Log getLog();
     // ! void logAction(Action logAction);

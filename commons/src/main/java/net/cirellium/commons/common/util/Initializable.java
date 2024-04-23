@@ -1,5 +1,7 @@
 package net.cirellium.commons.common.util;
 
+import net.cirellium.commons.common.exception.InitializationException;
+
 /**
  * An object that can be initialized
  * 
@@ -15,6 +17,6 @@ public interface Initializable<I> {
      * 
      * @param i The required object to initialize a process (e.g. used for dependency injection)
      */
-    void initialize(I i);
+    void initialize(I i) throws InitializationException;
     
 }

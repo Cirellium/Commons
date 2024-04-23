@@ -6,7 +6,7 @@ import java.util.function.Consumer;
 
 import org.bukkit.entity.Player;
 
-import net.cirellium.commons.bukkit.inv.implementation.InventoryBase;
+import net.cirellium.commons.bukkit.inv.InventoryBase;
 import net.cirellium.commons.bukkit.inv.implementation.InventoryContent;
 
 public abstract class PaginatedInventory extends InventoryBase {

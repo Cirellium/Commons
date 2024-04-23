@@ -14,28 +14,28 @@ import java.util.logging.Logger;
 import net.cirellium.commons.common.logger.SimpleCirelliumLogger;
 import net.cirellium.commons.common.plugin.CirelliumPlugin;
 
-public class CommandHandler<P extends CirelliumPlugin<P>> {
+public class CommandHandler {
     
-    protected static CommandHandler<?> instance;
+    protected static CommandHandler INSTANCE;
 
-    protected final P plugin;
+    protected final CirelliumPlugin<?> plugin;
 
     protected CommandRegistry registry;
 
     protected Logger logger;
 
-    public CommandHandler(P plugin) {
-        instance = this;
+    public CommandHandler(CirelliumPlugin<?> plugin) {
+        INSTANCE = this;
         this.logger = new SimpleCirelliumLogger(plugin.getPlatform(), "CommandsAnnotated2");
         this.plugin = plugin;
     }
 
-    public P getPlugin() { return plugin; }
+    public CirelliumPlugin<?> getPlugin() { return plugin; }
 
     public CommandRegistry getRegistry() { return registry; }
 
     public Logger getLogger() { return logger; }
 
-    public static CommandHandler<?> getInstance() { return instance; }
+    public static CommandHandler getInstance() { return INSTANCE; }
 
 }

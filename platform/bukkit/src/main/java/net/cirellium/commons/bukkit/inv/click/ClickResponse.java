@@ -2,8 +2,8 @@ package net.cirellium.commons.bukkit.inv.click;
 
 import java.util.function.Predicate;
 
+import net.cirellium.commons.bukkit.inv.InventoryBase;
 import net.cirellium.commons.bukkit.inv.click.ClickHandler.ClickInformation;
-import net.cirellium.commons.bukkit.inv.implementation.InventoryBase;
 import net.cirellium.commons.common.message.Message;
 import net.cirellium.commons.common.util.Processor;
 

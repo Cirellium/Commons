@@ -16,12 +16,12 @@ public class CacheService<P extends CirelliumPlugin<P>> extends AbstractService<
     }
 
     @Override
-    public void initialize() {
+    public void initialize(P p) {
         
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown(P p) {
         
     }
 

@@ -28,12 +28,11 @@ import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 /**
  * This class represents the base class for all Cirellium Bukkit plugins.
  */
-public abstract class CirelliumBukkitPlugin<P extends CirelliumBukkitPlugin<P>> extends JavaPlugin
-        implements CirelliumPlugin<P>, ServiceHolder<P> {
+public abstract class CirelliumBukkitPlugin extends JavaPlugin implements CirelliumPlugin<CirelliumBukkitPlugin>, ServiceHolder<CirelliumBukkitPlugin> {
 
-    protected CirelliumPlugin<P> plugin;
+    protected CirelliumBukkitPlugin plugin;
 
-    private ServiceHandler<P> serviceHandler;
+    private ServiceHandler<CirelliumBukkitPlugin> serviceHandler;
 
     @Getter
     private ExecutorService executorService;
@@ -43,7 +42,7 @@ public abstract class CirelliumBukkitPlugin<P extends CirelliumBukkitPlugin<P>> 
     @Override
     public void onLoad() {
         plugin = this;
-        executorService = Executors.newFixedThreadPool(1);
+        executorService = Executors.newFixedThreadPool(4);
         boolean load = false;
 
         try {
@@ -58,8 +57,8 @@ public abstract class CirelliumBukkitPlugin<P extends CirelliumBukkitPlugin<P>> 
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
-
-        serviceHandler = new ServiceHandler<P>(plugin);
+        
+        serviceHandler = new ServiceHandler<CirelliumBukkitPlugin>(plugin);
         serviceHandler.loadServices();
     }
 
@@ -84,7 +83,7 @@ public abstract class CirelliumBukkitPlugin<P extends CirelliumBukkitPlugin<P>> 
         disable();
     }
 
-    public abstract P getSelf();
+    // public abstract P getSelf();
 
     public BukkitAudiences adventure() {
         if (this.adventure == null) {
@@ -104,12 +103,12 @@ public abstract class CirelliumBukkitPlugin<P extends CirelliumBukkitPlugin<P>> 
     }
 
     @Override
-    public ServiceHandler<P> getServiceHandler() {
+    public ServiceHandler<CirelliumBukkitPlugin> getServiceHandler() {
         return serviceHandler;
     }
 
     @Override
-    public ServiceHolder<P> getServiceHolder() {
+    public ServiceHolder<CirelliumBukkitPlugin> getServiceHolder() {
         return this;
     }
 

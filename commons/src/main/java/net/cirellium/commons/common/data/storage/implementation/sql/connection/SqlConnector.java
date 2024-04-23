@@ -14,11 +14,10 @@ import java.sql.SQLException;
 import java.util.function.Function;
 
 import net.cirellium.commons.common.plugin.CirelliumPlugin;
-import net.cirellium.commons.common.util.Initializable;
+import net.cirellium.commons.common.util.Lifecycle;
 import net.cirellium.commons.common.util.Processor;
-import net.cirellium.commons.common.util.Shutdownable;
 
-public interface Connector extends Processor<String, Function<String, String>>, Initializable<CirelliumPlugin<?>>, Shutdownable<CirelliumPlugin<?>> {
+public interface SqlConnector extends Processor<String, Function<String, String>>, Lifecycle<CirelliumPlugin<?>>  {
     
     Connection getConnection() throws SQLException;
 
@@ -26,7 +25,9 @@ public interface Connector extends Processor<String, Function<String, String>>, 
 
     Function<String, String> process(String query);
 
+    @Override
     void initialize(CirelliumPlugin<?> plugin);
 
+    @Override
     void shutdown(CirelliumPlugin<?> plugin);
 }
