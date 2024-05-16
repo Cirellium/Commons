@@ -18,13 +18,10 @@ public abstract class CirelliumLogger extends Logger {
 
     @Override
     public abstract void info(String msg);
-<<<<<<<<< Temporary merge branch 1
-=========
     
     public Platform getPlatform() {
         return platform;
     }
->>>>>>>>> Temporary merge branch 2
 
     public String getName() {
         return name;
