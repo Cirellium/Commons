@@ -268,7 +268,7 @@
       <groupId>net.kyori</groupId>
       <artifactId>adventure-text-minimessage</artifactId>
       <version>4.16.0</version>
-    </dependency> -->
+    </dependency>
 
     <dependency>
       <groupId>com.google.guava</groupId>

@@ -242,15 +242,6 @@
       <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
     </repository>
     <repository>
-      <id>spigot-repo</id>
-      <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-    </repository>
-
-    <repository>
-      <id>projectlombok.org</id>
-      <url>https://projectlombok.org/edge-releases</url>
-    </repository>
-    <repository>
       <id>projectlombok.org</id>
       <url>https://projectlombok.org/edge-releases</url>
     </repository>
