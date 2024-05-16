@@ -147,9 +147,8 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <version>3.3.0</version>
-        <configuration>
-          <!--<failOnError>false</failOnError>-->
-          <!-- <artifactItems>
+        <!-- <configuration>
+          <artifactItems>
             <artifactItem>
               <groupId>${project.groupId}</groupId>
               <artifactId>${project.artifactId}</artifactId>
@@ -160,11 +159,11 @@
               <overWrite>true</overWrite>
               <destFileName>${project.name}.jar</destFileName>
               <directory>/home/fear/code/commons</directory>
-              <outputDirectory>/home/fear/code/commons</outputDirectory>
+              <outputDirectory>/home/fear/code/TestServer/plugins/</outputDirectory>
             </artifactItem>
-          </artifactItems> -->
-          <!-- <outputDirectory>/home/fear/code/commons</outputDirectory> -->
-        </configuration>
+          </artifactItems>
+          <outputDirectory>/home/fear/code/TestServer/plugins/</outputDirectory>
+        </configuration> -->
       </plugin>
 
       <plugin>

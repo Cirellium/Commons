@@ -28,10 +28,12 @@ public abstract class CommandData<A extends Annotation> {
         for (int i = 0; i < parameters.length; i++) {
             final Parameter parameter = parameters[i];
             final Argument argument = parameter.getAnnotation(Argument.class);
+            
             if (argument == null)
                 continue;
 
-            builder.append("<" + argument.name() + ">");
+            builder.append(argument.name() + ">");
+
             if (i < parameters.length - 1)
                 builder.append(" ");
         }
