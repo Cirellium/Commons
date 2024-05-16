@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import net.cirellium.commons.bukkit.inv.button.Button;
 import net.cirellium.commons.bukkit.inv.click.ClickHandler.ClickInformation;
 import net.cirellium.commons.bukkit.inv.click.ClickResponse;
-import net.cirellium.commons.bukkit.inv.implementation.InventoryContent;
+import net.cirellium.commons.bukkit.inv.content.InventoryContent;
 
 /**
  * This interface represents a custom inventory and is implemented by all types of inventories.

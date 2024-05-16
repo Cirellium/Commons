@@ -39,6 +39,7 @@
       </resource>
     </resources>
 
+
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -83,7 +84,15 @@
                   <excludes>
                     <exclude>net.kyori</exclude>
                   </excludes>
+                  <excludes>
+                    <exclude>net.kyori</exclude>
+                  </excludes>
                 </relocation>
+
+                <!-- <relocation>
+                  <pattern>net.kyori.adventure.text</pattern>
+                  <shadedPattern>net.cirellium.libs.net.kyori.adventure.text</shadedPattern>
+                </relocation> -->
 
                 <!-- <relocation>
                   <pattern>net.kyori.adventure.text</pattern>
@@ -193,6 +202,7 @@
         </executions>
       </plugin>
 
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
@@ -231,7 +241,6 @@
       <id>spigot-repo</id>
       <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
     </repository>
-
     <repository>
       <id>projectlombok.org</id>
       <url>https://projectlombok.org/edge-releases</url>
@@ -281,6 +290,12 @@
       <scope>system</scope>
       <systemPath>${project.basedir}/libs/craftbukkit-1.20.1-R0.1-SNAPSHOT.jar</systemPath>
     </dependency> -->
+
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.10.1</version>
+    </dependency>
 
     <dependency>
       <groupId>org.spigotmc</groupId>

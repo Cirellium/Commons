@@ -41,7 +41,7 @@ public interface ClickResponse extends Processor<ClickInformation, Boolean> {
      * @param message The message to send
      * @return The ClickResponse object
      */
-    static ClickResponse sendMessage(Message message) {
+    public static ClickResponse sendMessage(Message message) {
         return sendMessage(message.getString());
     }
 
@@ -51,7 +51,7 @@ public interface ClickResponse extends Processor<ClickInformation, Boolean> {
      * @param message The message to send
      * @return The ClickResponse object
      */
-    static ClickResponse sendMessage(String message) {
+    public static ClickResponse sendMessage(String message) {
         return (clickInformation) -> {
             clickInformation.player().sendMessage(message);
             return true;
@@ -64,7 +64,7 @@ public interface ClickResponse extends Processor<ClickInformation, Boolean> {
      * @param inventory The inventory to open
      * @return The ClickResponse object
      */
-    static ClickResponse openInventory(InventoryBase inventory) {
+    public static ClickResponse openInventory(InventoryBase inventory) {
         return (clickInformation) -> {
             inventory.openInventory(clickInformation.player());
             return true;
@@ -77,7 +77,7 @@ public interface ClickResponse extends Processor<ClickInformation, Boolean> {
      * @param command The command to run
      * @return The ClickResponse object
      */
-    static ClickResponse runCommand(String command) {
+    public static ClickResponse runCommand(String command) {
         return (clickInformation) -> clickInformation.player().performCommand(command);
     }
 
@@ -86,7 +86,7 @@ public interface ClickResponse extends Processor<ClickInformation, Boolean> {
      * 
      * @return The ClickResponse object
      */
-    static ClickResponse closeInventory() {
+    public static ClickResponse closeInventory() {
         return (clickInformation) -> {
             clickInformation.player().closeInventory();
             return true;
@@ -98,7 +98,7 @@ public interface ClickResponse extends Processor<ClickInformation, Boolean> {
      * 
      * @return The ClickResponse object
      */
-    static ClickResponse success() { return (clickInformation) -> true; }
+    public static ClickResponse success() { return (clickInformation) -> true; }
 
     /**
      * Returns the value of a {@link Predicate}.
@@ -106,7 +106,7 @@ public interface ClickResponse extends Processor<ClickInformation, Boolean> {
      * @param predicate The predicate to evaluate
      * @return The ClickResponse object
      */
-    static ClickResponse successIf(Predicate<ClickInformation> predicate) {
+    public static ClickResponse successIf(Predicate<ClickInformation> predicate) {
         return (clickInformation) -> predicate.test(clickInformation);
     }
 }

@@ -5,13 +5,16 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryCreativeEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.InventoryType;
 
 import net.cirellium.commons.bukkit.inv.button.Button;
 import net.cirellium.commons.bukkit.inv.click.ClickHandler.ClickInformation;
 import net.cirellium.commons.bukkit.inv.click.ClickResponse;
 
 public class InventoryListener implements Listener {
-    
+
     @EventHandler
     public void invClick(InventoryClickEvent e) {
         if (!(e.getWhoClicked() instanceof Player))
@@ -21,6 +24,14 @@ public class InventoryListener implements Listener {
         if (e.getCurrentItem() == null)
             return;
         if (e.getView().getTopInventory() == null)
+            return;
+        if (e instanceof InventoryCreativeEvent)
+            return;
+        if (e.getClickedInventory().getType() == InventoryType.PLAYER)
+            return;
+        if (e.getClickedInventory().getHolder() == null)
+            return;
+        if (!(e.getClickedInventory().getHolder() instanceof InventoryBase))
             return;
 
         InventoryBase inv = (InventoryBase) e.getClickedInventory().getHolder();
@@ -43,8 +54,41 @@ public class InventoryListener implements Listener {
     }
 
     @EventHandler
-    public void invClose(InventoryCloseEvent e) {
+    public void invDrag(InventoryDragEvent e) {
+        if (!(e.getWhoClicked() instanceof Player))
+            return;
+        if (e.getInventory() == null)
+            return;
+        if (e.getInventory().getHolder() == null)
+            return;
+        if (!(e.getInventory().getHolder() instanceof InventoryBase))
+            return;
+
         InventoryBase inv = (InventoryBase) e.getInventory().getHolder();
+
+        if (inv == null)
+            return;
+
+        for (int slot : e.getRawSlots()) {
+            if (inv.getContent().getButtons().containsKey(slot)) {
+                e.setCancelled(true);
+                return;
+            }
+        }
+    }
+
+    @EventHandler
+    public void invClose(InventoryCloseEvent e) {
+        if (e.getInventory() == null)
+            return;
+        if (e.getView().getTopInventory() == null)
+            return;
+        if (e.getInventory().getHolder() == null)
+            return;
+        if (!(e.getView().getTopInventory().getHolder() instanceof InventoryBase))
+            return;
+
+        InventoryBase inv = (InventoryBase) e.getView().getTopInventory().getHolder();
 
         if (inv == null)
             return;

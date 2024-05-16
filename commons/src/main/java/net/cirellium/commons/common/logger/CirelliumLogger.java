@@ -18,5 +18,4 @@ public abstract class CirelliumLogger extends Logger {
 
     @Override
     public abstract void info(String msg);
-
 }
