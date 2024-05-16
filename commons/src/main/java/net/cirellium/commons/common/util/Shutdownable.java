@@ -1,5 +1,7 @@
 package net.cirellium.commons.common.util;
 
+import net.cirellium.commons.common.exception.ShutdownException;
+
 /**
  * An object that can be shutdown
  * 
@@ -15,6 +17,6 @@ public interface Shutdownable<S> {
      * 
      * @param s The required object to shutdown a process (e.g. used for dependency injection)
      */
-    void shutdown(S s);
+    void shutdown(S s) throws ShutdownException;
     
 }

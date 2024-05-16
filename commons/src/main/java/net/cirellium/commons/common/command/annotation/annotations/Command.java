@@ -45,5 +45,4 @@ public @interface Command {
             return false;
         }
     }
-
 }

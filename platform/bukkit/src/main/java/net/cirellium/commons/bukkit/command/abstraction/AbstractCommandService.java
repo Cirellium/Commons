@@ -14,28 +14,27 @@ import net.cirellium.commons.common.command.result.CommandResult;
 import net.cirellium.commons.common.service.ServiceType;
 
 public abstract class AbstractCommandService<
-        P extends CirelliumBukkitPlugin<P>,               // The plugin class that extends CirelliumPlugin
         H,                                          // The command handler class that extends this class
-        M extends AbstractCommandService<P, H, M>   // The actual command manager that extends this class
-        > extends AbstractBukkitService<P> {
+        M extends AbstractCommandService<H, M>   // The actual command manager that extends this class
+        > extends AbstractBukkitService {
 
-    protected final P plugin;
-    protected final CommandHandler<P, H, M> commandHandler;
+    protected final CirelliumBukkitPlugin plugin;
+    protected final CommandHandler<H, M> commandHandler;
 
-    protected final HashMap<String, AbstractCommand<P, M>> commands;
+    protected final HashMap<String, AbstractCommand<M>> commands;
 
-    public AbstractCommandService(P plugin) {
+    public AbstractCommandService(CirelliumBukkitPlugin plugin) {
         super(plugin, 
             ServiceType.COMMAND, 
             true, 
             new ServiceType[] { ServiceType.DATABASE, ServiceType.CACHE });
         this.plugin = plugin;
-        this.commandHandler = new CommandHandler<P, H, M>(this);
+        this.commandHandler = new CommandHandler<H, M>(this);
 
         this.commands = new HashMap<>();
     }
 
-    public AbstractCommandService(P plugin, CommandHandler<P, H, M> handler, ServiceType type, boolean autoInitialize, ServiceType[] dependencies) {
+    public AbstractCommandService(CirelliumBukkitPlugin plugin, CommandHandler<H, M> handler, ServiceType type, boolean autoInitialize, ServiceType[] dependencies) {
         super(plugin, 
             ServiceType.COMMAND, 
             true, 
@@ -47,13 +46,13 @@ public abstract class AbstractCommandService<
     }
 
     @Override
-    public void initialize() {
+    public void initialize(CirelliumBukkitPlugin plugin) {
         
 
     }
 
     @Override
-    public void shutdown() {
+    public void shutdown(CirelliumBukkitPlugin plugin) {
         
     }
 
@@ -65,7 +64,7 @@ public abstract class AbstractCommandService<
         for (String commandName : commands.keySet()) {
             if (!(args[0].equalsIgnoreCase(commandName))) continue;
 
-            AbstractCommand<P, M> cmd = commands.get(commandName);
+            AbstractCommand<M> cmd = commands.get(commandName);
 
             if (cmd.isDirectCommand()) return cmd.executePlayer(null, command, args);
 
@@ -94,7 +93,7 @@ public abstract class AbstractCommandService<
         for (String commandName : commands.keySet()) { // ! TODO Untested
             if (!(args[0].equalsIgnoreCase(commandName))) continue;
 
-            AbstractCommand<P, M> cmd = commands.get(commandName);
+            AbstractCommand<M> cmd = commands.get(commandName);
 
             if (cmd.isDirectCommand()) return cmd.executeConsole(command, args);
 
@@ -107,29 +106,29 @@ public abstract class AbstractCommandService<
         return new CommandResult(CommandOutcome.ERROR);
     }
 
-    public List<AbstractCommand<P, M>> getCommands() {
-        return new ArrayList<AbstractCommand<P, M>>(commands.values());
+    public List<AbstractCommand<M>> getCommands() {
+        return new ArrayList<AbstractCommand<M>>(commands.values());
     }
 
-    public abstract HashMap<String, AbstractCommand<P, M>> getCommandMap();
+    public abstract HashMap<String, AbstractCommand<M>> getCommandMap();
 
-    public AbstractCommand<P, M> getCommand(String commandName) {
+    public AbstractCommand<M> getCommand(String commandName) {
         return commands.get(commandName);
     }
 
-    public void registerCommand(AbstractCommand<P, M> command) {
+    public void registerCommand(AbstractCommand<M> command) {
         commands.put(command.getCommandName(), command);
     }
 
-    public boolean isSubCommand(AbstractCommand<P, M> command) {
+    public boolean isSubCommand(AbstractCommand<M> command) {
         return command instanceof SubCommand;
     }
 
-    public boolean isDirectCommand(AbstractCommand<P, M> command) {
+    public boolean isDirectCommand(AbstractCommand<M> command) {
         return !isSubCommand(command);
     }
 
-    public CommandHandler<P, H, M> getCommandHandler() {
+    public CommandHandler<H, M> getCommandHandler() {
         return commandHandler;
     }
 

@@ -21,7 +21,9 @@ import java.util.function.Supplier;
 
 import net.cirellium.commons.common.collection.CMap;
 import net.cirellium.commons.common.data.storage.implementation.Storage;
-import net.cirellium.commons.common.data.storage.implementation.sql.connection.Connector;
+import net.cirellium.commons.common.data.storage.implementation.sql.connection.SqlConnector;
+import net.cirellium.commons.common.data.storage.implementation.sql.query.SqlStatement.QueryStatement;
+import net.cirellium.commons.common.data.storage.implementation.sql.query.SqlStatement.UpdateStatement;
 import net.cirellium.commons.common.data.user.AbstractCirelliumUser;
 
 /**
@@ -35,9 +37,13 @@ import net.cirellium.commons.common.data.user.AbstractCirelliumUser;
  * @version 1.0
  * @see Storage
  */
-public abstract class SqlStorage<CUser extends AbstractCirelliumUser> implements Storage<CUser> {
+public abstract class SqlStorage<CUser extends AbstractCirelliumUser<CUser>> implements Storage<CUser> {
 
-    protected Connector connector;
+    protected SqlConnector connector;
+
+    public SqlStorage(SqlConnector connector) {
+        this.connector = connector;
+    }
 
     @Override
     public abstract CMap<UUID, CUser> getUsers();
@@ -69,6 +75,23 @@ public abstract class SqlStorage<CUser extends AbstractCirelliumUser> implements
     @Override
     public abstract String getPlayerName(UUID uuid);
 
+    public ResultSet getResultSet(QueryStatement statement) {
+        try {
+            Connection connection = connector.getConnection();
+            PreparedStatement pStatement = connection.prepareStatement(statement.getFinalStatement());
+            ResultSet rSet = pStatement.executeQuery();
+            pStatement.close();
+            return rSet;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void getResultSet(QueryStatement statement, Consumer<ResultSet> resultSet) {
+        getResultSet(statement.getFinalStatement(), resultSet);
+    }
+
     public void getResultSet(String query, Consumer<ResultSet> resultSet) {
         execute(connection -> {
             try {
@@ -86,8 +109,26 @@ public abstract class SqlStorage<CUser extends AbstractCirelliumUser> implements
         });
     }
 
+    public CompletableFuture<Void> executeAsync(UpdateStatement statement) {
+        return getAsync(() -> executeUpdate(statement));
+    }
+
+    public ResultSet getResultSetAsync(QueryStatement statement) {
+        return CompletableFuture.supplyAsync(() -> {
+            return getResultSet(statement);
+        }).join();
+    }
+
+    public CompletableFuture<Void> getResultSetAsync(QueryStatement statement, Consumer<ResultSet> resultSet) {
+        return getResultSetAsync(statement.getFinalStatement(), resultSet);
+    }
+
     public CompletableFuture<Void> getResultSetAsync(String query, Consumer<ResultSet> resultSet) {
         return getAsync(() -> getResultSet(query, resultSet));
+    }
+
+    public void executeUpdate(UpdateStatement statement) {
+        executeUpdate(statement.getFinalStatement());
     }
 
     public void executeUpdate(String update) {
@@ -108,17 +149,15 @@ public abstract class SqlStorage<CUser extends AbstractCirelliumUser> implements
         }
     }
 
-
     public CompletableFuture<Void> getAsync(Runnable runnable) {
-        return CompletableFuture.runAsync(runnable);
+        return CompletableFuture.runAsync(runnable, getPlugin().getExecutorService());
     }
 
     public CompletableFuture<?> getAsync(Supplier<?> supplier) {
-        return CompletableFuture.supplyAsync(supplier);
+        return CompletableFuture.supplyAsync(supplier, getPlugin().getExecutorService());
     }
 
     public Object getAsyncDirect(Supplier<?> supplier) {
         return getAsync(supplier).join();
     }
-    
 }

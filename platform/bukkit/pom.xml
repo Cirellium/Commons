@@ -157,7 +157,6 @@
         <artifactId>maven-jar-plugin</artifactId>
         <version>3.3.0</version>
         <!-- <configuration>
-         <artifactItems>
           <artifactItems>
             <artifactItem>
               <groupId>${project.groupId}</groupId>
@@ -169,12 +168,10 @@
               <overWrite>true</overWrite>
               <destFileName>${project.name}.jar</destFileName>
               <directory>/home/fear/code/commons</directory>
-              <outputDirectory>/home/fear/code/commons</outputDirectory>
-              <directory>/home/fear/code/commons</directory>
-              <outputDirectory>/home/fear/code/commons</outputDirectory>
+              <outputDirectory>/home/fear/code/TestServer/plugins/</outputDirectory>
             </artifactItem>
           </artifactItems>
-          <outputDirectory>/home/fear/code/commons</outputDirectory>
+          <outputDirectory>/home/fear/code/TestServer/plugins/</outputDirectory>
         </configuration> -->
       </plugin>
 
@@ -277,24 +274,6 @@
       <systemPath>/workspaces/code/commons/commons/target/commons-1.0-8289153-SNAPSHOT.jar</systemPath>
     </dependency> -->
 
-
-    <!-- <dependency>
-      <groupId>net.cirellium</groupId>
-      <artifactId>commons</artifactId>
-      <version>1.0</version>
-      <scope>system</scope>
-      <systemPath>/home/vscode/.m2/repository/net/cirellium/commons/1.0/commons-1.0.jar</systemPath>
-    </dependency> -->
-
-    <!-- <dependency>
-      <groupId>net.cirellium</groupId>
-      <artifactId>commons</artifactId>
-      <version>1.0</version>
-      <scope>system</scope>
-      <systemPath>/workspaces/code/commons/commons/target/commons-1.0-8289153-SNAPSHOT.jar</systemPath>
-    </dependency> -->
-
-
     <dependency>
       <groupId>net.cirellium</groupId>
       <artifactId>commons</artifactId>
@@ -312,20 +291,6 @@
       <artifactId>gson</artifactId>
       <version>2.10.1</version>
     </dependency>
-
-
-    <dependency>
-      <groupId>net.kyori</groupId>
-      <artifactId>adventure-platform-bukkit</artifactId>
-      <version>4.3.2</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-      <version>2.10.1</version>
-    </dependency>
-
 
     <!-- <dependency>
       <groupId>org.bukkit</groupId>
@@ -374,15 +339,9 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- <dependency>
-      <groupId>net.kyori</groupId>
-      <artifactId>adventure-text-minimessage</artifactId>
-      <version>4.16.0</version>
-    </dependency> -->
-
     <dependency>
       <groupId>net.kyori</groupId>
-      <artifactId>adventure-text-serializer-legacy</artifactId>
+      <artifactId>adventure-text-minimessage</artifactId>
       <version>4.16.0</version>
     </dependency>
 
@@ -409,6 +368,13 @@
       <artifactId>reflections</artifactId>
       <version>0.10.2</version>
     </dependency>
+
+    <dependency> <!-- For some fucking reason u need this for it to compile -->
+      <groupId>javax.inject</groupId>
+      <artifactId>javax.inject</artifactId>
+      <version>1</version>
+    </dependency>
+
   </dependencies>
 
 </project>

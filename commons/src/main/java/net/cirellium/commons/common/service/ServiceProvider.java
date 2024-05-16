@@ -22,6 +22,19 @@ public class ServiceProvider<P extends CirelliumPlugin<P>> {
         this.serviceRegistry = serviceRegistry;
     }
 
+    public <S extends AbstractService<?>> S findService(Class<S> clazz) {
+        return clazz.cast(this.serviceRegistry.getServiceMap().values().stream()
+                .filter(controller -> controller.getClass().equals(clazz))
+                .findFirst().orElse(null));
+
+        // return serviceRegistry.getServiceMap().values().stream()
+        // // .filter(serviceClass::isInstance)
+        // .filter(service -> service.getClass().isAssignableFrom(genericTypeClass))
+        // .map(genericTypeClass::cast)
+        // .findFirst()
+        // .orElse(null);
+    }
+
     public AbstractService<P> getService(ServiceType type) {
         AbstractService<P> service = serviceRegistry.getServiceMap().get(type);
         if (service == null) {

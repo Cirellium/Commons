@@ -10,24 +10,21 @@ public abstract class CirelliumLogger extends Logger {
 
     private static final Function<String, String> newName = name -> name.equals("cirelliumcore") ? "Core" : name;
 
-    private final Platform platform;
-
-    private final String name;
-
     public CirelliumLogger(Platform platform, String name) {
         super("Cirellium: " + newName.apply(name), null);
-        this.platform = platform;
-        this.name = newName.apply(name);
 
         setLevel(Level.ALL);
     }
 
     @Override
     public abstract void info(String msg);
+<<<<<<<<< Temporary merge branch 1
+=========
     
     public Platform getPlatform() {
         return platform;
     }
+>>>>>>>>> Temporary merge branch 2
 
     public String getName() {
         return name;

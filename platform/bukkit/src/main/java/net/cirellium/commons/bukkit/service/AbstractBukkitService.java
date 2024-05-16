@@ -19,30 +19,36 @@ import net.cirellium.commons.common.service.ServiceType;
 /**
  * A wrapper for an {@link AbstractService} that contains an instance of the {@link CirelliumBukkitPlugin} and provides Bukkit-specific methods.
  */
-public abstract class AbstractBukkitService<P extends CirelliumBukkitPlugin<P>> extends AbstractService<P> {
+public abstract class AbstractBukkitService extends AbstractService<CirelliumBukkitPlugin> {
 
     @Getter
-    protected final CirelliumBukkitPlugin<P> bukkitPlugin;
+    protected final CirelliumBukkitPlugin bukkitPlugin;
 
-    public AbstractBukkitService(P plugin) {
+    public AbstractBukkitService(CirelliumBukkitPlugin plugin) {
         super(plugin);
-        this.bukkitPlugin = plugin;
+        this.bukkitPlugin = (CirelliumBukkitPlugin) plugin.getPlugin();
     }
 
-    public AbstractBukkitService(P plugin, ServiceType file) {
+    public AbstractBukkitService(CirelliumBukkitPlugin plugin, ServiceType file) {
         super(plugin, file);
-        this.bukkitPlugin = plugin;
+        this.bukkitPlugin = (CirelliumBukkitPlugin) plugin.getPlugin();
     }
 
-    public AbstractBukkitService(P plugin, ServiceType type, ServiceType... dependencies) {
+    public AbstractBukkitService(CirelliumBukkitPlugin plugin, ServiceType type, ServiceType... dependencies) {
         super(plugin, type, true, dependencies);
-        this.bukkitPlugin = plugin;
+        this.bukkitPlugin = (CirelliumBukkitPlugin) plugin.getPlugin();
     }
 
-    public AbstractBukkitService(P plugin, ServiceType type, boolean autoInitialize, ServiceType... dependencies) {
+    public AbstractBukkitService(CirelliumBukkitPlugin plugin, ServiceType type, boolean autoInitialize, ServiceType... dependencies) {
         super(plugin, type, autoInitialize, dependencies);
-        this.bukkitPlugin = plugin;
+        this.bukkitPlugin = (CirelliumBukkitPlugin) plugin.getPlugin();
     }
+
+    @Override
+    public abstract void initialize(CirelliumBukkitPlugin plugin);
+
+    @Override
+    public abstract void shutdown(CirelliumBukkitPlugin plugin);
 
     public BukkitScheduler getScheduler() {
         return bukkitPlugin.getServer().getScheduler();

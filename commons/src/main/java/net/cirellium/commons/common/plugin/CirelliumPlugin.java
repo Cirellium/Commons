@@ -13,6 +13,7 @@ import java.io.File;
 import java.util.concurrent.ExecutorService;
 
 import net.cirellium.commons.common.logger.CirelliumLogger;
+import net.cirellium.commons.common.message.MessageProvider;
 import net.cirellium.commons.common.service.ServiceHolder;
 import net.cirellium.commons.common.version.Platform;
 import net.cirellium.commons.common.version.Version;
@@ -33,11 +34,15 @@ public interface CirelliumPlugin<P> {
 
     public Platform getPlatform();
 
-    public ServiceHolder<?> getServiceHolder();
+    public ServiceHolder<? super P> getServiceHolder();
 
     public CirelliumLogger getLogger();
 
     public ExecutorService getExecutorService();
+
+    public MessageProvider<?> getMessageProvider();
+
+    public P getPlugin();
     
     // ! Other methods:
     // ! Platform getPlatform();

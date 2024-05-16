@@ -14,6 +14,8 @@ public interface SimpleProvider<T> extends Supplier<T> {
 
     @Override
     default T get() {
+        return provide();
+    default T get() {
         return get();
     }
 }

@@ -208,7 +208,7 @@
 
   <dependencies>
 
-    <dependency>
+    <!--<dependency>
       <groupId>net.md-5</groupId>
       <artifactId>bungeecord-api</artifactId>
       <version>1.20-R0.2</version>
@@ -236,7 +236,7 @@
       <version>10.0.0</version>
       <type>jar</type>
       <scope>provided</scope>
-    </dependency>
+    </dependency>-->
 
     <dependency>
       <groupId>junit</groupId>
@@ -268,7 +268,7 @@
       <groupId>net.kyori</groupId>
       <artifactId>adventure-text-minimessage</artifactId>
       <version>4.16.0</version>
-    </dependency>
+    </dependency> -->
 
     <dependency>
       <groupId>com.google.guava</groupId>

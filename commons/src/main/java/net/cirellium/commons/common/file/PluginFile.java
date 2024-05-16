@@ -34,4 +34,7 @@ public interface PluginFile<F> {
 
     <T> Optional<T> getValueAs(Class<T> clazz, String path);
 
+    default <T> T getValue(Class<T> clazz, String path) {
+        return getValueAs(clazz, path).orElse(null);
+    }
 }
