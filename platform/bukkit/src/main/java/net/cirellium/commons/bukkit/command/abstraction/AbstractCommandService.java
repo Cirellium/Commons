@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 
 import net.cirellium.commons.bukkit.CirelliumBukkitPlugin;
 import net.cirellium.commons.bukkit.service.AbstractBukkitService;
-import net.cirellium.commons.common.command.result.CommandOutcome;
+import net.cirellium.commons.common.command.result.CommandExecutionResult;
 import net.cirellium.commons.common.command.result.CommandResult;
 import net.cirellium.commons.common.service.ServiceType;
 
@@ -59,7 +59,7 @@ public abstract class AbstractCommandService<
     protected CommandResult executePlayer(Player player, org.bukkit.command.Command command, String[] args) {
         if (args.length == 0) return getCommand("").executePlayer(null, command, args);
 
-        if (commands.get(args[0]) == null) return new CommandResult(CommandOutcome.ERROR_NO_COMMAND_FOUND);
+        if (commands.get(args[0]) == null) return new CommandResult(CommandExecutionResult.ERROR_NO_COMMAND_FOUND);
 
         for (String commandName : commands.keySet()) {
             if (!(args[0].equalsIgnoreCase(commandName))) continue;
@@ -68,9 +68,9 @@ public abstract class AbstractCommandService<
 
             if (cmd.isDirectCommand()) return cmd.executePlayer(null, command, args);
 
-            if (args.length == 1) return new CommandResult(CommandOutcome.ERROR_NO_SUBCOMMAND);
+            if (args.length == 1) return new CommandResult(CommandExecutionResult.ERROR_NO_SUBCOMMAND);
 
-            if (!cmd.hasSubCommand(args[1])) return new CommandResult(CommandOutcome.ERROR_NO_SUBCOMMAND_FOUND.withPlaceholder("subcommand", args[1]));
+            if (!cmd.hasSubCommand(args[1])) return new CommandResult(CommandExecutionResult.ERROR_NO_SUBCOMMAND_FOUND.withPlaceholder("subcommand", args[1]));
 
             return cmd.getSubCommand(args[1]).executePlayer(null, command, args);
 
@@ -80,15 +80,15 @@ public abstract class AbstractCommandService<
             //     return cmd.getSubCommands().get(subCommandName).executePlayer(null, command, args);
             // }
         }
-        return new CommandResult(CommandOutcome.ERROR);
+        return new CommandResult(CommandExecutionResult.ERROR);
     }
 
     protected CommandResult executeConsole(org.bukkit.command.Command command, String[] args) {
         if (args.length == 0) {
-            return new CommandResult(CommandOutcome.ERROR_NO_COMMAND);
+            return new CommandResult(CommandExecutionResult.ERROR_NO_COMMAND);
         }
 
-        if (commands.get(args[0]) == null) return new CommandResult(CommandOutcome.ERROR_NO_COMMAND_FOUND.withPlaceholder("command", args[0]));
+        if (commands.get(args[0]) == null) return new CommandResult(CommandExecutionResult.ERROR_NO_COMMAND_FOUND.withPlaceholder("command", args[0]));
         
         for (String commandName : commands.keySet()) { // ! TODO Untested
             if (!(args[0].equalsIgnoreCase(commandName))) continue;
@@ -97,13 +97,13 @@ public abstract class AbstractCommandService<
 
             if (cmd.isDirectCommand()) return cmd.executeConsole(command, args);
 
-            if (args.length == 1) return new CommandResult(CommandOutcome.ERROR_NO_SUBCOMMAND);
+            if (args.length == 1) return new CommandResult(CommandExecutionResult.ERROR_NO_SUBCOMMAND);
 
-            if (!cmd.hasSubCommand(args[1])) return new CommandResult(CommandOutcome.ERROR_NO_SUBCOMMAND_FOUND.withPlaceholder("subcommand", args[1]));
+            if (!cmd.hasSubCommand(args[1])) return new CommandResult(CommandExecutionResult.ERROR_NO_SUBCOMMAND_FOUND.withPlaceholder("subcommand", args[1]));
 
             return cmd.getSubCommand(args[1]).executeConsole(command, args);
         }
-        return new CommandResult(CommandOutcome.ERROR);
+        return new CommandResult(CommandExecutionResult.ERROR);
     }
 
     public List<AbstractCommand<M>> getCommands() {

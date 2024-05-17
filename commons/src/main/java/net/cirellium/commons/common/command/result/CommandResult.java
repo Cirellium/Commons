@@ -14,22 +14,22 @@ import net.cirellium.commons.common.message.MessageKey;
 
 public class CommandResult {
     
-    public static final CommandResult INVALID_SENDER = new CommandResult(CommandOutcome.ERROR_INVALID_SENDER);
+    public static final CommandResult INVALID_SENDER = new CommandResult(CommandExecutionResult.ERROR_INVALID_SENDER);
 
-    private CommandOutcome outcome;
+    private CommandExecutionResult outcome;
     
     private Message message;
     
-    public CommandResult(CommandOutcome outcome) {
+    public CommandResult(CommandExecutionResult outcome) {
         this.outcome = outcome;
     }
 
-    public CommandResult(CommandOutcome outcome, MessageKey key) {
+    public CommandResult(CommandExecutionResult outcome, MessageKey key) {
         this.outcome = outcome;
         this.message = new Message(key);
     }
     
-    public CommandOutcome getOutcome() {
+    public CommandExecutionResult getOutcome() {
         return outcome;
     }
     
@@ -38,15 +38,15 @@ public class CommandResult {
     }
 
     public boolean isSuccess() {
-        return outcome == CommandOutcome.SUCCESS || outcome == CommandOutcome.SUCCESS_NEED_CONFIRMATION;
+        return outcome == CommandExecutionResult.SUCCESS || outcome == CommandExecutionResult.SUCCESS_NEED_CONFIRMATION;
     }
 
     public boolean shouldDisplayUsage() {
         return !isSuccess() && 
-            outcome != CommandOutcome.ERROR
-            && outcome == CommandOutcome.ERROR_NO_COMMAND_FOUND
-            && outcome != CommandOutcome.ERROR_NO_SUBCOMMAND_FOUND
-            && outcome != CommandOutcome.ERROR_NO_PERMISSION
-            && outcome != CommandOutcome.ERROR_INVALID_SENDER;
+            outcome != CommandExecutionResult.ERROR
+            && outcome == CommandExecutionResult.ERROR_NO_COMMAND_FOUND
+            && outcome != CommandExecutionResult.ERROR_NO_SUBCOMMAND_FOUND
+            && outcome != CommandExecutionResult.ERROR_NO_PERMISSION
+            && outcome != CommandExecutionResult.ERROR_INVALID_SENDER;
     }
 }

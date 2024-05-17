@@ -22,7 +22,7 @@ import net.cirellium.commons.common.command.annotation.annotations.Argument;
 import net.cirellium.commons.common.command.data.CommandData;
 import net.cirellium.commons.common.command.data.MainCommandData;
 import net.cirellium.commons.common.command.data.SubCommandData;
-import net.cirellium.commons.common.command.result.CommandOutcome;
+import net.cirellium.commons.common.command.result.CommandExecutionResult;
 
 public class CirelliumBukkitCommand extends org.bukkit.command.Command implements PluginIdentifiableCommand {
 
@@ -54,7 +54,7 @@ public class CirelliumBukkitCommand extends org.bukkit.command.Command implement
         final BukkitCommandInvoker invoker = new BukkitCommandInvoker(sender);
 
         if (!invoker.hasPermission(permission)) {
-            invoker.sendMessage(CommandOutcome.ERROR_NO_PERMISSION.placeholder("permission", permission));
+            invoker.sendMessage(CommandExecutionResult.ERROR_NO_PERMISSION.placeholder("permission", permission));
             return true;
         }
 
@@ -70,8 +70,8 @@ public class CirelliumBukkitCommand extends org.bukkit.command.Command implement
             final Object[] invokeParams = new Object[parameters.length];
 
             if (passedArguments.length == 0) {
-                sender.sendMessage(CommandOutcome.NOT_ENOUGH_ARGUMENTS.toMessage(),
-                        CommandOutcome.USAGE.placeholder("usage", commandData.getUsage(commandLabel)));
+                sender.sendMessage(CommandExecutionResult.NOT_ENOUGH_ARGUMENTS.toMessage(),
+                        CommandExecutionResult.USAGE.placeholder("usage", commandData.getUsage(commandLabel)));
                 return true;
             }
 
@@ -81,8 +81,8 @@ public class CirelliumBukkitCommand extends org.bukkit.command.Command implement
                 final String value;
 
                 if (i >= args.length && (arg == null || arg.defaultValue().isEmpty())) {
-                    sender.sendMessage(CommandOutcome.NOT_ENOUGH_ARGUMENTS.toMessage(),
-                            CommandOutcome.USAGE.placeholder("usage", commandData.getUsage(commandLabel)));
+                    sender.sendMessage(CommandExecutionResult.NOT_ENOUGH_ARGUMENTS.toMessage(),
+                            CommandExecutionResult.USAGE.placeholder("usage", commandData.getUsage(commandLabel)));
                     return true;
                 } else {
                     value = arg != null && !arg.defaultValue().isEmpty() && i >= args.length ? arg.defaultValue()

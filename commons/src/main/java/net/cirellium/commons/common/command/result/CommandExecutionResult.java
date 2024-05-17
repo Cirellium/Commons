@@ -12,7 +12,7 @@ package net.cirellium.commons.common.command.result;
 
 import net.cirellium.commons.common.message.MessageKey;
 
-public enum CommandOutcome implements MessageKey {
+public enum CommandExecutionResult implements MessageKey {
 
     SUCCESS("<green>Command executed successfully."),
     SUCCESS_NEED_CONFIRMATION("<green>Command executed successfully. Please confirm your action by running <command>"),
@@ -36,13 +36,13 @@ public enum CommandOutcome implements MessageKey {
     ERROR_NO_SUBCOMMAND("<color:#ff523b>Please provide a subcommand"),
     ERROR_NO_SUBCOMMAND_FOUND("<color:#ff523b>No subcommand was found for <subcommand>");
 
-    CommandOutcome(String fallback) {
+    CommandExecutionResult(String fallback) {
         this.fallbackValue = fallback;
     }
 
     private String fallbackValue;
 
-    public CommandOutcome withPlaceholder(String key, String value) {
+    public CommandExecutionResult withPlaceholder(String key, String value) {
         this.fallbackValue = this.fallbackValue.replace("<" + key + ">", value);
         return this;
     }
