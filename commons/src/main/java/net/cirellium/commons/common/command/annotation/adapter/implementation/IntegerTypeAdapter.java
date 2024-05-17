@@ -13,18 +13,17 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import net.cirellium.commons.common.command.annotation.adapter.ArgumentTypeAdapter;
-import net.cirellium.commons.common.command.result.CommandOutcome;
+import net.cirellium.commons.common.command.result.CommandExecutionResult;
 import net.cirellium.commons.common.command.sender.CommandInvoker;
 
-public class IntegerTypeAdapter implements ArgumentTypeAdapter<Integer> {
+public class IntegerTypeAdapter implements CommandArgumentTypeAdapter<Integer> {
 
     @Override
     public Integer parse(CommandInvoker sender, String argument) {
         try {
             return Integer.parseInt(argument);
         } catch (NumberFormatException e) {
-            sender.sendMessage(CommandOutcome.ERROR_INVALID_TYPE.placeholder("type", "integer"));
+            sender.sendMessage(CommandExecutionResult.ERROR_INVALID_TYPE.placeholder("type", "integer"));
         }
         return null;
     }

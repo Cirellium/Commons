@@ -8,9 +8,9 @@ import net.cirellium.commons.common.util.ClassTyped;
 
 public enum ResponseType implements ClassTyped {
 
-    STRING(String.class, new ResponseTypeHandler<String>() {
+    STRING(String.class, new ResponseTypeAdapter<String>() {
         @Override
-        public String parse(final String input) {
+        public String parse(PromptResponder responder, final String input) {
             return input;
         }
 
@@ -20,9 +20,9 @@ public enum ResponseType implements ClassTyped {
         }
     }),
 
-    INTEGER(Integer.class, new ResponseTypeHandler<Integer>() {
+    INTEGER(Integer.class, new ResponseTypeAdapter<Integer>() {
         @Override
-        public Integer parse(final String input) {
+        public Integer parse(PromptResponder responder, final String input) {
             return Integer.parseInt(input);
         }
 
@@ -32,9 +32,9 @@ public enum ResponseType implements ClassTyped {
         }
     }),
 
-    DOUBLE(Double.class, new ResponseTypeHandler<Double>() {
+    DOUBLE(Double.class, new ResponseTypeAdapter<Double>() {
         @Override
-        public Double parse(final String input) {
+        public Double parse(PromptResponder responder, final String input) {
             return Double.parseDouble(input);
         }
 
@@ -44,9 +44,9 @@ public enum ResponseType implements ClassTyped {
         }
     }),
 
-    BOOLEAN(Boolean.class, new ResponseTypeHandler<Boolean>() {
+    BOOLEAN(Boolean.class, new ResponseTypeAdapter<Boolean>() {
         @Override
-        public Boolean parse(final String input) {
+        public Boolean parse(PromptResponder responder, final String input) {
             return Boolean.parseBoolean(input);
         }
 
@@ -56,9 +56,9 @@ public enum ResponseType implements ClassTyped {
         }
     }),
 
-    WORLD(World.class, new ResponseTypeHandler<World>() {
+    WORLD(World.class, new ResponseTypeAdapter<World>() {
         @Override
-        public World parse(final String input) {
+        public World parse(PromptResponder responder, final String input) {
             return Bukkit.getWorld(input);
         }
 
@@ -68,9 +68,9 @@ public enum ResponseType implements ClassTyped {
         }
     }),
 
-    PLAYER(Player.class, new ResponseTypeHandler<Player>() {
+    PLAYER(Player.class, new ResponseTypeAdapter<Player>() {
         @Override
-        public Player parse(final String input) {
+        public Player parse(PromptResponder responder, final String input) {
             return Bukkit.getPlayer(input);
         }
 
@@ -81,9 +81,9 @@ public enum ResponseType implements ClassTyped {
     });
 
     private final Class<?> type;
-    private final ResponseTypeHandler<?> handler;
+    private final ResponseTypeAdapter<?> handler;
 
-    ResponseType(final Class<?> type, ResponseTypeHandler<?> handler) {
+    ResponseType(final Class<?> type, ResponseTypeAdapter<?> handler) {
         this.type = type;
         this.handler = handler;
     }
@@ -93,7 +93,7 @@ public enum ResponseType implements ClassTyped {
         return type;
     }
 
-    public ResponseTypeHandler<?> getHandler() {
+    public ResponseTypeAdapter<?> getHandler() {
         return handler;
     }
 

@@ -13,10 +13,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import net.cirellium.commons.common.command.annotation.adapter.ArgumentTypeAdapter;
 import net.cirellium.commons.common.command.sender.CommandInvoker;
 
-public class UUIDTypeAdapter implements ArgumentTypeAdapter<UUID> {
+public class UUIDTypeAdapter implements CommandArgumentTypeAdapter<UUID> {
 
     @Override
     public UUID parse(CommandInvoker sender, String argument) {

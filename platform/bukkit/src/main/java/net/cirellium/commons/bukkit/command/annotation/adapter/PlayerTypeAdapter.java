@@ -19,7 +19,7 @@ import org.bukkit.entity.Player;
 import net.cirellium.commons.common.command.annotation.adapter.ArgumentTypeAdapter;
 import net.cirellium.commons.common.command.sender.CommandInvoker;
 
-public class PlayerTypeAdapter implements ArgumentTypeAdapter<Player> {
+public class PlayerTypeAdapter implements CommandArgumentTypeAdapter<Player> {
 
     @Override
     public Player parse(CommandInvoker sender, String argument) {

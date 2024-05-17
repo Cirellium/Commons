@@ -12,15 +12,22 @@ package net.cirellium.commons.common.command.annotation.adapter.implementation;
 import java.util.List;
 import java.util.Set;
 
-import net.cirellium.commons.common.command.annotation.adapter.ArgumentTypeAdapter;
 import net.cirellium.commons.common.command.sender.CommandInvoker;
 
-public class DoubleTypeAdapter implements ArgumentTypeAdapter<Double> {
+/**
+ * A type adapter for double arguments
+ */
+public class DoubleTypeAdapter implements CommandArgumentTypeAdapter<Double> {
 
     @Override
     public Double parse(CommandInvoker sender, String argument) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'parse'");
+        try {
+            return Double.parseDouble(argument);
+        } catch (NumberFormatException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override

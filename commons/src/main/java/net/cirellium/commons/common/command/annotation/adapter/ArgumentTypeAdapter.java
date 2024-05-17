@@ -9,24 +9,18 @@
 */
 package net.cirellium.commons.common.command.annotation.adapter;
 
-import java.util.List;
-import java.util.Set;
+/** 
+ * A class that handles the parsing and tab completion of arguments for a command.
+ * 
+ * It can suggest a list of possible results for the argument, parse the argument, and tab complete the argument.
+ * Also, it can check if it supports a certain class.
+ * 
+ * @param <T> The type of the argument
+ */
+public interface ArgumentTypeAdapter<T, S> {
 
-import net.cirellium.commons.common.command.result.CommandOutcome;
-import net.cirellium.commons.common.command.sender.CommandInvoker;
-
-public interface ArgumentTypeAdapter<T> {
-    
-    T parse(CommandInvoker sender, String argument);
-
-    List<String> tabComplete(CommandInvoker sender, Set<String> argumentSet, String argument);
-
-    List<?> getPossibleResults();
+    T parse(S sender, String argument);
 
     boolean supports(Class<?> clazz);
-
-    default void handleException(CommandInvoker sender, String source) {
-        sender.sendMessage(CommandOutcome.ERROR_PARSE_ARG.placeholder("arg", source));
-    }
     
 }

@@ -12,10 +12,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import net.cirellium.commons.common.command.annotation.adapter.ArgumentTypeAdapter;
 import net.cirellium.commons.common.command.sender.CommandInvoker;
 
-public class StringTypeAdapter implements ArgumentTypeAdapter<String> {
+public class StringTypeAdapter implements CommandArgumentTypeAdapter<String> {
 
     @Override
     public String parse(CommandInvoker sender, String argument) {

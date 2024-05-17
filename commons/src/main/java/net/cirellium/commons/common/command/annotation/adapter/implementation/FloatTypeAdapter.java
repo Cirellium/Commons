@@ -12,10 +12,9 @@ package net.cirellium.commons.common.command.annotation.adapter.implementation;
 import java.util.List;
 import java.util.Set;
 
-import net.cirellium.commons.common.command.annotation.adapter.ArgumentTypeAdapter;
 import net.cirellium.commons.common.command.sender.CommandInvoker;
 
-public class FloatTypeAdapter implements ArgumentTypeAdapter<Float> {
+public class FloatTypeAdapter implements CommandArgumentTypeAdapter<Float> {
 
     @Override
     public Float parse(CommandInvoker sender, String argument) {

@@ -18,7 +18,7 @@ import org.bukkit.World;
 import net.cirellium.commons.common.command.annotation.adapter.ArgumentTypeAdapter;
 import net.cirellium.commons.common.command.sender.CommandInvoker;
 
-public class WorldTypeAdapter implements ArgumentTypeAdapter<World> {
+public class WorldTypeAdapter implements CommandArgumentTypeAdapter<World> {
 
     @Override
     public World parse(CommandInvoker sender, String argument) {

@@ -17,7 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import net.cirellium.commons.common.command.annotation.adapter.ArgumentTypeAdapter;
 import net.cirellium.commons.common.command.sender.CommandInvoker;
 
-public class ItemStackTypeAdapter implements ArgumentTypeAdapter<ItemStack> {
+public class ItemStackTypeAdapter implements CommandArgumentTypeAdapter<ItemStack> {
 
     @Override
     public ItemStack parse(CommandInvoker sender, String argument) {

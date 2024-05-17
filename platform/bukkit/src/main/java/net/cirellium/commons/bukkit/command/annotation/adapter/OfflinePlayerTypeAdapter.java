@@ -17,7 +17,7 @@ import org.bukkit.OfflinePlayer;
 import net.cirellium.commons.common.command.annotation.adapter.ArgumentTypeAdapter;
 import net.cirellium.commons.common.command.sender.CommandInvoker;
 
-public class OfflinePlayerTypeAdapter implements ArgumentTypeAdapter<OfflinePlayer> {
+public class OfflinePlayerTypeAdapter implements CommandArgumentTypeAdapter<OfflinePlayer> {
 
     @Override
     public OfflinePlayer parse(CommandInvoker sender, String argument) {
