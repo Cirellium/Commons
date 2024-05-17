@@ -15,7 +15,7 @@ import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
-import net.cirellium.commons.common.command.annotation.adapter.ArgumentTypeAdapter;
+import net.cirellium.commons.common.command.annotation.adapter.implementation.CommandArgumentTypeAdapter;
 import net.cirellium.commons.common.command.sender.CommandInvoker;
 
 public class WorldTypeAdapter implements CommandArgumentTypeAdapter<World> {

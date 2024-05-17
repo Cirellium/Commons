@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import lombok.Data;
-import net.cirellium.commons.common.command.annotation.adapter.ArgumentTypeAdapter;
+import net.cirellium.commons.common.command.annotation.adapter.implementation.CommandArgumentTypeAdapter;
 import net.cirellium.commons.common.command.data.MainCommandData;
 import net.cirellium.commons.common.logger.SimpleCirelliumLogger;
 import net.cirellium.commons.common.version.Platform;
@@ -20,7 +20,7 @@ public abstract class CommandRegistry {
 
     protected final List<MainCommandData> registeredCommands;
 
-    protected final List<ArgumentTypeAdapter<?>> typeAdapters;
+    protected final List<CommandArgumentTypeAdapter<?>> typeAdapters;
 
     protected final String defaultPrefix;
 
@@ -29,7 +29,7 @@ public abstract class CommandRegistry {
     public CommandRegistry(String prefix) {
         this.defaultPrefix = prefix;
         this.registeredCommands = new ArrayList<MainCommandData>();
-        this.typeAdapters = new ArrayList<ArgumentTypeAdapter<?>>();
+        this.typeAdapters = new ArrayList<CommandArgumentTypeAdapter<?>>();
         initialize();
     }
 
@@ -49,8 +49,8 @@ public abstract class CommandRegistry {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> ArgumentTypeAdapter<T> findTypeAdapter(Class<T> type) {
-        return (ArgumentTypeAdapter<T>) this.typeAdapters.stream().filter(adapter -> adapter.supports(type)).findAny()
+    public <T> CommandArgumentTypeAdapter<T> findTypeAdapter(Class<T> type) {
+        return (CommandArgumentTypeAdapter<T>) this.typeAdapters.stream().filter(adapter -> adapter.supports(type)).findAny()
                 .orElseThrow(() -> new IllegalArgumentException("No type adapter found for type " + type.getName()));
     }
 }
