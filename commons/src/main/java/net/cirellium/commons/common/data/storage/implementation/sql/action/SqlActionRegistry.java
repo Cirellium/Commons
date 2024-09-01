@@ -14,9 +14,7 @@ import net.cirellium.commons.common.data.storage.implementation.sql.action.SqlAc
 import net.cirellium.commons.common.plugin.CirelliumPlugin;
 import net.cirellium.commons.common.util.Initializable;
 
-public abstract class SqlActionRegistry implements Initializable<CirelliumPlugin<?>> {
-    
-    protected Registry<Enum<? extends SqlAction>, String> defaultActions;
+public abstract class SqlActionRegistry extends Registry<Enum<? extends SqlAction>, String> implements Initializable<CirelliumPlugin<?>> {
 
     protected SqlActionProvider provider;
 
@@ -31,11 +29,9 @@ public abstract class SqlActionRegistry implements Initializable<CirelliumPlugin
     }
 
     public void registerDefaultActions() {
-        this.defaultActions = Registry.create();
-        
         for (Enum<? extends SqlAction> actionEnum : DefaultSqlAction.values()) {
             if (actionEnum instanceof SqlAction action) {
-                this.defaultActions.register(actionEnum, action.getStatement());
+                this.register(actionEnum, action.getStatement());
             }
         }
     }

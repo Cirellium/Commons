@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>commons-parent</artifactId>
+    <groupId>net.cirellium</groupId>
+    <version>1.0</version>
+    <relativePath>../../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>commons-paper</artifactId>
+  <name>Commons-Paper</name>
+  <version>1.0</version>
+
+  <properties>
+    <java.version>21</java.version>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
+
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <project.fullVersion>${project.version}</project.fullVersion>
+  </properties>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <excludes>
+          <exclude>*.yml</exclude>
+        </excludes>
+        <includes>
+          <include>META-INF/**</include>
+        </includes>
+      </resource>
+    </resources>
+
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.5.2</version>
+        <configuration>
+          <!--<failOnError>false</failOnError>-->
+        </configuration>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <filters>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/**</exclude>
+                  </excludes>
+                </filter>
+              </filters>
+              <!--<failOnError>false</failOnError>-->
+              <shadedArtifactAttached>false</shadedArtifactAttached>
+              <createDependencyReducedPom>false</createDependencyReducedPom>
+
+              <relocations>
+                <relocation>
+                  <pattern>com.zaxxer</pattern>
+                  <shadedPattern>net.cirellium.libs.com.zaxxer</shadedPattern>
+                </relocation>
+
+                <relocation>
+                  <pattern>org.projectlombok</pattern>
+                  <shadedPattern>net.cirellium.libs.org.projectlombok</shadedPattern>
+                </relocation>
+
+                <relocation>
+                  <pattern>net.kyori</pattern>
+                  <shadedPattern>net.cirellium.libs.net.kyori</shadedPattern>
+                  <excludes>
+                    <exclude>net.kyori</exclude>
+                  </excludes>
+                  <excludes>
+                    <exclude>net.kyori</exclude>
+                  </excludes>
+                </relocation>
+
+                <!-- <relocation>
+                  <pattern>net.kyori.adventure.text</pattern>
+                  <shadedPattern>net.cirellium.libs.net.kyori.adventure.text</shadedPattern>
+                </relocation> -->
+
+                <!-- <relocation>
+                  <pattern>net.kyori.adventure.text</pattern>
+                  <shadedPattern>net.cirellium.libs.net.kyori.adventure.text</shadedPattern>
+                </relocation> -->
+
+                <relocation>
+                  <pattern>com.google</pattern>
+                  <shadedPattern>net.cirellium.libs.com.google</shadedPattern>
+                </relocation>
+
+                <relocation>
+                  <pattern>javassist</pattern>
+                  <shadedPattern>net.cirellium.libs.javassist</shadedPattern>
+                </relocation>
+
+                <relocation>
+                  <pattern>javax.annotation</pattern>
+                  <shadedPattern>net.cirellium.libs.javax.annotation</shadedPattern>
+                </relocation>
+
+                <relocation>
+                  <pattern>org.apache</pattern>
+                  <shadedPattern>net.cirellium.libs.org.apache</shadedPattern>
+                </relocation>
+
+                <relocation>
+                  <pattern>org.checkerframework</pattern>
+                  <shadedPattern>net.cirellium.libs.org.checkerframework</shadedPattern>
+                </relocation>
+
+                <relocation>
+                  <pattern>org.intellij</pattern>
+                  <shadedPattern>net.cirellium.libs.org.intellij</shadedPattern>
+                </relocation>
+
+                <relocation>
+                  <pattern>org.jetbrains</pattern>
+                  <shadedPattern>net.cirellium.libs.org.jetbrains</shadedPattern>
+                </relocation>
+
+                <relocation>
+                  <pattern>org.reflections</pattern>
+                  <shadedPattern>net.cirellium.libs.org.reflections</shadedPattern>
+                </relocation>
+              </relocations>
+              <artifactSet>
+                <excludes>
+                  <exclude>junit:junit</exclude>
+                  <exclude>io.netty:*</exclude>
+                  <exclude>org.bukkit</exclude>
+                  <exclude>io.papermc</exclude>
+                </excludes>
+              </artifactSet>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.3.0</version>
+        <!-- <configuration>
+          <artifactItems>
+            <artifactItem>
+              <groupId>${project.groupId}</groupId>
+              <artifactId>${project.artifactId}</artifactId>
+              <version>${project.version}</version>
+              <type>${project.packaging}</type>
+              <type>jar</type>
+              <classifier>jar-with-dependencies</classifier>
+              <overWrite>true</overWrite>
+              <destFileName>${project.name}.jar</destFileName>
+              <directory>/home/fear/code/commons</directory>
+              <outputDirectory>/home/fear/code/TestServer/plugins/</outputDirectory>
+            </artifactItem>
+          </artifactItems>
+          <outputDirectory>/home/fear/code/TestServer/plugins/</outputDirectory>
+        </configuration> -->
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.12.1</version>
+        <configuration>
+          <!--<failOnError>false</failOnError>-->
+          <source>21</source>
+          <target>21</target>
+        </configuration>
+        <executions>
+          <execution>
+            <id>compile</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>testCompile</id>
+            <phase>test-compile</phase>
+            <goals>
+              <goal>testCompile</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.5.2</version>
+        <configuration>
+          <!--<failOnError>false</failOnError>-->
+          <dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml</dependencyReducedPomLocation>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <developers>
+    <developer>
+      <id>Fear</id>
+      <name>FearMyShotz</name>
+      <email>supremeplayzbs@gmail.com</email>
+      <url>https://fearmyshotz.github.io</url>
+      <roles>
+        <role>developer</role>
+        <role>maintainer</role>
+      </roles>
+    </developer>
+  </developers>
+
+  <repositories>
+    <repository>
+      <id>spigot-repo</id>
+      <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+    </repository>
+    <repository>
+      <id>projectlombok.org</id>
+      <url>https://projectlombok.org/edge-releases</url>
+    </repository>
+  </repositories>
+
+  <dependencies>
+
+    <!-- <dependency>
+      <groupId>net.cirellium</groupId>
+      <artifactId>commons</artifactId>
+      <version>1.0</version>
+      <scope>system</scope>
+      <systemPath>/home/vscode/.m2/repository/net/cirellium/commons/1.0/commons-1.0.jar</systemPath>
+    </dependency> -->
+
+    <!-- <dependency>
+      <groupId>net.cirellium</groupId>
+      <artifactId>commons</artifactId>
+      <version>1.0</version>
+      <scope>system</scope>
+      <systemPath>/workspaces/code/commons/commons/target/commons-1.0-8289153-SNAPSHOT.jar</systemPath>
+    </dependency> -->
+
+    <dependency>
+      <groupId>net.cirellium</groupId>
+      <artifactId>commons</artifactId>
+      <version>1.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>net.cirellium</groupId>
+      <artifactId>commons-bukkit</artifactId>
+      <version>1.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>net.kyori</groupId>
+      <artifactId>adventure-platform-bukkit</artifactId>
+      <version>4.3.2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.10.1</version>
+    </dependency>
+
+    <!-- <dependency>
+      <groupId>org.bukkit</groupId>
+      <artifactId>craftbukkit</artifactId>
+      <version>1.20-R0.1-SNAPSHOT</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/libs/craftbukkit-1.20.1-R0.1-SNAPSHOT.jar</systemPath>
+    </dependency> -->
+
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.10.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.spigotmc</groupId>
+      <artifactId>spigot-api</artifactId>
+      <version>1.20.1-R0.1-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.13.2</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.15.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.zaxxer</groupId>
+      <artifactId>HikariCP</artifactId>
+      <version>5.1.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.30</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>net.kyori</groupId>
+      <artifactId>adventure-text-minimessage</artifactId>
+      <version>4.16.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>net.kyori</groupId>
+      <artifactId>adventure-platform-bukkit</artifactId>
+      <version>4.3.2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>net.kyori</groupId>
+      <artifactId>adventure-platform-bukkit</artifactId>
+      <version>4.3.2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>33.0.0-jre</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.reflections</groupId>
+      <artifactId>reflections</artifactId>
+      <version>0.10.2</version>
+    </dependency>
+
+    <dependency> <!-- For some fucking reason u need this for it to compile -->
+      <groupId>javax.inject</groupId>
+      <artifactId>javax.inject</artifactId>
+      <version>1</version>
+    </dependency>
+
+  </dependencies>
+
+</project>
