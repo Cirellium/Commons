@@ -1,6 +1,6 @@
 package net.cirellium.commons.bukkit.prompt.response;
 
-import net.cirellium.commons.common.command.annotation.adapter.ArgumentTypeAdapter;
+import net.cirellium.commons.common.argument.adapter.ArgumentTypeAdapter;
 
 public interface ResponseTypeAdapter<T> extends ArgumentTypeAdapter<T, PromptResponder> {
 
