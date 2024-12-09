@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import net.cirellium.commons.common.argument.adapter.ArgumentTypeAdapter;
 import net.cirellium.commons.common.command.sender.CommandInvoker;
 
 public class StringTypeAdapter implements CommandArgumentTypeAdapter<String> {

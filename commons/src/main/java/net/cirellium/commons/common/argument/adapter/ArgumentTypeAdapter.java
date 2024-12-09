@@ -7,7 +7,7 @@
 *
 * Unauthorized copying of this file, via any medium is strictly prohibited
 */
-package net.cirellium.commons.common.command.annotation.adapter;
+package net.cirellium.commons.common.argument.adapter;
 
 /** 
  * A class that handles the parsing and tab completion of arguments for a command.

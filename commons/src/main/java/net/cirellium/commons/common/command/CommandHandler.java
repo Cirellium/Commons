@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 
 import net.cirellium.commons.common.logger.SimpleCirelliumLogger;
 import net.cirellium.commons.common.plugin.CirelliumPlugin;
+import net.cirellium.commons.common.argument.adapter.ArgumentTypeAdapter;
 
 public class CommandHandler {
     
