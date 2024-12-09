@@ -17,7 +17,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import lombok.SneakyThrows;
 import net.cirellium.commons.bukkit.command.annotation.invoker.BukkitCommandInvoker;
 import net.cirellium.commons.common.command.CommandHandler;
-import net.cirellium.commons.common.command.annotation.adapter.implementation.CommandArgumentTypeAdapter;
+import net.cirellium.commons.common.argument.adapter.ArgumentTypeAdapter;
 import net.cirellium.commons.common.command.annotation.annotations.Argument;
 import net.cirellium.commons.common.command.data.CommandData;
 import net.cirellium.commons.common.command.data.MainCommandData;
@@ -89,7 +89,7 @@ public class CirelliumBukkitCommand extends org.bukkit.command.Command implement
                             : args[i];
                 }
 
-                final CommandArgumentTypeAdapter<?> typeAdapter = CommandHandler.getInstance().getRegistry()
+                final ArgumentTypeAdapter<?, ?> typeAdapter = CommandHandler.getInstance().getRegistry()
                         .findTypeAdapter(parameter.getType());
 
                 if (typeAdapter != null) {
@@ -147,7 +147,7 @@ public class CirelliumBukkitCommand extends org.bukkit.command.Command implement
 
             Class<?> parameterType = commandMethod.getParameterTypes()[args.length - 1];
 
-            CommandArgumentTypeAdapter<?> adapter = CommandHandler.getInstance().getRegistry().findTypeAdapter(parameterType);
+            ArgumentTypeAdapter<?, ?> adapter = CommandHandler.getInstance().getRegistry().findTypeAdapter(parameterType);
 
             if (adapter != null) {
                 completions.addAll(
