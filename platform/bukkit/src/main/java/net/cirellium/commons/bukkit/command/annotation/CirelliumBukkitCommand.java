@@ -1,6 +1,7 @@
 package net.cirellium.commons.bukkit.command.annotation;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
@@ -112,19 +113,19 @@ public class CirelliumBukkitCommand extends org.bukkit.command.Command implement
 
             try {
                 method.invoke(data.getCommandObject(), finalParams);
-            } catch (IllegalAccessException e) {
+            } catch (IllegalAccessException | InvocationTargetException | IllegalArgumentException | NullPointerException | ExceptionInInitializerError e) {
                 e.printStackTrace();
             }
         } else if (parameters.length == 1 && parameters[0].getType().isArray()) {
             try {
                 method.invoke(data.getCommandObject(), sender, args);
-            } catch (IllegalAccessException e) {
+            } catch (IllegalAccessException | InvocationTargetException | IllegalArgumentException | NullPointerException | ExceptionInInitializerError e) {
                 e.printStackTrace();
             }
         } else {
             try {
                 method.invoke(data.getCommandObject(), sender);
-            } catch (IllegalAccessException e) {
+            } catch (IllegalAccessException | InvocationTargetException | IllegalArgumentException | NullPointerException | ExceptionInInitializerError e) {
                 e.printStackTrace();
             }
         }
