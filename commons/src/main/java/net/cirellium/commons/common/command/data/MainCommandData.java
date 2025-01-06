@@ -5,12 +5,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.cirellium.commons.common.command.annotation.annotations.Command;
 import net.cirellium.commons.common.command.annotation.annotations.SubCommand;
 
-@Data
 @EqualsAndHashCode(callSuper=false)
 public final class MainCommandData extends CommandData<Command> {
 
@@ -43,5 +41,13 @@ public final class MainCommandData extends CommandData<Command> {
 
     public final boolean hasSubCommand(SubCommand subCommand) {
         return subCommand.mainCommand().equalsIgnoreCase(command.label());
+    }
+
+    public Command getCommand() {
+        return command;
+    }
+
+    public List<SubCommandData> getSubCommands() {
+        return subCommands;
     }
 }

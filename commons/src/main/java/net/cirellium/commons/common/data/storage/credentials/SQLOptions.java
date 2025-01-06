@@ -3,7 +3,6 @@ package net.cirellium.commons.common.data.storage.credentials;
 import java.util.HashMap;
 import java.util.Map;
 
-import lombok.Data;
 import net.cirellium.commons.common.data.config.DatabaseCredentials;
 import net.cirellium.commons.common.file.PluginFile;
 
@@ -24,7 +23,6 @@ public record SQLOptions(DatabaseCredentials credentials, String sqliteFileName,
                 new HashMap<String, String>());
     }
 
-    @Data
     public static class HikariCredentials {
         String user, address, port, password, database, tablePrefix;
 
@@ -80,6 +78,30 @@ public record SQLOptions(DatabaseCredentials credentials, String sqliteFileName,
 
         public static Builder builder() {
             return new Builder();
+        }
+
+        public String getUser() {
+            return user;
+        }
+
+        public String getAddress() {
+            return address;
+        }
+
+        public String getPort() {
+            return port;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public String getDatabase() {
+            return database;
+        }
+
+        public String getTablePrefix() {
+            return tablePrefix;
         }
     }
 }

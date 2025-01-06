@@ -14,37 +14,37 @@ public abstract class UserDataHandler<A extends AbstractCirelliumUser<?>> extend
 
     @Override
     public void load(A loadable) {
-        // TODO Auto-generated method stub
+        // TODO implement
         throw new UnsupportedOperationException("Unimplemented method 'load'");
     }
 
     @Override
     public void loadAll() {
-        // TODO Auto-generated method stub
+        // TODO implement
         throw new UnsupportedOperationException("Unimplemented method 'loadAll'");
     }
 
     @Override
     public CMap<UUID, A> getUsers() {
-        // TODO Auto-generated method stub
+        // TODO implement
         throw new UnsupportedOperationException("Unimplemented method 'getUsers'");
     }
 
     @Override
     public A getUser(UUID uuid) {
-        // TODO Auto-generated method stub
+        // TODO implement
         throw new UnsupportedOperationException("Unimplemented method 'getUser'");
     }
 
     @Override
     public void addUser(A user) {
-        // TODO Auto-generated method stub
+        // TODO implement
         throw new UnsupportedOperationException("Unimplemented method 'addUser'");
     }
 
     @Override
     public void removeUser(UUID uuid) {
-        // TODO Auto-generated method stub
+        // TODO implement
         throw new UnsupportedOperationException("Unimplemented method 'removeUser'");
     }
 }

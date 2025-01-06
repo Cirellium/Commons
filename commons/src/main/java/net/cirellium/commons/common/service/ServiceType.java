@@ -27,7 +27,7 @@ public enum ServiceType {
     USER_DATA(UserDataHandler.class),
     DATABASE(DatabaseService.class),
     FILE(null),
-   
+    EVENT(null),
 
     // This is used for services that have no dependencies
     NONE(null);

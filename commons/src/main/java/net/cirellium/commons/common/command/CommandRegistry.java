@@ -9,13 +9,11 @@ import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import lombok.Data;
 import net.cirellium.commons.common.command.annotation.adapter.implementation.CommandArgumentTypeAdapter;
 import net.cirellium.commons.common.command.data.MainCommandData;
 import net.cirellium.commons.common.logger.SimpleCirelliumLogger;
 import net.cirellium.commons.common.version.Platform;
 
-@Data
 public abstract class CommandRegistry {
 
     protected final List<MainCommandData> registeredCommands;

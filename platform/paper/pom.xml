@@ -181,8 +181,8 @@
         <version>3.12.1</version>
         <configuration>
           <!--<failOnError>false</failOnError>-->
-          <source>21</source>
-          <target>21</target>
+          <source>23</source>
+          <target>23</target>
         </configuration>
         <executions>
           <execution>

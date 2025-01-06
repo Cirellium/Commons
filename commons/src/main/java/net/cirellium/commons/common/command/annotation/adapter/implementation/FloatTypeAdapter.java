@@ -18,19 +18,19 @@ public class FloatTypeAdapter implements CommandArgumentTypeAdapter<Float> {
 
     @Override
     public Float parse(CommandInvoker sender, String argument) {
-        // TODO Auto-generated method stub
+        // TODO implement
         throw new UnsupportedOperationException("Unimplemented method 'parse'");
     }
 
     @Override
     public List<String> tabComplete(CommandInvoker sender, Set<String> argumentSet, String argument) {
-        // TODO Auto-generated method stub
+        // TODO implement
         throw new UnsupportedOperationException("Unimplemented method 'tabComplete'");
     }
 
     @Override
     public List<?> getPossibleResults() {
-        // TODO Auto-generated method stub
+        // TODO implement
         throw new UnsupportedOperationException("Unimplemented method 'getPossibleResults'");
     }
 

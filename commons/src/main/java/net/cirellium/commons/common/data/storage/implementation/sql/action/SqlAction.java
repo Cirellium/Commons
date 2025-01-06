@@ -106,5 +106,15 @@ public interface SqlAction extends SimpleProvider<String> {
         public String getStatement() {
             return action.getStatement();
         }
+
+        /**
+         * Returns the type of the SQL action.
+         *
+         * @return the type of the SQL action
+         */
+        @Override
+        public Type getType() {
+            return type;
+        }
     }
 }

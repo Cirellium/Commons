@@ -59,13 +59,14 @@ public abstract class AbstractService<C extends CirelliumPlugin<C>> implements L
 
         this.autoInitialize = autoInitialize;
 
-        if (dependencies[0] != ServiceType.NONE)
-            this.dependencies = new HashSet<ServiceType>(Arrays.asList(dependencies));
+        if (dependencies != null && dependencies.length > 0 && dependencies[0] != ServiceType.NONE) {
+            this.dependencies = new HashSet<>(Arrays.asList(dependencies));
+            logger.info(getName() + " has dependencies: " + String.valueOf(dependencies[0] != ServiceType.NONE));
+        }
 
-        logger.info(getName() + " has dependencies: " + String.valueOf(dependencies[0] != ServiceType.NONE));
 
-        // plugin.getServiceHolder().getServiceRegistry().registerService(this);
-        // prepare();
+        plugin.getServiceHolder().getServiceRegistry().registerService(this);
+        prepare();
     }
 
     public void prepare() {

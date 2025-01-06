@@ -2,6 +2,8 @@ package net.cirellium.commons.common.util.clazz;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.security.CodeSource;
 import java.util.ArrayList;
@@ -25,6 +27,10 @@ import net.cirellium.commons.common.version.Platform;
 public class ClassUtils {
 
     static Logger logger = new SimpleCirelliumLogger(Platform.UNKNOWN, "ClassUtils");
+
+    public static List<Class<?>> getClassesInPackage(String packageName) {
+        return new ArrayList<Class<?>>(getClassesInPackage(packageName));
+    }
 
     public static Collection<Class<?>> getClassesInPackage(Class<?> pluginClass, String packageName) {
         JarFile jarFile;
@@ -122,5 +128,96 @@ public class ClassUtils {
         Reflections reflections = new Reflections(packageName);
 
         return reflections.getSubTypesOf(clazz);
+    }
+
+    public static Object createInstance(Class<?> clazz) throws Exception {
+        try {
+            java.lang.reflect.Field instanceField = null;
+            for (final java.lang.reflect.Field field : clazz.getDeclaredFields()) {
+                if (field.getType().isAssignableFrom(clazz) && Modifier.isStatic(field.getModifiers())) {
+                    instanceField = field;
+                    break;
+                }
+            }
+            if (instanceField != null) {
+                instanceField.setAccessible(true);
+                return instanceField.get(null);
+            }
+        } catch (IllegalAccessException ignored) { // ignore if no singleton
+        }
+        Constructor<?> constructor;
+        try {
+            constructor = clazz.getDeclaredConstructor();
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(
+                    "Class " + clazz.getName() + " has no default constructor. Can not create instance", e);
+        }
+
+        if (!Modifier.isPublic(constructor.getModifiers())) {
+            constructor.setAccessible(true);
+        }
+        return constructor.newInstance();
+    }
+
+    // private static Tuple<InstanceCreationMode, Object> findInstance(Class<?>
+    // clazz) {
+    // final Constructor<?>[] constructors = clazz.getDeclaredConstructors();
+
+    // Object instance = null;
+    // InstanceCreationMode mode = null;
+
+    // // Strictly limit the class to one no args constructor
+    // if (constructors.length == 1) {
+    // final Constructor<?> constructor = constructors[0];
+
+    // if (constructor.getParameterCount() == 0) {
+    // final int modifiers = constructor.getModifiers();
+
+    // // Case 1: Public constructor
+    // if (Modifier.isPublic(modifiers)) {
+    // instance = ReflectionUtil.instantiate(constructor);
+    // mode = InstanceCreationMode.NEW_FROM_CONSTRUCTOR;
+    // }
+
+    // // Case 2: Singleton
+    // else if (Modifier.isPrivate(modifiers)) {
+    // Field instanceField = null;
+
+    // for (final Field field : clazz.getDeclaredFields()) {
+    // final int fieldMods = field.getModifiers();
+
+    // if (!field.getType().isAssignableFrom(clazz) || field.getType() ==
+    // Object.class)
+    // continue;
+
+    // if (Modifier.isPrivate(fieldMods) && Modifier.isStatic(fieldMods)
+    // && (Modifier.isFinal(fieldMods) || Modifier.isVolatile(fieldMods)))
+    // instanceField = field;
+    // }
+
+    // if (instanceField != null) {
+    // instance = ReflectionUtil.getFieldContent(instanceField, (Object) null);
+    // mode = InstanceCreationMode.SINGLETON;
+    // }
+    // }
+    // }
+
+    // }
+
+    // ValidationUtils.checkBoolean(!(instance instanceof Boolean),
+    // "Used " + mode + " to find instance of " + clazz.getSimpleName() + " but got
+    // a boolean instead!");
+
+    // ValidationUtils.checkNotNull(instance,
+    // "Your class " + clazz + " using @AutoRegister must EITHER have 1) one public
+    // no arguments constructor,"
+    // + " OR 2) one private no arguments constructor plus a 'private static final "
+    // + clazz.getSimpleName() + " instance' instance field.");
+
+    // return new Tuple<>(mode, instance);
+    // }
+
+    public static enum InstanceCreationMode {
+        NEW_FROM_CONSTRUCTOR, SINGLETON;
     }
 }

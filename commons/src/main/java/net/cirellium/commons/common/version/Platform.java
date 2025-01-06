@@ -18,6 +18,8 @@ package net.cirellium.commons.common.version;
  */
 public abstract class Platform {
 
+    public static final Platform STANDALONE = Platform.UNKNOWN;
+
     public static final Platform UNKNOWN = new Platform() {
         @Override
         public Version getVersion() {

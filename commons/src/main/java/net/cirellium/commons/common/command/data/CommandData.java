@@ -4,12 +4,10 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
-import lombok.Data;
 import net.cirellium.commons.common.command.CommandHandler;
 import net.cirellium.commons.common.command.annotation.annotations.Argument;
 import net.cirellium.commons.common.command.annotation.annotations.SubCommand;
 
-@Data
 public abstract class CommandData<A extends Annotation> {
 
     protected Method method;
@@ -51,5 +49,13 @@ public abstract class CommandData<A extends Annotation> {
 
     public void log(String msg) {
         CommandHandler.getInstance().getLogger().info(msg);
+    }
+
+    public Method getMethod() {
+        return method;
+    }
+
+    public Object getCommandObject() {
+        return commandObject;
     }
 }

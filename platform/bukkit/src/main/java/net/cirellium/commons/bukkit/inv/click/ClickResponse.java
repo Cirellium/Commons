@@ -98,7 +98,7 @@ public interface ClickResponse extends Processor<ClickInformation, Boolean> {
      * 
      * @return The ClickResponse object
      */
-    public static ClickResponse success() { return (clickInformation) -> true; }
+    public static ClickResponse success() { return (_) -> true; }
 
     /**
      * Returns the value of a {@link Predicate}.

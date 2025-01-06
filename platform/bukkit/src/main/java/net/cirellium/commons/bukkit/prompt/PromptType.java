@@ -16,30 +16,30 @@ import net.cirellium.commons.common.util.ClassTyped;
 
 public enum PromptType implements ClassTyped {
 
-    CHAT(ChatPrompt.class, (event, prompt) -> {
+    CHAT(ChatPrompt.class, (event, _) -> {
         if (!(event instanceof AsyncPlayerChatEvent || event instanceof PlayerCommandPreprocessEvent)) return null;
         
         
         return null;
     }),
 
-    INVENTORY(InventoryPrompt.class, (event, prompt) -> {
+    INVENTORY(InventoryPrompt.class, (event, _) -> {
         if (!(event instanceof InventoryClickEvent)) return null;
 
         return null;
     }),
 
-    ANVIL(AnvilPrompt.class, (event, prompt) -> {
+    ANVIL(AnvilPrompt.class, (event, _) -> {
         if (!(event instanceof InventoryClickEvent)) return null;
 
         return null;
     }),
 
-    BOOK(BookPrompt.class, (event, prompt) -> {
+    BOOK(BookPrompt.class, (_, _) -> {
         return null;
     }),
 
-    SIGN(SignPrompt.class, (event, prompt) -> {
+    SIGN(SignPrompt.class, (_, _) -> {
         return null;
     });
 

@@ -2,12 +2,10 @@ package net.cirellium.commons.common.command.data;
 
 import java.lang.reflect.Method;
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.cirellium.commons.common.command.annotation.annotations.Command;
 import net.cirellium.commons.common.command.annotation.annotations.SubCommand;
 
-@Data
 @EqualsAndHashCode(callSuper=false)
 public final class SubCommandData extends CommandData<SubCommand> {
 
@@ -22,5 +20,9 @@ public final class SubCommandData extends CommandData<SubCommand> {
 
     public final boolean isSubCommandOf(Command command) {
         return subCommand.mainCommand().equalsIgnoreCase(command.label());
+    }
+
+    public SubCommand getSubCommand() {
+        return subCommand;
     }
 }

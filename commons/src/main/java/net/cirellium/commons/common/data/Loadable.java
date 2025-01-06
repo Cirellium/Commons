@@ -4,9 +4,9 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.UUID;
 
-import net.cirellium.commons.common.util.Identifiable;
+import net.cirellium.commons.common.util.Identified;
 
-public interface Loadable<D extends Data> extends Identifiable<UUID>, DataHolder<D, UUID> {
+public interface Loadable<D extends Data> extends Identified<UUID>, DataHolder<D, UUID> {
 
     @Override
     UUID getId();

@@ -1,6 +1,6 @@
 package net.cirellium.commons.common.util;
 
-public interface Identifiable<I extends Comparable<I>> {
+public interface Identified<I extends Comparable<I>> {
     
     I getId();
     

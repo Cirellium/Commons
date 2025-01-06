@@ -1,7 +1,5 @@
 package net.cirellium.commons.common.logger;
 
-import java.util.logging.Logger;
-
 import net.cirellium.commons.common.version.Platform;
 
 public class SimpleCirelliumLogger extends CirelliumLogger {
@@ -16,6 +14,7 @@ public class SimpleCirelliumLogger extends CirelliumLogger {
 
     @Override
     public void info(String msg) {
-        Logger.getLogger("default").info(msg);
+        // Logger.getLogger("default").info(msg);
+        System.out.println("[" + getName() + "] " + msg);
     }
 }

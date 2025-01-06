@@ -25,7 +25,7 @@ public interface ButtonProvider extends Provider<Button, Integer> {
                 .damage((int)(Math.random()*80))
                 .amount(1))
             .slot(slot)
-            .clickHandler((clickInformation) -> ClickResponse.closeInventory())
+            .clickHandler((_) -> ClickResponse.closeInventory())
             .build();
 
 }

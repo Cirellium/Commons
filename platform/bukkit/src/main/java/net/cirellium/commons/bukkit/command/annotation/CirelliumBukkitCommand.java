@@ -63,7 +63,7 @@ public class CirelliumBukkitCommand extends org.bukkit.command.Command implement
 
     @SneakyThrows
     private boolean invoke(CommandData<?> commandData, Method method, BukkitCommandInvoker sender, String commandLabel,
-            String[] passedArguments, String[] args) {
+            String[] passedArguments, String[] args){
         final Parameter[] parameters = Arrays.copyOfRange(method.getParameters(), 1, method.getParameters().length);
 
         if (parameters.length > 0 && !parameters[0].getType().isArray()) {

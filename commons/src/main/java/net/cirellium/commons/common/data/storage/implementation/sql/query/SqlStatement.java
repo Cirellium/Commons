@@ -14,7 +14,6 @@ import net.cirellium.commons.common.util.Provider;
 /**
  * Represents an abstract SQL statement.
  */
-@Getter
 public abstract class SqlStatement {
 
     public static final Provider<String, Order> ORDER_PROVIDER = (order) -> order == null ? "" : "ORDER BY " + order;
@@ -61,6 +60,14 @@ public abstract class SqlStatement {
         public static Builder<? extends SqlStatement> builder() {
             return new SqlQueryBuilder();
         }
+
+        public Order getOrder() {
+            return order;
+        }
+
+        public int getLimit() {
+            return limit;
+        }    
     }
 
     public static class UpdateStatement extends SqlStatement {
@@ -181,5 +188,25 @@ public abstract class SqlStatement {
         public UpdateStatement build() {
             return new UpdateStatement(action, table, columns, values, conditions, "");
         }
+    }
+
+    public SqlAction getAction() {
+        return action;
+    }
+
+    public String getTable() {
+        return table;
+    }
+
+    public List<String> getColumns() {
+        return columns;
+    }
+
+    public Map<String, String> getValues() {
+        return values;
+    }
+
+    public List<SqlCondition> getConditions() {
+        return conditions;
     }
 }

@@ -14,24 +14,25 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.logging.Logger;
 
-// import net.cirellium.commons.bukkit.CirelliumBukkitPlugin;
-// import net.cirellium.commons.bukkit.service.AbstractBukkitService;
-import net.cirellium.commons.common.exception.service.ServiceDependencyException;
 import net.cirellium.commons.common.exception.service.ServiceException;
+import net.cirellium.commons.common.exception.service.ServiceStateException;
 import net.cirellium.commons.common.logger.SimpleCirelliumLogger;
 import net.cirellium.commons.common.plugin.CirelliumPlugin;
 import net.cirellium.commons.common.util.ExceptionUtils;
 import net.cirellium.commons.common.util.clazz.ClassUtils;
-import net.cirellium.commons.common.version.Platform; 
+import net.cirellium.commons.common.version.Platform;
 
 /**
- * This class is responsible for loading, initializing, as well as shutting down services.
- * It uses the {@link ServiceRegistry} to store all services, and the {@link ServiceProvider} to provide services.
+ * This class is responsible for loading, initializing, as well as shutting down
+ * services.
+ * It uses the {@link ServiceRegistry} to store all services, and the
+ * {@link ServiceProvider} to provide services.
  * 
  * If any service fails to initialize, a ServiceException will be thrown.
  */
@@ -51,13 +52,14 @@ public class ServiceHandler<P extends CirelliumPlugin<P>> {
     public ServiceHandler(CirelliumPlugin<P> plugin) {
         INSTANCE = this;
         this.plugin = plugin;
-        // if(plugin.getPlatform() == Platform.BUKKIT) this.bukkitPlugin = (CirelliumBukkitPlugin<?>) plugin;
+        // if(plugin.getPlatform() == Platform.BUKKIT) this.bukkitPlugin =
+        // (CirelliumBukkitPlugin<?>) plugin;
         this.registry = new ServiceRegistry<P>();
         this.provider = new ServiceProvider<P>(registry);
         this.logger = new SimpleCirelliumLogger(Platform.UNKNOWN, "ServiceHandler");
 
         // CompletableFuture.runAsync(() -> loadServices(), plugin.getExecutorService())
-                        // .thenRun(() -> initializeServices());
+        // .thenRun(() -> initializeServices());
     }
 
     public static ServiceHandler<?> getInstance() {
@@ -72,7 +74,7 @@ public class ServiceHandler<P extends CirelliumPlugin<P>> {
         return provider;
     }
 
-    @SuppressWarnings( { "rawtypes" })
+    @SuppressWarnings({ "rawtypes" })
     public List<AbstractService> loadServices() {
         logger.info("Loading services...");
         List<AbstractService> services = new ArrayList<AbstractService>();
@@ -80,56 +82,68 @@ public class ServiceHandler<P extends CirelliumPlugin<P>> {
             for (Class<?> serviceClass : ClassUtils.getAllClasses("net.cirellium", AbstractService.class)) {
                 logger.info("Found class " + serviceClass.getSimpleName());
 
-                if (serviceClass.getSimpleName().equals("AbstractBukkitService")) continue;
+                if (serviceClass.getSimpleName().equals("AbstractBukkitService"))
+                    continue;
                 if (AbstractService.class.isAssignableFrom(serviceClass)) {
-                    if(serviceClass.getSuperclass().getSimpleName().contains("AbstractBukkitService")) {
-                        // Constructor<?> constructor = serviceClass.getConstructor(CirelliumBukkitPlugin.class);
+                    if (serviceClass.getSuperclass().getSimpleName().contains("AbstractBukkitService")) {
+                        // Constructor<?> constructor =
+                        // serviceClass.getConstructor(CirelliumBukkitPlugin.class);
                         Constructor<?> constructor = serviceClass.getDeclaredConstructors()[0];
 
-                        logger.info("Found constructor with " + constructor.getParameterCount() + " parameters and " + constructor.getParameterTypes()[0].getSimpleName() + " as first parameter");
-    
-                        if(Modifier.isAbstract(serviceClass.getModifiers())) {
-                            logger.info(serviceClass.getSimpleName() + " class is abstract, loading sub service class...");
-    
+                        logger.info("Found constructor with " + constructor.getParameterCount() + " parameters and "
+                                + constructor.getParameterTypes()[0].getSimpleName() + " as first parameter");
+
+                        if (Modifier.isAbstract(serviceClass.getModifiers())) {
+                            logger.info(
+                                    serviceClass.getSimpleName() + " class is abstract, loading sub service class...");
+
                             try {
-                                Class<?> subServiceClass = ClassUtils.getAllClasses("net.cirellium", serviceClass).iterator().next();
+                                Class<?> subServiceClass = ClassUtils.getAllClasses("net.cirellium", serviceClass)
+                                        .iterator().next();
                                 logger.info("Found sub service class " + subServiceClass.getSimpleName());
-                                if(subServiceClass != null) loadSubService(subServiceClass);
+                                if (subServiceClass != null)
+                                    loadSubService(subServiceClass);
                                 continue;
                             } catch (NullPointerException | NoSuchElementException e) {
-                                logger.warning("No sub service class found for " + serviceClass.getSimpleName() + ", skipping...");
+                                logger.warning("No sub service class found for " + serviceClass.getSimpleName()
+                                        + ", skipping...");
                                 continue;
                             }
                         }
-    
+
                         try {
                             var service = (AbstractService) constructor.newInstance(plugin);
 
                             registry.registerService((AbstractService) service);
-    
+
                             logger.info("Loaded service " + serviceClass.getSimpleName());
                         } catch (InvocationTargetException e) {
-                            logger.warning("Failed to register service " + serviceClass.getSimpleName() + " because the underlying constructor threw an exception. Skipping...");
+                            logger.warning("Failed to register service " + serviceClass.getSimpleName()
+                                    + " because the underlying constructor threw an exception. Skipping...");
                             logger.warning("Reason: " + ExceptionUtils.findOriginalCause(e.getCause()).getMessage());
                             continue;
                         }
                         continue;
-                    } 
+                    }
                     // Create a new instance of the service
                     Constructor<?> constructor = serviceClass.getDeclaredConstructors()[0];
 
-                    logger.info("Found constructor with " + constructor.getParameterCount() + " parameters and " + constructor.getParameterTypes()[0].getSimpleName() + " as first parameter");
+                    logger.info("Found constructor with " + constructor.getParameterCount() + " parameters and "
+                            + constructor.getParameterTypes()[0].getSimpleName() + " as first parameter");
 
-                    if(Modifier.isAbstract(serviceClass.getModifiers())) {
+                    if (Modifier.isAbstract(serviceClass.getModifiers())) {
                         logger.info(serviceClass.getSimpleName() + " class is abstract, loading sub service class...");
 
                         try {
-                            Class<?> subServiceClass = ClassUtils.getAllClasses("net.cirellium", serviceClass).iterator().next();
+                            Class<?> subServiceClass = ClassUtils.getAllClasses("net.cirellium", serviceClass)
+                                    .iterator().next();
                             logger.info("Found sub service class " + subServiceClass.getSimpleName());
-                            if(subServiceClass != null) loadSubService(subServiceClass);
+                            if (subServiceClass != null)
+                                loadSubService(subServiceClass);
                             continue;
                         } catch (NullPointerException | NoSuchElementException e) {
-                            logger.warning("No sub service class found for " + serviceClass.getSimpleName() + ", skipping...");
+                            logger.warning(
+                                    "No sub service class found for " + serviceClass.getSimpleName() + ", skipping...");
                             continue;
                         }
                     }
@@ -156,7 +170,8 @@ public class ServiceHandler<P extends CirelliumPlugin<P>> {
         Constructor<?> constructor = subServiceClass.getDeclaredConstructors()[0];
 
         logger.info("Loading sub-service class " + subServiceClass.getSimpleName());
-        logger.info("Found constructor with " + constructor.getParameterCount() + " parameters and " + constructor.getParameterTypes()[0].getSimpleName() + " as first parameter");
+        logger.info("Found constructor with " + constructor.getParameterCount() + " parameters and "
+                + constructor.getParameterTypes()[0].getSimpleName() + " as first parameter");
 
         try {
             constructor.newInstance(plugin);
@@ -164,47 +179,39 @@ public class ServiceHandler<P extends CirelliumPlugin<P>> {
             e.printStackTrace();
         }
     }
-  
+
     public void initializeServices() throws ServiceException {
         logger.info("Initializing services...");
 
         Set<ServiceType> initializedServices = new HashSet<>();
         Set<AbstractService<P>> toInitialize = new HashSet<>(registry.getServiceMap().values());
 
+        logger.info("Services to initialize: " + toInitialize.size());
+
         // Initialize all services in respect to their dependencies
         while (!toInitialize.isEmpty()) {
             boolean initialized = false;
-            for (AbstractService<P> service : toInitialize) {
+            Iterator<AbstractService<P>> iterator = toInitialize.iterator();
+            while (iterator.hasNext()) {
+                AbstractService<P> service = iterator.next();
                 logger.info("Checking service " + service.getName() + " for dependencies...");
                 // Check if the service has all dependencies initialized
                 if (service.getDependencies() == null || initializedServices.containsAll(service.getDependencies())) {
-                    // Initialize the service
-                    logger.info("Attempting to prepare service " + service.getName());
-                    service.prepare();
-                    initializedServices.add(service.getServiceType());
-                    toInitialize.remove(service);
-                    initialized = true;
-                } else {
-                    // Check if the service has any missing dependencies
-                    Set<ServiceType> missingDependencies = new HashSet<>(service.getDependencies());
-                    missingDependencies.stream().filter(type -> !initializedServices.contains(type)).forEach(dependencyType -> {
-                        try {
-                            logger.info("Attempting to prepare dependency " + dependencyType.getClass().getSimpleName());
-                            service.getService(dependencyType).prepare();
-                            initializedServices.add(dependencyType);
-                            toInitialize.remove(service.getService(dependencyType));
-                        } catch (ServiceDependencyException e) {
-                            e.printStackTrace();
-                        }
-                    });
-                    service.prepare();
-                    initializedServices.add(service.getServiceType());
-                    toInitialize.remove(service);
-                    initialized = true;
+                    // Initialize the service if not already initialized
+                    if (!initializedServices.contains(service.getServiceType())) {
+                        logger.info("Attempting to prepare service " + service.getName());
+                        service.prepare();
+                        initializedServices.add(service.getServiceType());
+                        iterator.remove();
+                        initialized = true;
+                    } else {
+                        logger.warning("Service " + service.getName() + " is already initialized.");
+                        iterator.remove();
+                    }
                 }
             }
             if (!initialized) {
-                throw new IllegalStateException("Failed to initialize services, circular dependency detected");
+                throw new ServiceStateException(null, "Could not initialize all services due to missing dependencies.");
             }
         }
     }
@@ -213,7 +220,7 @@ public class ServiceHandler<P extends CirelliumPlugin<P>> {
     public void shutdownServices() {
         for (AbstractService<P> service : registry.getServiceMap().values()) {
             service.shutdown((P) plugin);
-            
+
             registry.unregisterService(service.getServiceType());
         }
     }

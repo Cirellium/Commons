@@ -36,7 +36,7 @@ public abstract class InventoryBase implements CustomInventory, InventoryHolder 
         this.content = content;
         this.size = size;
 
-        this.closeAction = (p) -> {};
+        this.closeAction = (_) -> {};
 
         // fillInventory();
         updateInventory();
