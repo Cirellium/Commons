@@ -110,11 +110,23 @@ public class CirelliumBukkitCommand extends org.bukkit.command.Command implement
             finalParams[0] = method.getParameters()[0].getType().cast(sender);
             System.arraycopy(invokeParams, 0, finalParams, 1, invokeParams.length);
 
-            method.invoke(data.getCommandObject(), finalParams);
+            try {
+                method.invoke(data.getCommandObject(), finalParams);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
         } else if (parameters.length == 1 && parameters[0].getType().isArray()) {
-            method.invoke(data.getCommandObject(), sender, args);
+            try {
+                method.invoke(data.getCommandObject(), sender, args);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
         } else {
-            method.invoke(data.getCommandObject(), sender);
+            try {
+                method.invoke(data.getCommandObject(), sender);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
         }
         return false;
     }
