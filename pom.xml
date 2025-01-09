@@ -38,6 +38,17 @@
     <maven.compiler.target>23</maven.compiler.target>
   </properties>
 
+  <distributionManagement>
+    <repository>
+      <id>fear-projects</id>
+      <url>https://repo.fearmyshotz.net/repository/projects/</url>
+    </repository>
+    <snapshotRepository>
+      <id>fear-projects</id>
+      <url>https://repo.fearmyshotz.net/repository/projects/</url>
+    </snapshotRepository>
+  </distributionManagement>
+
   <build>
     <defaultGoal>clean package</defaultGoal>
     <finalName>
@@ -185,8 +196,13 @@
 
   <repositories>
     <repository>
+      <id>fear-projects</id>
+      <url>https://repo.fearmyshotz.net/repository/projects/</url>
+    </repository>
+
+    <repository>
       <id>papermc</id>
-      <url>https://papermc.io/repo/repository/maven-public/</url>
+      <url>https://repo.papermc.io/repository/maven-public/</url>
     </repository>
 
     <repository>
