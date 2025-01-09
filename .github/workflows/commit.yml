@@ -38,7 +38,7 @@ jobs:
     - name: Generate Maven settings.xml
       run: |
         mkdir -p ~/.m2
-        echo "<settings><servers><server><id>nexus</id><username>${{ secrets.NEXUS_USERNAME }}</username><password>${{ secrets.NEXUS_PASSWORD }}</password></server></servers></settings>" > ~/.m2/settings.xml
+        echo "<settings><servers><server><id>fear-projects</id><username>${{ secrets.NEXUS_USERNAME }}</username><password>${{ secrets.NEXUS_PASSWORD }}</password></server></servers></settings>" > ~/.m2/settings.xml
 
     - name: Build Commons-Parent with Maven
       run: |
