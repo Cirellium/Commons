@@ -46,13 +46,13 @@ jobs:
         mvn -B clean deploy --file pom.xml -e -X -DoutputDirectory=target -Dmaven.javadoc.skip=true
         
     - run: mkdir build && cp /home/runner/work/Commons/Commons/commons/target/*.jar build
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: Package
         path: build
         
     - run: cp /home/runner/work/Commons/Commons/platform/bukkit/target/*.jar build
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: Package
         path: build
