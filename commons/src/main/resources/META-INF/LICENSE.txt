@@ -1,0 +1,30 @@
+Copyright (c) 2023 Cirellium Network
+
+All rights reserved.
+
+The Cirellium Commons project, including but not limited to all software 
+code, documentation, images, and data, is the exclusive property of 
+Cirellium Network.
+
+You are hereby granted a non-exclusive, non-transferable license to use the 
+Cirellium Commons project for non-commercial use only, provided that you do 
+not modify any portion of the project and that you retain all copyright and 
+other proprietary notices contained in the project.
+
+You may not copy, distribute, sublicense, or create derivative works from 
+the Cirellium Commons project without the express written permission of 
+Cirellium Network.
+
+You may not use the Cirellium Commons project for any commercial purpose, 
+including but not limited to selling the project or using the project to 
+provide services to third parties.
+
+If you create any derivative works based on the Cirellium Commons project, 
+you must include a copy of this license with your distribution and indicate 
+that the source of the derivative work is the Cirellium Commons project.
+
+Cirellium Network reserves the right to terminate this license at any time and for any reason.
+
+By using the Cirellium Commons project, you agree to be bound by the terms 
+of this license. If you do not agree to the terms of this license, do not use 
+the Cirellium Commons project.
