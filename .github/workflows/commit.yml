@@ -11,9 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java_version: [23]
+        java_version: [23.0.2]
 
     env:
+      JAVA_VERSION: ${{ matrix.java_version }}
       JAVA_HOME: /opt/jdk-${{ matrix.java_version }}
 
     steps:
@@ -24,17 +25,17 @@ jobs:
         id: cache-jdk
         uses: actions/cache@v4
         with:
-          path: /opt/jdk-${{ matrix.java_version }}
-          key: jdk-${{ matrix.java_version }}-linux-x64
+          path: /opt/jdk-${{ env.JAVA_VERSION }}
+          key: jdk-${{ env.JAVA_VERSION }}-linux-x64
 
       - name: Download and Install JDK
         if: steps.cache-jdk.outputs.cache-hit != 'true'
         run: |
-          wget https://download.oracle.com/java/${{ matrix.java_version }}/latest/jdk-${{ matrix.java_version }}_linux-x64_bin.tar.gz
-          tar -xvzf jdk-${{ matrix.java_version }}_linux-x64_bin.tar.gz
-          sudo mv jdk-${{ matrix.java_version }} /opt/
-          sudo update-alternatives --install /usr/bin/java java /opt/jdk-${{ matrix.java_version }}/bin/java 1
-          sudo update-alternatives --set java /opt/jdk-${{ matrix.java_version }}/bin/java
+          wget https://download.oracle.com/java/23/archive/jdk-${JAVA_VERSION}_linux-x64_bin.tar.gz
+          tar -xvzf jdk-${JAVA_VERSION}_linux-x64_bin.tar.gz
+          sudo mv jdk-${JAVA_VERSION} /opt/
+          sudo update-alternatives --install /usr/bin/java java /opt/jdk-${JAVA_VERSION}/bin/java 1
+          sudo update-alternatives --set java /opt/jdk-${JAVA_VERSION}/bin/java
 
       - name: Confirm Java version
         run: java -version
