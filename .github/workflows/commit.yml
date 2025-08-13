@@ -1,11 +1,3 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
-
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 name: Build Commons JARs
 
 on:
@@ -16,43 +8,53 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java_version: [23]
+
+    env:
+      JAVA_HOME: /opt/jdk-${{ matrix.java_version }}
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Download and Install JDK 23
-      run: |
-        wget https://download.oracle.com/java/23/latest/jdk-23_linux-x64_bin.tar.gz
-        tar -xvzf jdk-23_linux-x64_bin.tar.gz
-        sudo mv jdk-23.0.1 /opt/
-        sudo update-alternatives --install /usr/bin/java java /opt/jdk-23.0.1/bin/java 1
-        sudo update-alternatives --config java
-        java -version
+      - name: Cache JDK
+        id: cache-jdk
+        uses: actions/cache@v4
+        with:
+          path: /opt/jdk-${{ matrix.java_version }}
+          key: jdk-${{ matrix.java_version }}-linux-x64
 
-    - name: Set JAVA_HOME for Maven
-      run: echo "JAVA_HOME=/opt/jdk-23.0.1" | sudo tee -a /etc/environment
-        
-    - name: Generate Maven settings.xml
-      run: |
-        mkdir -p ~/.m2
-        echo "<settings><servers><server><id>fear-projects</id><username>${{ secrets.NEXUS_USERNAME }}</username><password>${{ secrets.NEXUS_PASSWORD }}</password></server></servers></settings>" > ~/.m2/settings.xml
+      - name: Download and Install JDK
+        if: steps.cache-jdk.outputs.cache-hit != 'true'
+        run: |
+          wget https://download.oracle.com/java/${{ matrix.java_version }}/latest/jdk-${{ matrix.java_version }}_linux-x64_bin.tar.gz
+          tar -xvzf jdk-${{ matrix.java_version }}_linux-x64_bin.tar.gz
+          sudo mv jdk-${{ matrix.java_version }} /opt/
+          sudo update-alternatives --install /usr/bin/java java /opt/jdk-${{ matrix.java_version }}/bin/java 1
+          sudo update-alternatives --set java /opt/jdk-${{ matrix.java_version }}/bin/java
 
-    - name: Build Commons-Parent with Maven
-      run: |
-        source /etc/environment
-        mvn -B clean deploy --file pom.xml -e -X -DoutputDirectory=target -Dmaven.javadoc.skip=true
-        
-    - run: mkdir build && cp /home/runner/work/Commons/Commons/commons/target/*.jar build
-    - uses: actions/upload-artifact@v4
-      with:
-        name: Package
-        path: build
-        
-    - run: cp /home/runner/work/Commons/Commons/platform/bukkit/target/*.jar build
-    - uses: actions/upload-artifact@v4
-      with:
-        name: Package
-        path: build
+      - name: Confirm Java version
+        run: java -version
+
+      - name: Generate Maven settings.xml
+        run: |
+          mkdir -p ~/.m2
+          echo "<settings><servers><server><id>fear-projects</id><username>${{ secrets.NEXUS_USERNAME }}</username><password>${{ secrets.NEXUS_PASSWORD }}</password></server></servers></settings>" > ~/.m2/settings.xml
+
+      - name: Build Commons-Parent with Maven (verify)
+        run: mvn -B verify --file pom.xml -Dmaven.javadoc.skip=true
+
+      - name: Collect build artifacts
+        run: |
+          mkdir -p build
+          cp commons/target/*.jar build || true
+          cp platform/bukkit/target/*.jar build || true
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Commons-JARs-JDK${{ matrix.java_version }}
+          path: build
