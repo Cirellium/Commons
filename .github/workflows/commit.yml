@@ -9,7 +9,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     strategy:
       fail-fast: true
       matrix:
@@ -28,12 +27,15 @@ jobs:
           java-version: ${{ matrix.java }}
           cache: maven
 
+      - name: Make mvnw executable
+        run: chmod +x mvnw
+
       - name: Build & verify with Maven Wrapper
         run: |
           ./mvnw -B -T 1C verify \
-              -DskipTests -Dsurefire.skip=true \
-              -Dmaven.javadoc.skip=true \
-              -Dmdep.analyze.skip=true
+                 -DskipTests -Dsurefire.skip=true \
+                 -Dmaven.javadoc.skip=true \
+                 -Dmdep.analyze.skip=true
 
       - name: Collect JARs
         run: |
